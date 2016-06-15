@@ -1,0 +1,269 @@
+
+<% content_for :city do %>
+	<meta name="title" content="<%= @city_obj.m_title if @city_obj.present? %> Tours, Travel Activities and Things to do - Travelog.com">
+	<meta name="description" content="Book Tours, Activities and Things to do in <%= @city_obj.m_desc if @city_obj.present? %>. Outdoor Activities, City tours, Day trip, Sightseeing, wellness retreats, weekend escapes and many more">
+	<meta name="keywords" content="Things to do in <%= @city_obj.m_key if @city_obj.present? %>, <%= @city_obj.m_key if @city_obj.present? %> Travel, <%= @city_obj.m_key if @city_obj.present? %> Tours, Travel <%= @city_obj.m_key if @city_obj.present? %>, <%= @city_obj.m_key if @city_obj.present? %> Day trip, Sightseeing <%= @city_obj.m_key if @city_obj.present? %>, What to do in <%= @city_obj.m_key if @city_obj.present? %>, <%= @city_obj.m_key if @city_obj.present? %>">
+<% end %>
+
+<% content_for :page_title do%>
+<% if @city_obj.present?  %>
+	<%= @city_obj.name %> Things to do - Travelog
+<% else %>
+	Things to do - Travelog.com
+<% end %>
+<% end %>
+
+<div class="container container-filter ">
+	<div class="row row-filter filter-search">
+		<div class="col-md-12  ">
+			<div class="col-md-2 col-sm-12 col-xs-12 text-left pull-left ">
+				<h5>Category </h5>
+				
+			</div>
+			<form method="POST" action="/place/<%= @slug %>" id="result-form">
+				<%= tag(:input, :name => 'authenticity_token', :type => "hidden", :value => form_authenticity_token) %>
+				<div class="col-md-10 col-sm-12 col-xs-12">
+					<% ProductCategory.order('id').each do |category| %>
+						<div class="checkbox checkbox-default">
+							<span class="text-label">
+							<%= category[:name] %></span>
+							<input id="checkbox_<%= category.id %>" name="category_<%= category.id %>" type="checkbox" <%= "checked" if @categories["category_#{category.id}"] == "1" %>>
+							<label for="checkbox_<%= category.id %>">
+							</label>
+						</div>
+					<% end %>
+				</div>
+			</form>
+			
+		</div>
+	</div>
+	<div class="row row-filter  slider-filter">
+		<div class="col-md-12   ">
+			<div class="col-md-2 col-sm-12 col-xs-12 text-left pull-left  ">
+				<h5>Price Range </h5>
+			</div>
+			<div class="col-md-10 col-sm-12 col-xs-12">
+				<h5>          </h5>
+				<div class="slider" id="slider1"></div>
+				<span class="example-val" id="slider1-span"></span>
+				<div id="nonlinear"></div>
+				<span class="example-val" id="lower-value"></span>
+				<span id="lower-offset"></span>
+				<span class="example-val" id="upper-value"></span>
+				<span id="upper-offset"></span>
+			</div>
+			<div class="col-md-2 col-sm-12 col-xs-12"> </div>
+			<div class="label-description col-md-10 col-sm-12 col-xs-12">
+				<h5> </h5>
+				<label class="pull-left" id="start-price">$500</label>
+				<label class="pull-right" id="end-price">$5,000</label>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="container-result">
+	<div class="container result-content">
+		<!-- Projects Row -->
+		<div class="row">
+			<div class="col-md-12 text-right content-title">
+				<p> Total: <%= @total_count %> attractions</p>
+				<p> Display: <%= @products.count %> attractions</p>
+			</div>
+		</div>
+		
+		<% @products.each_slice(4).each do |slice| %>
+			<div class="row">
+				<% slice.each do |product| %>
+					<div class="col-xs-12 col-sm-6 col-md-3">
+						<p class="price">
+						<% if product.product_discount != 1 %>
+
+						from <strike><em><%= get_all_currency_symbols[product.current_currency] %></em> <%= product.price_with_currency %></strike>
+						<br>
+						<em><%= get_all_currency_symbols[product.current_currency] %></em> <%= (product.price_with_currency *  product.product_discount).round(2) %>
+						<% else %>
+						<%= get_all_currency_symbols[product.current_currency] %> <%= product.price_with_currency %>
+						<% end %>
+						</p>
+						<!-- <p class="heart-wrapper ">
+							<input id="heart8" type="checkbox" class="heart-checkbox" />
+							<label for="heart8"> </label>
+						</p> -->
+						<a href="<%= product_path product %>"><img src="<%= product.user.store_setting.store_image.store_img.small if product.user.store_setting.present?%>" class="img-circle user-thumb" width="52"/></a>
+						<a href="<%= product_path product %>">
+							<img class="" src="<%= product.product_attachments.first.attachment.square.url if product.product_attachments.first.present? %>"  alt="product.name">
+						</a>
+						<h4>
+							<a href="<%= product_path product %>"><%=h truncate(product.name, :length => 20) %></a>
+						</h4>
+						<a href="<%= product_path product %>">
+							<p><%= product.city%>, <%= product.country%></p>
+							<p class="star-rating">
+								<span class="icon-star <%= 'selected' if product.review_mark > 0 %>"></span>
+								<span class="icon-star <%= 'selected' if product.review_mark > 1 %>"></span>
+								<span class="icon-star <%= 'selected' if product.review_mark > 2 %>"></span>
+								<span class="icon-star <%= 'selected' if product.review_mark > 3 %>"></span>
+								<span class="icon-star <%= 'selected' if product.review_mark > 4 %>"></span>
+							</p>
+						</a>
+					</div>
+				<% end %>
+			</div>
+		<% end %>
+
+		<div class="col-md-12 text-center view-more">
+			<%= paginate @products %>
+		</div>
+	</div>
+</div>
+
+<script>    
+
+	function stickDropdown(_elem){
+		$(_elem).parent().removeClass('open').addClass('open');
+	}
+
+	function initResponsiveHeader() {
+		var sideslider = $('[data-toggle=collapse-side]');
+		var sel = sideslider.attr('data-target');
+		var sel2 = sideslider.attr('data-target-2');
+		sideslider.click(function(event) {
+			$(sel).toggleClass('in');
+			$(sel2).toggleClass('out');
+		}); 
+	}
+	
+	$(document).ready(function() {
+
+		initResponsiveHeader();
+
+		var start_value;
+		var end_value;
+
+		var nonLinearSlider = document.getElementById('nonlinear');
+
+		var start_price = gon.start_price;
+		if (start_price == undefined) {
+			start_price = 0;
+		};
+		var end_price = gon.end_price;
+		if (end_price == undefined) {
+			end_price = gon.max_price;
+		};
+
+		noUiSlider.create(nonLinearSlider, {
+			connect: true,
+			behaviour: 'tap',
+			start: [start_price, end_price],
+			range: {
+				 // Starting at 500, step the value by 500,
+				 // until 4000 is reached. From there, step by 1000.
+				 'min': [gon.min_price],
+				 '10%': [gon.max_price / 20, gon.max_price / 20],
+				 '50%': [gon.max_price * 4 / 10, gon.max_price / 10],
+				 'max': [gon.max_price]
+			}
+		});
+
+		nonLinearSlider.noUiSlider.on('update', function( values, handle ) {
+			var value = values[handle];
+			if ( handle ) {
+				end_value = value;
+				// console.log('end-value:' + end_value);
+				$('#end-price').text(gon.currency_symbols[gon.current_currency] + end_value)
+			} else {
+				start_value = value;
+				// console.log('start-value:' + start_value);
+				$('#start-price').text(gon.currency_symbols[gon.current_currency] + start_value)
+			}
+		});
+
+		nonLinearSlider.noUiSlider.on('change', function(){
+			$form = $('#result-form');
+			$form.append('<input type="hidden" name="start_price" value="' + start_value + '">');
+			$form.append('<input type="hidden" name="end_price" value="' + end_value + '">');
+			console.log($form.serialize());
+			$form.submit();
+		});
+
+		$(document).on('change', 'form input[type="checkbox"]', function() {
+			console.log('checkbox click');
+			$form = $(this).closest('form');
+			$form.append('<input type="hidden" name="start_price" value="' + start_value + '">');
+			$form.append('<input type="hidden" name="end_price" value="' + end_value + '">');
+			console.log($form.serialize());
+			$form.submit();
+		})
+	});
+	
+	$(function() {
+		function displayResult(item) {
+			$('.alert').show().html('You selected <strong>' + item.value + '</strong>: <strong>' + item.text + '</strong>');
+		}
+		$('#demo6').typeahead({
+			source: [
+				 'Genting',
+				 'Zoo Negara',
+				 'Tioman',
+				 'Petronas Towers',
+				 'Batu Caves',
+				 'Gunung Mulu',
+				 'Mount Kinabalu',
+				 'Bako Park',
+				 'Sunway Lagoon',
+				 'Pangkor island'
+			],
+			onSelect: displayResult
+		});
+
+	});
+		 
+</script>
+
+
+      <style>
+         /*discount price*/
+         .discount {    font-size: 16px;
+         color: #CCC;}
+         /*discount price*/
+         /*to be intergrate with header during responsive fix*/
+         .header-10 {
+         background: #FFF;
+         }
+         .header-10 .navbar .nav > li.nav-user-options a {
+         padding: 21px 0 17px;
+         background: #FFF;
+         }
+         .checkbox label::after {
+         margin-top: -5px;
+         }
+         label {
+         margin-top: 10px;
+         }
+		 
+	 /*Footer*/
+         .bottom-below-footer { margin-top:100px;}
+		 .bottom-below-footer p {color: #ffffff;
+    font-weight: normal;
+    font-size: 15px;}
+         .btn-currency { border-radius:1px; background:none; border:1px solid #999;}
+         .btn-currency:hover, focus, active {background:none;}
+         .btn-currency:hover,active {  background:none;}
+         .open > ul.currency-dropdown-menu {
+         margin-top: 0;
+         }
+         .open .dropdown-toggle.btn-default.btn-currency {
+         background: #000;
+         }
+		 .footer-3 a {
+    color: #ffffff;
+    font-weight: normal;
+    font-size: 15px;
+}
+         /*Footer*/
+		 
+		 
+		 
+         /*to be intergrate with header during responsive fix*/
+      </style>

@@ -1,0 +1,73 @@
+// Place all the styles related to the products controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+.booking-result-container {
+	.form-group {
+		.col-xs-5 {
+			text-align: right;
+		}
+		&.row {
+			margin-left: 0;
+			margin-right: 0;
+			border-top: 1px solid #ccc;
+			margin-bottom: 0;
+    	padding: 10px 0;
+    	&:last-child {
+    		margin-bottom: 20px;
+    		border-bottom: 1px solid #ccc;
+    	}
+		}
+	}
+	label {
+		font-weight: bold;
+	}
+}
+
+.side-collapse-container .section-details.summary {
+	z-index: 10;
+}
+
+.star-rating {
+	.picture-block & {
+		width: 80px;
+	}
+	&.small {
+		.icon-star {
+			font-size: 12px;
+		}
+	}
+	.icon-star {
+		display: inline;
+    color: #d8d8d8;
+    font-size: 16px;
+
+    &.selected {
+    	color: #ffcd00
+    }
+	}
+}
+
+p.totalprice {
+	span {
+		font-size: 16px;
+	}
+}
+
+.header-10-sub .background {
+	// background: image-url("img/vacation.jpg");
+}
+
+.datepicker.dropdown-menu {
+	visibility: visible;
+	opacity: 1;
+	display: none;
+}
+
+#product-show .form-control.testimonials {
+	color: #000;
+}
+
+header.header-10 {
+	background: #FFF;
+}

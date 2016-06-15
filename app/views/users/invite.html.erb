@@ -1,0 +1,23 @@
+<section class="header-10-sub v-center ">
+	<div class="background inviteuserbackground">
+		&nbsp;
+	</div>
+	<div>
+		<div class="container">
+			<div class="hero-unit userinvitehero">
+				
+				<img src="<%= @user.get_avatar_url %>" class="img-circle inviteuserprofileimg"/>
+				
+				<h1><%= @user.full_name %> gave you RM85 to travel.</h1>
+				<p>
+					Travelog is the best way to travel with any budget.
+				</p>
+				
+				<a class="btn btn-usersignup" href="<%= "/users/invitation/accept?invitation_token=#{@invitation_token}" %>">Sign up to claim your credit</a>
+				<br><br>
+				<a href="#" class="termssmall">Terms and Conditions</a>
+				
+			</div>
+		</div>
+	</div>
+</section>

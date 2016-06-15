@@ -1,0 +1,86 @@
+<section class="header-10-sub v-center ">
+	<div class="background invitefriendsbg">
+		&nbsp;
+	</div>
+	<div>
+		<div class="container">
+			<div class="hero-unit invitefriends">
+				<h1>Earn up to $100 for everyone you invite.</h1>
+				<a href="#"><p>
+					Invite Your Email Contacts
+				</p></a>
+
+				<a href="#"><img src="/assets/img/sample-04/inviteemail.png" width="80"></a>
+
+			</div>
+		</div>
+	</div>
+</section>
+
+<section class="content-7 invitefriends-content">
+	<div class="row">
+		<div class="col-md-12 text-center">
+
+			<!-- <h6>Send a friend $20 Travelog credit. You'll get $20 when they travel and $80 when they host. <a href="#">Learn More</a></h6> -->
+			<h6>Send a friend $5 Travelog credit. You'll get $5 when they Signup. <a href="#">Learn More</a></h6>
+			<div class="col-md-12 text-center">
+				<a href="">Referrals Terms and Conditions</a>
+			</div>
+			<div class="col-md-12 invitefriends-form">
+				<div class="col-md-5 col-md-offset-1">
+					<%= form_for resource, :as => resource_name, :url => invitation_path(resource_name), :html => {:method => :post, :class => 'form-inline'} do |f| %>
+
+						<div class="form-group">
+							<!-- <input type="text" class="form-control" id="" placeholder="Enter email addresses saperated by comma"> -->
+							<input type="text" class="form-control" name="user[email]" id="user_email" placeholder="Enter email addresses saperated by comma">
+						</div>
+
+						<button type="submit" class="btn btn-shareemail">Send</button>
+					<% end %>
+				</div>
+				<div class="col-md-5">
+					<form class="form-inline">
+
+						<div class="form-group">
+							<!-- <input type="text" class="form-control" id="" placeholder="www.travelog.com/c/macv3?s=8"> -->
+							<input type="text" class="form-control" id="fb-share-link" name="fb-share-link" placeholder="<%= @fb_share_link %>" readonly>
+						</div>
+
+						<!-- <button type="submit" class="btn btn-sharefacebook">Facebook</button> -->
+						<a class="btn btn-sharefacebook" data-network="facebook" rel="nofollow" title="Facebook" href="<%= URI.encode("http://www.facebook.com/sharer.php?u=" + @fb_share_link) %>" target="_blank" style="color: white;">
+							<i class="icon icon-facebook"></i>
+							Facebook
+						</a>
+					</form>
+				</div>
+			</div>
+
+			<hr>
+
+			<div class="col-md-12 friendslist">
+
+				<!-- <h4>You have $0 travel credit to spend.</h4> <a href="#">Learn More</a> -->
+				<h4>You have $<%= current_user.reward_credit %> travel credit to spend.</h4> <a href="#">Learn More</a>
+				<br>
+				<!-- <p>You’ve earned a total of $0, with $300 pending, Invite more friends to earn more credit!</p> -->
+				<p>You’ve earned a total of $<%= current_user.reward_credit %>, Invite more friends to earn more credit!</p>
+
+
+			</div>
+
+			</div>
+		<!--booking-->
+
+
+		<!--booking-->
+	</div>
+</section>
+
+<script>
+	$(document).ready(function() {
+		$('.btn-sharefacebook').on('click', function(e) {
+			e.preventDefault();
+			window.open($(this).attr('href'), 'windowName', "height=300,width=500");
+		})
+	})
+</script>

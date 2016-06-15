@@ -1,0 +1,42 @@
+<div class="row">
+
+  <% @products.each do |product| %>
+    <div class="col-sm-6 col-md-4 col-lg-4 product-card">
+    <% if product.product_discount != 1 %>
+      <p class="price pull-right text-right">
+      <span class="discount">
+
+      from <strike><em><%= get_all_currency_symbols[product.current_currency] %></em> <%= product.price_with_currency %></strike>
+      </span>
+      <br>
+      <em><%= get_all_currency_symbols[product.current_currency] %></em> <%= (product.price_with_currency *  product.product_discount).round(2) %></p>
+    <% else %>
+      <p class="price"><%= get_all_currency_symbols[product.current_currency] %> <%= product.price_with_currency %></p>
+    <% end %>
+      <a href="<%= product_path product %>"><img src="<%= product.store_logo_url %>" class="img-circle user-thumb" width="52"/></a>
+
+      <p class="star-rating" style="position: absolute;">
+                
+        <i class="fa fa-star <%= 'empty-star' if product.review_mark <= 0 %>"></i>
+        <i class="fa fa-star <%= 'empty-star' if product.review_mark <= 1 %>"></i>
+        <i class="fa fa-star <%= 'empty-star' if product.review_mark <= 2 %>"></i>
+        <i class="fa fa-star <%= 'empty-star' if product.review_mark <= 3 %>"></i>
+        <i class="fa fa-star <%= 'empty-star' if product.review_mark <= 4 %>"></i>
+        
+      </p>
+              
+      <div class="img-holder">
+        <a href="<%= product_path product %>">
+          <img src="<%= product.product_attachments.first.attachment.square.url if product.product_attachments.first.present? %>" alt="<%= product.name %>" style="width: 100%;">
+        </a>
+      </div>
+      <h4>
+        <a href="<%= product_path product %>"><%=h truncate(product.name, :length => 30) %></a>
+      </h4>
+      <a href="<%= product_path product %>">
+        <p><%= product.city%>, <%= product.country%></p>
+      </a>
+
+    </div>
+  <% end %>
+</div>

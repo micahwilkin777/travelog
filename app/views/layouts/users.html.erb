@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="">
+	<meta name="author" content="">
+	<%= favicon_link_tag 'favicon.ico' %>
+  
+  <title><%= page_title yield(:page_title) %></title>
+  <%= stylesheet_link_tag    'application_users', media: 'all' %>
+  <%= javascript_include_tag 'application_users' %>
+  <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?libraries=places&sensor=false"></script>
+  <%= csrf_meta_tags %>
+  <%= Gon::Base.render_data %>
+</head>
+<body>
+  
+  <div class="header-gradient"></div>
+  <div class="page-wrapper">
+    <%= render 'layouts/header_users' %>
+    <%= render 'shared/flash' %>
+    <%= yield %>
+    <%= render 'layouts/footer' %>
+  </div>
+
+  <style>
+    ul.dropdown-menu {
+      display: none;
+    }
+  </style>
+</body>
+</html>

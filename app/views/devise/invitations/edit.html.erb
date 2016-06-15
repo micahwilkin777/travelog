@@ -1,0 +1,73 @@
+<% content_for :page_title do %>
+	<%= 'Travelog - Signup' %>
+<% end %>
+<div class="container signupLogin-content">
+	 <!-- Projects Row -->
+	 <div class="row">
+			<div class="col-md-offset-3 col-md-6 col-lg-6 invite-signup-page text-center">
+				<h3>Let's sign you in</h3>
+				<hr>
+				<%= form_for resource, :as => resource_name, :url => invitation_path(resource_name), :html => { :method => :put, :class => 'text-left' } do |f| %>
+					<%= devise_error_messages! %>
+					<%= f.hidden_field :invitation_token %>
+
+					<div class="form-group">
+						<%= f.label :first_name, 'First Name' %><br />
+						<%= f.text_field :first_name, placeholder: "First Name", class: "form-control" %>
+					</div>
+
+					<div class="form-group">
+						<%= f.label :last_name, 'Last Name' %><br />
+						<%= f.text_field :last_name, placeholder: "Last Name", class: "form-control" %>
+					</div>
+					
+					<div class="form-group">
+						<%= f.label :password %>
+						<%= f.password_field :password, autocomplete: "off", placeholder: "Password", class: "form-control" %>
+					</div>
+
+					<div class="form-group">
+						<%= f.label :password_confirmation, 'Confirm Password' %>
+						<%= f.password_field :password_confirmation, autocomplete: "off", placeholder: "Confirm Password", class: "form-control" %>
+					</div>
+					<button type="submit" class="btn btn-default signup-btn">Submit</button>
+				<% end %>
+			</div>
+	 </div>
+</div>
+
+<style>
+	  /* -----
+SVG Icons
+----- */
+
+.svg-icon {
+  width: 1em;
+  height: 1em;
+}
+
+.svg-icon path,
+.svg-icon polygon,
+.svg-icon rect {
+  fill: #4691f6;
+}
+
+.svg-icon circle {
+  stroke: #4691f6;
+  stroke-width: 1;
+}
+/* -----
+SVG Icons
+----- */
+.icon-facebook{    position: absolute;
+    top: -2px;
+    left: 91px;
+    width: 20px;}
+.icon-facebook path{fill:#FFF;}
+.btn-facebook { background:#3b5999; border:0; border-radius:1px; color:#FFF;width: 380px;
+    height: 40px;     padding: 12px 121px;
+    margin-left: -15px;}
+	.btn-facebook:hover,active,focus { color:#FFF;}
+	.fb-btn-row { margin-top:40px;}
+
+	  </style>

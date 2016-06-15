@@ -1,0 +1,18 @@
+development: &sandbox # change to your own
+  username: xuxianzhi-facilitator_api1.me.com
+  password: FNUC2YY6UUNS33UQ
+  signature: AFcWxV21C7fd0v3bYYYRCpSSRl31A.CNy1TAgNFY37Aht06fjnhlWhX8
+  sandbox: true
+
+test:
+  <<: *sandbox
+
+production: &production
+  username: payment_api1.day.com.my
+  password: VKWREQHS7UKFNQA2
+  signature: ArcneWr3fZIaCcVaXLRmmZnzNkEtAX1Wu1EkZJPoEHJ23XVDJCmCMkQ7
+  sandbox: false
+  # username: xuxianzhi-facilitator_api1.me.com
+  # password: FNUC2YY6UUNS33UQ
+  # signature: AFcWxV21C7fd0v3bYYYRCpSSRl31A.CNy1TAgNFY37Aht06fjnhlWhX8
+  # sandbox: true

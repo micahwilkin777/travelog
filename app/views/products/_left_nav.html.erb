@@ -1,0 +1,115 @@
+<ul class="nav nav-sidebar">
+	<li class="sidebar-title"><a href="#">Listing</a></li>
+	<li class="<%= 'active' if @show_section == 'basic' %>">
+		<% if @product.new_record? %>
+			<a href="#" >Basics</a>
+		<% else %>
+			<!-- <a href="#">Basics</a> -->
+			<a href="/products/<%= @product.id %>/edit_basic" >Basics</a>
+		<% end %>
+		
+	</li>
+	<li class="<%= 'active' if @show_section == 'description' %>">
+		<% if @product.new_record? %>
+		<% else %>
+			<a href="/products/<%= @product.id %>/edit_description" >Descriptions</a>
+		<% end %>
+		<!-- <a href="#">Descriptions</a> -->
+	</li>
+	<li class="<%= 'active' if @show_section == 'location' %>">
+		<% if @product.new_record? %>
+		<% else %>
+			<a href="/products/<%= @product.id %>/edit_location" >Location</a>
+		<% end %>
+		<!-- <a href="#">Location</a> -->
+	</li>
+	<li class="<%= 'active' if @show_section == 'photo' %>">
+		<% if @product.new_record? %>
+		<% else %>
+			<a href="/products/<%= @product.id %>/edit_photo" >Photos</a>
+		<% end %>
+		<!-- <a href="#">Photos</a> -->
+	</li>
+</ul>
+<ul class="nav nav-sidebar">
+	<li class="sidebar-title">
+		<a href="#">Booking</a>
+	</li>
+	<li class="<%= 'active' if @show_section == 'price' %>">
+		<% if @product.new_record? %>
+
+		<% else %>
+			<a href="/products/<%= @product.id %>/edit_price" >Pricing</a>
+		<% end %>
+		<!-- <a href="#">Pricing</a> -->
+	</li>
+	<!-- <li class="<%= 'active' if @show_section == 'availibility' %>"><a href="#">Availibility</a></li> -->
+</ul>
+
+
+<% unless @product.new_record? %>
+	<hr>
+	<select class=" form-control <%= @product.status %> product-status" title="Dropdown" id="status-change">
+		<option value="enable" <%= 'selected' if @product.status == 'enable' %>>Listed</option>
+		<option value="disable" <%= 'selected' if @product.status == 'disable' %>>Unlisted</option>
+	</select>
+<% end %>
+
+<script>
+	$(document).ready(function() {
+		
+		$(document).on('change', '#status-change', function() {
+
+			var formData = new FormData();
+
+			formData.append('status', $(this).val());
+			url = "<%= @product.id %>"
+			url = "/products/" + url + "/set_status";
+
+			var append_html = '<p class="status-notice">Saving...</p>';
+			$('#status-change').before(append_html);
+			
+			$.ajax({
+				url: url,
+				dataType: "json",
+				data: formData,
+				cache: false,
+				contentType: false,
+				processData: false,
+				type: 'POST',
+				success: function(data) {
+					console.log('success');
+					$('#status-change').removeClass('enable').removeClass('disable').addClass(data.status);
+					$('#status-change').parent().find('.status-notice').text('Saved!').fadeOut('slow');
+					if (data.status == 'enable') {
+						$('#product-submit').val('List');
+						$('#product-submit').text('List');
+					} else if (data.status == 'disable') {
+						$('#product-submit').val('Save');
+						$('#product-submit').text('Save');
+					};
+				},
+				error: function(error) {
+					console.log(error);
+					
+				},
+				timeout: 500000
+			});
+
+		})
+	})
+</script>
+
+<style>
+	.product-status.enable {
+		border-color: green;
+    color: green;
+	}
+	.product-status.disable {
+		border-color: red;
+    color: red;
+	}
+	.status-notice {
+		color: green;
+	}
+</style>

@@ -1,0 +1,2 @@
+module StoreImagesHelper
+end

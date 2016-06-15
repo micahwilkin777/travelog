@@ -1,0 +1,103 @@
+<section class="content-8 v-center landing-explore">
+	<div>
+		<div class="container">
+			<h3>Start Your Adventure</h3>
+			<p class="oneliner">Get inspired for things to do in Malaysia</p>
+			<div class="row">
+
+				<form method="POST" action="/place/all" id="explore-form">
+					<%= tag(:input, :name => 'authenticity_token', :type => "hidden", :value => form_authenticity_token) %>
+					<% ProductCategory.order('id').each do |category| %>
+						<input type="hidden" name="category_<%= category.id %>" value="1">
+					<% end %>
+					<input type="hidden" name="city" value="all cities">
+					<div class="col-xs-12 col-sm-6 col-md-4 explorestacks">
+					<div class="img-holder">
+						<a  class="text-over kkb" href="/place/kota-kinabalu">Kota Kinabalu</a>
+						<a href="/place/kota-kinabalu" class="kkb">
+							<img class="" src="https://travelog.s3.amazonaws.com/uploads/product_attachment/attachment/231/square_DSC_0288-22.jpg" width="100%" alt="Kota Kinabalu Mari Mari Village">
+						</a>
+					</div>
+					</div>
+					<div class="col-xs-12 col-sm-6 col-md-4 explorestacks">
+					<div class="img-holder">
+						<a  class="text-over kuching" href="/place/kuching">Kuching</a>
+						<a href="/place/kuching" class="kuching">
+							<img class="" src="https://travelog.s3.amazonaws.com/uploads/product_attachment/attachment/35/square_sarawak-buntal.jpg" alt="Kuching Buntal Island">
+						</a>
+					</div>
+					</div>
+					<div class="col-xs-12 col-sm-6 col-md-4 explorestacks">
+                        <div class="explore-center-detail">
+                           <a href="https://www.travelog.com/products/cameron-highland-tour"><img src="https://travelog.s3.amazonaws.com/uploads/store_image/store_img/12/small_4606534628.jpg" width="56" class=" img-circle user-thumb-center"></a><br>
+                           <a class="text-over-center-user" href="https://www.travelog.com/products/cameron-highland-tour">Travelog</a><br>
+                           <a class="text-over-center-place" href="https://www.travelog.com/products/cameron-highland-tour">Cameron Highland Tour</a>
+                        </div>
+                        
+                        
+                        <div class="img-holder">
+                        <a href="https://www.travelog.com/products/cameron-highland-tour" class="">
+                        <img class="" src="https://travelog.s3.amazonaws.com/uploads/product_attachment/attachment/36/square_Cameron_Highlands_7.jpg" alt="Cameron Highland Tour">
+                        </a>
+                        </div>
+                        
+                        
+                     </div>
+					<div class="col-xs-12 col-sm-6 col-md-4 explorestacks">
+					<div class="img-holder">
+						<a  class="text-over kl" href="/place/kuala-lumpur">Kuala Lumpur</a>
+						<a href="/place/kuala-lumpur" class="kl">
+							<img class="" src="https://travelog.s3.amazonaws.com/uploads/product_attachment/attachment/29/square_atv.jpg" alt="Kuala Lumpur ATV">
+						</a>
+					</div>
+					</div>
+					<div class="col-xs-12 col-sm-12 col-md-8 explorestacks">
+					<div class="img-holder-wide">
+						<a class="wide-text-over langkawi" href="/place/langkawi">Langkawi</a>
+						<a href="/place/langkawi" class="langkawi">
+							<img class="" src="https://travelog.s3.amazonaws.com/uploads/product_attachment/attachment/200/large_snorkeling_3.jpg" alt="Langkawi Snorkeling">
+						</a>
+					</div>
+					</div>
+					<br>
+					
+			
+				</form>
+			</div>
+		</div>
+	</div>
+</section>
+
+<script>
+$(document).ready(function() {
+	$('#explore-form').on('click', 'a.kl', function(e) {
+		e.preventDefault();
+		$('#explore-form').find('[name="city"]').val('kuala lumpur');
+		var search_url = '/place/kuala-lumpur';
+		$('#explore-form').attr('action', search_url).submit();
+	})
+
+	$('#explore-form').on('click', 'a.langkawi', function(e) {
+		e.preventDefault();
+		$('#explore-form').find('[name="city"]').val('langkawi');
+		var search_url = '/place/langkawi';
+		$('#explore-form').attr('action', search_url).submit();
+		$('#explore-form').submit();
+	})
+
+	$('#explore-form').on('click', 'a.kkb', function(e) {
+		e.preventDefault();
+		$('#explore-form').find('[name="city"]').val('kota-kinabalu');
+		var search_url = '/place/kota-kinabalu';
+		$('#explore-form').attr('action', search_url).submit();
+		$('#explore-form').submit();
+	})
+	$('#explore-form').on('click', 'a.kuching', function(e) {
+		e.preventDefault();
+		$('#explore-form').find('[name="city"]').val('kuching');
+		var search_url = '/place/kuching';
+		$('#explore-form').attr('action', search_url).submit();
+		$('#explore-form').submit();
+	})
+})
+</script>

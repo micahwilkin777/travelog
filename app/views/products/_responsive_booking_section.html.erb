@@ -1,0 +1,119 @@
+<!-- Show up on responsive small  -->
+<div class="col-xs-12 col-sm-12 hidden-lg hidden-md visible-xs visible-sm" style="z-index: 3;">
+	<div class="container">
+		<div class="book-now-block-small book-widget-detail-page-small">
+			<form method="POST" id="booking-small-form" action="/invoices/new">
+				<%= tag(:input, :name => 'authenticity_token', :type => "hidden", :value => form_authenticity_token) %>
+				<div class="widget-title-small">
+					<% if @product_discount != 1 %>
+						<span>
+
+							from <strike><em><%= @current_currency %></em> <%= @product.price_with_currency %></strike>
+							</span>
+							<p><em><%= @current_currency %></em> <%= (@product.price_with_currency * @product_discount).round(2) %></p>
+					<% else %>
+						<p><span><%= @current_currency %></span> <span><%= @product.price_with_currency %></span></p>
+					<% end %>
+					
+				</div>
+				<div class="productdetail-booking-small">
+					
+					
+					<input type="hidden" name="product-id" value="<%= @product.id %>">
+
+					<div class="form-group row">
+						<label class="col-xs-12"><strong>When would you like to visit</strong></label>
+						<div class="col-xs-12">
+							
+							<div class="form-group  detail-widget-dateform">
+								<div class="input-group">
+									<input type="text" id="datetimepicker-small" class="form-control date-book" placeholder="Date" name="datepicker" >
+									<div class="input-group-addon"><span class="glyphicon glyphicon-calendar" aria-hidden="true"></span></div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="varient-options booking-variants-container">
+						<% @product.variants.each do |variant| %>
+							<div class="varient-row">
+								<input type="hidden" name="variant-price" value="<%= (variant.price_cents * @product_discount / 100).round(2) %>">
+								<input type="hidden" name="variant-price-with-currency" value="<%= (variant.price_with_currency * @product_discount).round(2) %>">
+								
+								<div class="col-xs-6 col-sm-6">
+									<p><%= variant.name %>:</p>
+								</div>
+								<div class="col-xs-6 col-sm-6" style="text-align: right;">
+									<!-- <button type="button" class="btn btn-default removeButton"><i class="fa fa-minus"></i></button>
+									<input type="hidden" name="variant[][id]" value="<%= variant.id %>">
+									<input type="hidden" name="variant[][name]" value="<%= variant.name %>">
+									<input type="hidden" name="variant[][price_cents]" value="<%= variant.price_cents %>">
+									<input type="text" name="variant[][count]" style="width: 40px; height: 40px; text-align: center;" value="0">
+									<button type="button" class="btn btn-default addButton"><i class="fa fa-plus"></i></button> -->
+
+
+									<div class="form-group">
+										<div class="input-group">
+											<input type="hidden" name="variant[][id]" value="<%= variant.id %>">
+											<input type="hidden" name="variant[][name]" value="<%= variant.name %>">
+											<input type="hidden" name="variant[][price_cents]" value="<%= variant.price_cents %>">
+
+											<button type="button" class="btn btn-default btn-minus removeButton"><span class="glyphicon glyphicon-minus"></span></button>
+											<input type="text" name="variant[][count]" class="input-varient" value="0">
+											<button type="button" class="btn btn-default btn-add addButton"><span class="glyphicon glyphicon-plus"></span></button>
+										</div>
+									</div>
+
+								</div>
+							</div>
+						<% end %>
+					</div>
+
+					<% if @product.refundable == 1 %>
+						<p class="refund">Refundable: <%= "#{@product.refund_percent}%" %> refund if cancelled <%= "#{@product.refund_day}days" %> in advance</p>
+					<% else %>
+						<p class="refund">Non-refundable</p>
+					<% end %>
+					<% if @is_variants %>
+						<hr>
+					<% end %>
+					<div class="form-group row hide" id="booking-result-item-template">
+						<div class="col-xs-7 result-item-name">
+							<label></label>
+						</div>
+						<div class="col-xs-5 result-item-price">
+							<label></label>
+						</div>
+					</div>
+					<div class="booking-result-container">
+								
+					</div>
+					<button type="submit" class="btn btn-block btn-default">Book Now</button>
+
+
+					<!-- <p><strong>When would you like to visit</strong></p>
+					<input type="text" class="form-control date-book" placeholder="Date">
+					<br>
+					<button type="button" class="btn btn-block btn-default">Book Now</button> -->
+					
+				</div>
+			</form>
+			<div>
+			<div align="center" class="addthis_sharing_toolbox"></div>
+			</div>
+		</div>
+		
+	</div>
+
+</div>
+
+<style>
+	@media (max-width: 480px) {
+		.book-widget-detail-page-small {
+	    position: relative;
+		}
+		.aboutmerchant {
+			height: inherit;
+		}
+	}
+</style>

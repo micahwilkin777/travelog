@@ -1,0 +1,24 @@
+<section class="header-11-sub profile-page">
+	<div class="container">
+		<div class="row ">
+
+
+			<div class="col-md-7">
+				<h2>Welcome back, <%= current_user.profile.first_name %></h2>
+				<h6>
+					Your Merchant signup status are Pending. To verify your Merchant signup, you need to submit a relavant documents. Click the link to submit the documents.
+				</h6>
+
+				<a href="/user/account_document" class="btn btn-success btn-proceed btn-next pull-left btn-verify">Verify</a>
+			</div>
+
+		</div>
+	</div>
+</section>
+
+<style>
+	.btn-verify.btn-next {
+		padding: 15px 60px;
+    font-size: 20px;
+	}
+</style>

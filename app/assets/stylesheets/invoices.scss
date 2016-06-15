@@ -1,0 +1,18 @@
+// Place all the styles related to the invoices controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+.comments {
+	&.row {
+		img.img-circle {
+			vertical-align: top;
+    	margin-top: 15px;
+		}
+		textarea {
+			width: calc(100% - 100px);
+	    padding: 10px 15px;
+	    margin: 10px 0px 0px 10px;
+	    max-width: calc(100% - 100px);
+		}
+	}
+}

@@ -1,0 +1,529 @@
+<% content_for :page_title do %>
+	Invoice for <%= @product.name %> - Travelog.com
+<% end %>
+<section class="header-11-sub payment-page">
+	<div class="container">
+		<div class="row ">
+
+			<div class="col-xs-12 col-sm-12 visible-xs visible-sm">
+				<div class="book-now-block-smxs">
+					<img  src="<%= @product.product_attachments[0].attachment.small.url %>" width='100%' alt="" />
+
+					<div class="productdetail-smxs">
+						<%= @product.name %>
+						<hr>
+
+						<p>Cancellation Policy</p>
+							<table table-payment class="table table-payment ">
+							<tbody>
+								<tr>
+									<% if @product.refund_day %>
+								<p><strong><%= @product.refund_percent %>%</strong> Refund if cancelled <strong><%= @product.refund_day %></strong> days in advance </p>
+								<% else %>
+								<p>Non Refundable</p>
+								<% end %>
+								</tr>
+							</tbody>
+						</table>
+
+						<hr>
+
+						<table table-payment class="table table-payment ">
+							<tbody>
+								<tr>
+									<th>Booking</th>
+									<th><%= @invoice.booking_date.strftime('%b %d, %Y') %></th>
+								</tr>
+							</tbody>
+						</table>
+						<hr>
+						<table table-payment class="table table-payment ">
+							<tbody>
+								<% if @invoice.variants.present? && @invoice.variants.count > 0 %>
+									<% @invoice.variants.each do |variant| %>
+										<tr>
+											<th><%= variant[:count] %> x <%= variant[:name] %></th>
+											<th><%= get_all_currency_symbols[@invoice.current_currency] %><%= variant[:total_with_currency] %>(<%= get_all_currency_symbols[@invoice.currency] %><%= variant[:total] %>)</th>
+										</tr>
+									<% end %>
+								<% else %>
+									<tr>
+										<th>1 x <%= @invoice.product.name %></th>
+										<th><%= get_all_currency_symbols[@invoice.current_currency] %><%= @invoice.product.price_with_currency %>(<%= get_all_currency_symbols[@invoice.currency] %><%= @invoice.product.price_cents / 100 %>)</th>
+									</tr>
+								<% end %>
+								<% if @invoice.is_reward_credit %>
+									<tr>
+										<th>Travelog Credit</th>
+										<th><%= get_all_currency_symbols[@invoice.current_currency] %><%= @invoice.reward_credit_with_currency %>(<%= get_all_currency_symbols[@invoice.currency] %><%= @invoice.reward_credit %>)</th>
+									</tr>
+								<% end %>
+
+								<!-- Coupon code -->
+
+							</tbody>
+						</table>
+						<hr>
+						<table table-payment class="table table-payment">
+							<thead>
+								<tr>
+									<th>
+										<h4>Total</h4>
+									</th>
+									<th>
+										<h4>
+											<%= get_all_currency_symbols[@invoice.current_currency] %><%= @invoice.real_total_with_currency %> (<%= get_all_currency_symbols[@invoice.currency] %><%= @invoice.real_total %>)
+										</h4>
+									</th>
+								</tr>
+							</thead>
+						</table>
+						<% if @invoice.currency != 'MYR' %>
+							<hr>
+							<p>You are paying <%= get_all_currency_symbols[@invoice.currency] %><%= @invoice.currency %>. Your total charge is <%= get_all_currency_symbols[@invoice.currency] %><%= @invoice.amount_cents / 100 %>. The exchange rate for booking thislisitng is <%= get_all_currency_symbols[@invoice.currency] %>1 <%= @invoice.currency %> to <%= get_all_currency_symbols[@invoice.current_currency] %><%= @invoice.currency_rate %> <%= @invoice.current_currency %> (Your host listing currency).</p>
+						<% end %>
+					</div>
+				</div>
+			</div>
+			
+			<div class="col-xs-12 col-md-6 billing ">
+				<div class="row">
+					<div class="col-xs-12">
+						<%= form_for(@invoice) do |f| %>
+							<div class="form-block">
+								<h3>Payment </h3>
+
+								<!-- hiden value -->
+								<input type="hidden" name="invoice[booking_date]" value="<%= @invoice.booking_date %>">
+								<input type="hidden" name="invoice[product_id]" value="<%= @invoice.product_id %>">
+								<input type="hidden" name="invoice[currency]" value="<%= @invoice.currency %>">
+								<input type="hidden" name="invoice[amount_cents]" value="<%= @invoice.amount_cents %>">
+								<input type="hidden" name="invoice[coupon_id]" value="<%= @invoice.coupon_id %>" id="invoice_coupon_id">
+								<input type="hidden" name="invoice[coupon_amounts]" value="<%= @invoice.coupon_amounts %>" id="invoice_coupon_amounts">
+								<input type="hidden" name="invoice[coupon_amounts_with_user_currency]" value="<%= @coupon_amounts_with_user_currency %>" id="invoice_coupon_amounts_with_user_currency">
+								<% @invoice.variants.each do |variant| %>
+									<div>
+										<input type="hidden" name="variant[][id]" value="<%= variant["id"] %>">
+										<input type="hidden" name="variant[][name]" value="<%= variant["name"] %>">
+										<input type="hidden" name="variant[][count]" value="<%= variant["count"] %>">
+										<input type="hidden" name="variant[][price_cents]" value="<%= variant["price_cents"] %>">
+									</div>
+								<% end %>
+								<div class="form-group col-md-12 paddingzero">
+									<label for="usr">Billing Country:</label>
+									<%= country_select("invoice", "billing_country", {selected: @invoice_params[:billing_country]}, { class: 'form-control'} ) %>
+								</div>
+								<div class="form-group col-md-12 paddingzero">
+									<label for="pwd">Payment Type:</label>
+									<select class="form-control" title="Payment Type" name="invoice[payment_type]">
+										<!-- <option value='1'>Credit Card</option> -->
+										<option value='2'>Paypal</option>
+									</select>
+								</div>
+								<div class="form-group col-md-12 paddingzero">  
+									<label class=" card-payment-block" for="pwd">
+										<!-- <img src="<%= asset_url('card1.jpg') %>" width="50"/>
+										<img src="<%= asset_url('card2.jpg') %>" width="50"/>
+										<img src="<%= asset_url('card3.jpg') %>" width="50"/>
+										<img src="<%= asset_url('card4.jpg') %>" width="50"/> -->
+										<img src="https://www.paypalobjects.com/webstatic/en_US/i/buttons/cc-badges-ppmcvdam.png" alt="Buy now with PayPal" />
+									</label>
+								</div>
+								<div style="display: none;">
+									<div class="form-group  col-md-4 paddingzero">
+										<label for="pwd">Valid Thru:</label>
+										<select class=" form-control" title="mm" name="invoice[valid_month]">
+											<option value="1">1</option>
+											<option value="2">2</option>
+											<option value="3">3</option>
+											<option value="4">4</option>
+											<option value="5">5</option>
+											<option value="6">6</option>
+											<option value="7">7</option>
+											<option value="8">8</option>
+											<option value="9">9</option>
+											<option value="10">10</option>
+											<option value="11">11</option>
+											<option value="12">12</option>
+										</select>
+									</div>
+									<div class="form-group col-md-4">
+										<label for="pwd">&nbsp;</label>
+										<select class=" form-control" title="yyyy" name="invoice[valid_year]">
+											<option value="2015">2015</option>
+											<option value="2016">2016</option>
+											<option value="2017">2017</option>
+											<option value="2018">2018</option>
+											<option value="2019">2019</option>
+											<option value="2020">2020</option>
+											<option value="2021">2021</option>
+											<option value="2022">2022</option>
+											<option value="2023">2023</option>
+											<option value="2024">2024</option>
+											<option value="2025">2025</option>
+											<option value="2026">2026</option>
+											<option value="2027">2027</option>
+											<option value="2028">2028</option>
+											<option value="2029">2029</option>
+											<option value="2030">2030</option>
+											<option value="2031">2031</option>
+											<option value="2032">2032</option>
+											<option value="2033">2033</option>
+											<option value="2034">2034</option>
+										</select>
+									</div>
+									<div class="form-group col-md-4  ">
+										<label for="sec">Security Code:</label>
+										<input type="text" placeholder='' class="form-control input-pay" id="sec" name="invoice[security_code]">
+									</div>
+								</div>
+							</div>
+							<div class="form-block">
+								<h3>Your Information   </h3>
+								<div class="form-group col-md-6 firstname">
+									<label for="sec">First Name:</label>
+									<input type="text" placeholder='First Name' class="form-control input-pay" id="sec" name="contact_detail[first_name]" value="<%= @contact_detail_params[:first_name] if @contact_detail_params.present? %>">
+								</div>
+								<div class="form-group col-md-6 lastname">
+									<label for="sec">Last Name:</label>
+									<input type="text" placeholder='Last Name' class="form-control input-pay" id="sec" name="contact_detail[last_name]" value="<%= @contact_detail_params[:last_name] if @contact_detail_params.present? %>">
+
+								</div>
+								<div class="form-group col-md-6 firstname">
+									<label for="sec">Email:</label>
+									<input type="text" placeholder='Email' class="form-control input-pay" id="sec" name="contact_detail[email]" value="<%= @contact_detail_params[:email] if @contact_detail_params.present? %>">
+								</div>
+								<div class="form-group col-md-6 lastname">
+									<label for="sec">Mobile Number:</label>
+									<input type="text" placeholder='e.g. +1 (302) 321-6123' class="form-control input-pay" id="sec" name="contact_detail[phone_number]" value="<%= @contact_detail_params[:phone_number] if @contact_detail_params.present? %>">
+									<span><em>This is how we will contact you at your destination if we need to reach for your details.</em></span>
+								</div>
+								<div class="form-group col-md-12 paddingzero">
+									<label for="sec">Message to Merchant:</label>
+									<textarea class="form-control" placeholder="Giving your Merchant more information will make them to confirm your booking (e.g: Arriving date, Hotels and etc)." rows="3" style="height: inherit;" name="contact_detail[message]"><%= @contact_detail_params[:message] %></textarea>
+								</div>
+
+								<div class="form-group col-md-12 paddingzero">
+								</div>
+								<div class="form-group col-md-6 "> </div>
+								<div class="form-group col-xs-12 col-sm-12 col-md-6 col-md-offset-6 paddingzero">
+									<button type="submit" class="btn btn-pay pull-right">
+										<!-- Make Payment -->
+										<img src="https://www.paypalobjects.com/webstatic/en_US/i/buttons/checkout-logo-large.png" alt="Check out with PayPal" />
+									</button>
+								</div>
+								<div class="col-xs-12 col-sm-12 col-md-12 disclaimer paddingzero">
+									<p>By clicking on "Checkout with PayPal", you agree to pay the total amount shown in the summary on the right, which includes and to follow the <a href="/terms" target="_blank">Terms of Service</a> and <a href="/policy" target="_blank">Privacy Policy</a>.
+									</p>
+								</div>
+							</div>
+						<% end %>
+					</div>
+				</div>
+				
+			</div>
+			
+			<div class="col-md-2  ">
+			</div>
+			<div class="col-md-4 hidden-xs hidden-sm">
+				<div class="book-now-block ">
+					<img  src="<%= @product.product_attachments[0].attachment.small.url %>" width='100%' alt="" />
+
+					<div class="productdetail">
+						<!-- <h3>Mount Kinabalu </h3>
+						<p>Mount Kinabalu is a prominent mountain on the island of Borneo in Southeast Asia. It is located in the East Malaysian state of Sabah and is protected as Kinabalu Park, a World Heritage Site.</p> -->
+						<%= @product.name %>
+						<hr>
+						<p>Cancellation Policy</p>
+						<table table-payment class="table table-payment ">
+							<tbody>
+								
+									
+									<% if @product.refund_day %>
+								<p><strong><%= @product.refund_percent %>%</strong> Refund if cancelled <strong><%= @product.refund_day %></strong> days in advance </p>
+								<% else %>
+								<p>Non Refundable</p>
+								<% end %>
+								
+									
+								
+							</tbody>
+						</table>
+						<hr>
+
+						<table table-payment class="table table-payment ">
+							<tbody>
+								<tr>
+									<th>Booking</th>
+									<th><%= @invoice.booking_date.strftime('%b %d, %Y') %></th>
+								</tr>
+							</tbody>
+						</table>
+						<hr>
+						<table table-payment class="table table-payment ">
+							<tbody>
+								<% if @invoice.variants.present? && @invoice.variants.count > 0 %>
+									<% @invoice.variants.each do |variant| %>
+										<tr>
+											<th><%= variant[:count] %> x <%= variant[:name] %></th>
+											<th><%= get_all_currency_symbols[@invoice.current_currency] %><%= variant[:total_with_currency]%>(<%= get_all_currency_symbols[@invoice.currency] %><%= variant[:total] %>)</th>
+											
+										</tr>
+									<% end %>
+								<% else %>
+									<tr>
+										<th>1 x <%= @invoice.product.name %></th>
+										<th><%= get_all_currency_symbols[@invoice.current_currency] %> <%= @invoice.product.price_with_currency * @product.discount/100 %>(<%= get_all_currency_symbols[@invoice.currency] %><%= @invoice.product.price_cents / 100 %>)</th>
+										
+									</tr>
+								<% end %>
+								<% if @invoice.is_reward_credit %>
+									<tr>
+										<th>Travelog Credit</th>
+										<th>
+											<%= get_all_currency_symbols[@invoice.current_currency] %><%= @invoice.reward_credit_with_currency %>(<%= get_all_currency_symbols[@invoice.currency] %><%= @invoice.reward_credit %>)
+										</th>
+									</tr>
+								<% end %>
+								<% if @invoice.coupon.present? %>
+									<tr class="coupon">
+										<th>Coupon</th>
+										<th>
+											<%= get_all_currency_symbols[@invoice.current_currency] %><%= @coupon_amounts_with_user_currency %>(<%= get_all_currency_symbols[@invoice.currency] %><%= @invoice.coupon_amounts %>)
+										</th>
+									</tr>
+								<% end %>
+								<tr>
+									<td colspan="2">
+										<input type="text" class="form-control" id="coupon-code" placeholder="e.g. 1FX2AA44 ">
+										<button class="btn btn-default btn-apply-coupon" id="btn-apply-coupon">Apply Coupon</button>
+									</td>
+									
+								</tr>
+
+							</tbody>
+						</table>
+						<hr>
+						<table table-payment class="table table-payment">
+							<thead>
+								<tr>
+									<th>
+										<h4>Total</h4>
+									</th>
+									<th>
+										<h4 class="total-amount">
+										<% if @invoice.coupon.present? %>
+											<%= get_all_currency_symbols[@invoice.current_currency] %><%= @invoice.real_total_with_currency - @coupon_amounts_with_user_currency.to_d %> (<%= get_all_currency_symbols[@invoice.currency] %><%= @invoice.real_total - @invoice.coupon_amounts %>)
+											
+										<% else %>
+											<%= get_all_currency_symbols[@invoice.current_currency] %><%= @invoice.real_total_with_currency%> (<%= get_all_currency_symbols[@invoice.currency] %><%= @invoice.real_total %>)
+										<% end %>	
+										</h4>
+									</th>
+								</tr>
+							</thead>
+						</table>
+						<% if @invoice.currency != 'MYR' %>
+							<hr>
+							<p>You are paying <%= get_all_currency_symbols[@invoice.currency] %><%= @invoice.currency %>. Your total charge is <%= get_all_currency_symbols[@invoice.currency] %><%= @invoice.amount_cents / 100 %>. The exchange rate for booking this lisitng is <%= get_all_currency_symbols[@invoice.currency] %>1 <%= @invoice.currency %> to <%= get_all_currency_symbols[@invoice.current_currency] %><%= @invoice.currency_rate %> <%= @invoice.current_currency %> (Your host listing currency).</p>
+						<% end %>
+
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+
+
+<style>
+	.form-control {
+		border: 1px solid #ccc;
+	}
+	.paddingrightzero {
+	  padding-right: 0;
+	}
+	#coupon-code {
+    display: inline-block;
+    width: 116px;
+    height: 37px;
+	}
+	.btn-apply-coupon {
+    padding: 7px 11px;
+    display: inline-block;
+    vertical-align: top;
+    margin-left: 15px;
+    font-size: 15px;
+	}
+	.coupon-cancel a {
+    color: red;
+    text-align: right;
+    display: block;
+    padding-right: 20px;
+	}
+	.coupon-error {
+		color: red;
+	}
+	.btn.btn-pay {
+    padding: 0;
+    border: none;
+    width: initial;
+    border-radius: 0;
+    background-color: transparent;
+    -webkit-border-radius: 0;
+    moz-border-radius: 0;
+	}
+</style>
+
+
+<script>
+	function initResponsiveHeader() {
+
+	  var sideslider = $('[data-toggle=collapse-side]');
+	  var sel = sideslider.attr('data-target');
+	  var sel2 = sideslider.attr('data-target-2');
+	  sideslider.click(function(event) {
+			$(sel).toggleClass('in');
+			$(sel2).toggleClass('out');
+	  });
+
+	}
+
+	$(window).load(function() {
+	  $(document).ready(function() {
+
+		  initResponsiveHeader();
+
+		  var display_currency = "<%= @invoice.current_currency %>";
+		  var display_currency_symbol = "<%= get_all_currency_symbols[@invoice.current_currency] %>";
+		  var invoice_currency = "<%= @invoice.currency %>";
+		  var invoice_currency_symbol = "<%= get_all_currency_symbols[@invoice.currency] %>";
+		  
+			// $('select').selectpicker({
+			// 	 liveSearch: false,
+			// 	 maxOptions: 1
+			// });
+			
+			$('#btn-apply-coupon').on('click', function() {
+				var coupon_code = $('#coupon-code').val();
+				if (coupon_code == '') {
+					$('#coupon-code').focus();
+					return;
+				}
+
+				var formData = new FormData();
+				formData.append('code', coupon_code);
+				formData.append('product_currency', invoice_currency);
+				
+				$tr_coupon_button = $(this).closest('tr');
+
+				url = '/coupons/get_coupon'
+				$.ajax({
+					url: url,
+					dataType: "json",
+					data: formData,
+					cache: false,
+					contentType: false,
+					processData: false,
+					type: 'POST',
+					success: function(data) {
+						console.log('get coupon success');
+						console.log(data);
+						var coupon_html = '<tr class="coupon"><th>Coupon</th>';
+						coupon_html += '<th>' + display_currency_symbol + data.coupon.amounts_with_user_currency + '(';
+						coupon_html += invoice_currency_symbol + data.coupon.amounts_with_product_currency + ')';
+						$tr_coupon_button.parent().find('.coupon').remove();
+						$tr_coupon_button.before(coupon_html);
+						
+						var real_total_with_currency = gon.real_total_with_currency;
+						real_total_with_currency -= parseFloat(data.coupon.amounts_with_user_currency);
+						real_total_with_currency = Math.round10(real_total_with_currency, -2);
+
+						var real_total = gon.real_total;
+						real_total -= parseFloat(data.coupon.amounts_with_product_currency);
+						real_total = Math.round10(real_total, -3);
+
+						$('h4.total-amount').text(display_currency_symbol + real_total_with_currency.toString() + ' (' + invoice_currency_symbol + real_total + ')');
+						$('#invoice_coupon_id').val(data.coupon.id);
+						$('#invoice_coupon_amounts').val(data.coupon.amounts_with_product_currency);
+						$('#invoice_coupon_amounts_with_user_currency').val(data.coupon.amounts_with_user_currency);
+
+						coupon_html = '<tr class="coupon-cancel"><th colspan="2"><a href="#">Cancel</a></th></tr>';
+						$tr_coupon_button.after(coupon_html);
+						$('#btn-apply-coupon').prop('disabled', true);
+
+					},
+					error: function(error) {
+						console.log(error);
+						coupon_html = '<tr class="coupon-error"><th colspan="2">Coupon code is invalid.</th></tr>';
+						$tr_coupon_button.before(coupon_html);
+						$tr_coupon_button.parent().find('.coupon-error').fadeOut('slow')
+					},
+					timeout: 2000
+				});
+			})
+			
+			$('.productdetail').on('click', '.coupon-cancel a', function(e) {
+				e.preventDefault();
+
+				$('#btn-apply-coupon').prop('disabled', false);
+				$('tr.coupon').fadeOut('slow');
+				$('h4.total-amount').text(display_currency_symbol + gon.real_total_with_currency.toString() + ' (' + invoice_currency_symbol + gon.real_total + ')');
+				$('#invoice_coupon_id').val('');
+				$('#invoice_coupon_amounts').val('');
+				$('#invoice_coupon_amounts_with_user_currency').val('');
+				$(this).closest('.coupon-cancel').remove();
+
+			})
+			
+
+			$('#new_invoice').formValidation({
+				framework: 'bootstrap',
+				icon: {
+					valid: 'glyphicon glyphicon-ok',
+					invalid: 'glyphicon glyphicon-remove',
+					validating: 'glyphicon glyphicon-refresh'
+				},
+				fields: {
+					'contact_detail[first_name]': {
+						row: '.col-md-6',
+						validators: {
+							notEmpty: {
+								message: 'The first name is required'
+							}
+						}
+					},
+					'contact_detail[last_name]': {
+						row: '.col-md-6',
+						validators: {
+							notEmpty: {
+								message: 'The last name is required'
+							}
+						}
+					},
+					'contact_detail[email]': {
+						row: '.col-md-6',
+						validators: {
+							notEmpty: {
+								message: 'The email is required'
+							},
+							emailAddress: {
+                message: 'The input is not a valid email address'
+              }
+						}
+					},
+					'contact_detail[phone_number]': {
+						row: '.col-md-6',
+						validators: {
+							notEmpty: {
+								message: 'The phone is required'
+							}
+						}
+					}
+				}
+			})
+
+	  });
+	});
+</script>

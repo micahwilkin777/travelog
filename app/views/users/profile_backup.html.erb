@@ -1,0 +1,179 @@
+<% content_for :page_title do %>
+	<%= 'Profile - Travelog' %>
+<% end %>
+
+
+<%= render "shared/settings_nav", :obj => 'profile' %>
+
+<section class="header-11-sub profile-page">
+	<div class="container">
+		<div class="row ">
+			<%= render 'shared/profile_nav', :obj => 'profile' %>
+			<div class="col-xs-12 col-sm-9 col-md-9">
+				<div class="profile-details">
+					<% if current_user.errors.full_messages.count > 0 %>
+					<div class="error col-sm-offset-3">
+						<% current_user.errors.full_messages.each do |message| %>
+						<p><%= message %></p>
+						<% end %>
+					</div>
+					<% end %>
+
+					<%= form_for @profile, url: {action: "profile"}, :html => {:class => "form-horizontal profile-form" } do |f| %>
+						<div class="form-group">
+							<%= f.label :first_name, 'First Name', :class=>"col-xs-12 col-sm-12 control-label"  %>
+							<div class="col-xs-12 col-sm-12 col-md-8">
+								<%= f.text_field :first_name, :class => 'form-control', :placeholder => 'First Name' %>
+							</div>
+						</div>
+						<div class="form-group">
+							<%= f.label :last_name, 'Last Name', :class=>"col-xs-12 col-sm-12 control-label"  %>
+							<div class="col-xs-12 col-sm-12 col-md-8">
+								<%= f.text_field :last_name, :class => 'form-control', :placeholder => 'Last Name' %>
+							</div>
+						</div>
+						<div class="form-group">
+							<%= f.label :user_new_password, 'New Password', :class=>"col-xs-12 col-sm-12 control-label"  %>
+							<div class="col-xs-12 col-sm-12 col-md-8">
+								<input class="form-control" placeholder="New Password" type="password" name="user[new_password]" id="user_new_password">
+							</div>
+						</div>
+						<div class="form-group">
+							<%= f.label :user_confirm_password, 'Confirm Password', :class=>"col-xs-12 col-sm-12 control-label"  %>
+							<div class="col-xs-12 col-sm-12 col-md-8">
+								<input class="form-control" placeholder="Confirm Password" type="password" name="user[confirm_password]" id="user_confirm_password">
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label for="" class="col-xs-12 col-sm-12 control-label">I Am</label>
+							<div class="col-xs-12 col-sm-12 col-md-8">
+								<select class="form-control">
+									<option>Male</option>
+									<option>Female</option>
+								</select>
+							</div>
+						</div>
+
+						<h6>Birthday</h6>
+
+						<div class="form-group">
+							<label for="" class="col-xs-12 col-sm-12 control-label">Day</label>
+							<div class="col-xs-12 col-sm-12 col-md-8">
+								<select class="form-control">
+									<option>Day</option>
+									<option></option>
+								</select>
+							</div>
+						</div>                           
+						<div class="form-group">
+							<label for="" class="col-xs-12 col-sm-12 control-label">Month</label>
+							<div class="col-xs-12 col-sm-12 col-md-8">
+								<select class="form-control">
+									<option>Month</option>
+									<option></option>
+								</select>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="" class="col-xs-12 col-sm-12 control-label">Year</label>
+							<div class="col-xs-12 col-sm-12 col-md-8">
+								<select class="form-control">
+									<option>Year</option>
+									<option></option>
+								</select>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<div class="col-sm-12">
+								<button type="submit" name="commit" class="btn btn-default btn-save pull-right">Save</button>
+							</div>
+						</div>
+					<% end %>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+
+<!-- added by me -->
+<style type="text/css">
+	.error p {
+		color: red;
+    opacity: 1;
+    font-size: 18px;
+    padding-left: 7px;
+	}
+</style>
+
+<script>
+	$(document).ready(function() {
+		$(document).on('click', '#add-avatar-button', function() {
+			attachment_count = $('.attachments-container .col-md-4').length
+			if (attachment_count < 1) {
+				$('#file_upload').trigger('click');
+			} else {
+				alert("Can't upload more than 1.");
+			}
+		})
+
+		$('.attachments-container').on('change', '#file_upload', function() {
+
+			var formData = new FormData();
+			formData.append('user_avatar[avatar]', this.files[0]);
+			$.ajax({
+				url: '/user_avatars',
+				dataType: "json",
+				data: formData,
+				cache: false,
+				contentType: false,
+				processData: false,
+				type: 'POST',
+				success: function(data) {
+					console.log('success');
+					append_html = '<div class="form-group col-md-4">';
+					append_html += '<img src="' + data.avatar.small.url + '" data-id="' + data.id + '">';
+					append_html += '<input type="hidden" name="user_avatar[id]" value="' + data.id + '">';
+					append_html += '<button type="button" class="btn btn-default delete-attachment">Delete</button>';
+					append_html += '</div>';
+					$('.attachments-container').append(append_html);
+					$('#file_upload').val('');
+				},
+				error: function(error) {
+					console.log(error);
+				}
+			});
+		})
+
+		$('.attachments-container').on('click', '.delete-attachment', function(event) {
+			$(this).parent().fadeOut('slow', function() {
+				$(this).remove();
+			});
+			var attachment_id = $(this).parent().find('input[name="user_avatar[id]"]').val();
+			$.ajax({
+				type: "POST",
+				url: "/user_avatars/" + attachment_id,
+				dataType: "json",
+				data: { "_method": "delete" },
+				complete: function(){
+					console.log('deleted attachment');
+				}
+			});
+			event.preventDefault();
+
+		})
+
+		$(document).on('click', 'input[type="submit"]', function(event) {
+			if ($('#user_new_password').val() != '') {
+				if ($('#user_new_password').val() != $('#user_confirm_password').val()) {
+					event.preventDefault();
+					alert("Password is not match.");
+				};
+			};
+		})
+	})
+</script>
+
+

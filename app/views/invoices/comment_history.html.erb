@@ -1,0 +1,20 @@
+<% @invoice.comments.default.each do |comment| %>
+	<div class="comment-item" data-comment-id="<%= comment.id %>">
+		<img src="<%= @invoice.user.get_avatar_url %>" width="60" class="img-circle">
+		<div class="comment-content">
+			<p><%= current_user.full_name %><span style="margin-left: 20px; color: #444;"><%= comment.format_date %></span></p>
+			<textarea placeholder="Leave a comment..." disabled><%= comment.content %></textarea>		
+		</div>
+		<div class="btn-group btn-update-comment">
+		  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+		    ...
+		  </button>
+		  <ul class="dropdown-menu">
+		    <li><a href="#" class="edit-comment">Edit comment</a></li>
+		    <li><a href="#" class="update-comment hide">Update comment</a></li>
+		    <li role="separator" class="divider"></li>
+		    <li><a href="#" class="remove-comment">Remove comment</a></li>
+		  </ul>
+		</div>
+	</div>
+<% end %>

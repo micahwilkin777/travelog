@@ -1,0 +1,98 @@
+<section class="header-10-sub v-center ">
+	<div class="background">
+		
+	</div>
+	<div>
+		<div class="container">
+			<div class="hero-unit">
+
+			</div>
+		</div>
+	</div>
+</section>
+
+<!-- About Merchant  -->
+<section class="content-7 aboutmerchant"  itemscope itemtype="http://schema.org/Product">
+
+
+	<div class="row">
+		
+		<!-- start Show up on responsive small booking  -->
+		<%= render 'responsive_booking_section' %>
+		<!-- end Show up on responsive small booking -->
+
+
+		<!--booking-->
+		<%= render 'about_merchant_section' %>
+
+	</div>
+</section>
+
+<!-- About listing -->
+<section class="content-8 aboutlisting">
+	<div class="container">
+		About this listing. 
+		<% if @product.user == current_user %>
+			(<a href="/products/<%= @product.id %>/edit"><span>Edit Listing</span></a>)
+		<% end %>
+	</div>
+</section>
+
+<!-- content-8  -->
+
+<section class="greysection aboutproduct">
+	<div class="container">
+
+		<div class="row">
+
+			<div class="col-xs-12 col-md-7">
+				<%= @product.description.html_safe if @product.description.present? %>
+			</div>
+		</div>                        
+
+	</div>
+</section>
+
+<script>
+	$(document).ready(function() {
+
+	})
+</script>
+
+<style>
+	/* style for adjusting validation mark */
+	.fv-form-bootstrap .fv-icon-no-label {
+		right: 15px;
+	}
+	label.refund, p.refund {
+		color: #7f8c8d;
+	}
+
+	.BVRRRatingNormalOutOf {
+		display: none;
+	}
+
+	p.refund.refund-sub {
+		margin-left: 15px;
+	}
+
+	section.aboutproduct, section.gallery {
+    background: #F5F5F5;
+	}
+
+	section.aboutlisting {
+		background: #F5F5F5;
+		min-height: initial;
+		padding: 40px 0;
+		border-top: 1px solid #dce0e0;
+	}
+	section.aboutlisting .container {
+		color: #333;
+		font-size: 20px;
+		text-align: left;
+	}
+
+	section.aboutlisting .container span {
+		color: rgb(226, 1, 1);
+	}
+</style>

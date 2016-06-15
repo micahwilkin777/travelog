@@ -1,0 +1,10 @@
+<% if @from_user.full_name.blank? %>
+	<p><%= @from_user.full_name %>(<%= @from_user.email %>) on Travelog has left the comment on your product(<%= @product_name %>) </p>
+<% else %>
+	<p><%= @from_user.email %> on Travelog has left the comment on your product(<%= @product_name %>) </p>
+<% end %>
+<p>The review comment is the following:
+</p>
+<p><%= @message %></p>
+<p>Thanks,</p>
+<p>The Travelog Team</p>

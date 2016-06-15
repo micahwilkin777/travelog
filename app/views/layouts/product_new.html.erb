@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="">
+	<meta name="author" content="">
+	<%= favicon_link_tag 'favicon.ico' %>
+	
+  <title><%= page_title yield(:page_title) %></title>
+  <%= stylesheet_link_tag    'application_product_new', media: 'all' %>
+  <%= javascript_include_tag 'application_old' %>
+  <%= csrf_meta_tags %>
+  <%= Gon::Base.render_data %>
+</head>
+<body>
+
+	<%= render 'layouts/fixed_header' %>
+	<%= render 'shared/flash' %>
+	<!-- Second navbar -->
+	<%= render 'products/nav_second', :obj => '' %>
+	<%= yield %>
+	
+	<style type="text/css">
+		
+	</style>
+</body>
+</html>

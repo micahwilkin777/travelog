@@ -1,0 +1,44 @@
+<nav class="navbar navbar-fixed-top nav-second-profile">
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-3 col-md-2 second-sidebar">
+				<ul class="nav navbar-nav ">
+					<li>
+						<% if @product.name.present? %>
+							<%= truncate(strip_tags(@product.name), length: 31, escape: false) %>
+						<% else %>
+							Places, for traveller
+						<% end %>
+						
+					</li>
+				</ul>
+			</div>
+		</div>
+		<!-- <div id="" class="">
+			<ul class="nav navbar-nav">
+				<li><a href="#">Places, for traveller in Kuala Lumpur</a></li>
+			</ul>
+		</div> -->
+		<!--/.nav-collapse -->
+	</div>
+</nav>
+
+<style>
+	.second-sidebar {
+		position: fixed;
+    /*top: 74px;*/
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    display: block;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    border-right: 1px solid #eee;
+    height: 44px;
+	}
+
+	.nav-second-profile .navbar-nav > li {
+		padding-left: 0;
+		padding-top: 14px;
+	}
+</style>

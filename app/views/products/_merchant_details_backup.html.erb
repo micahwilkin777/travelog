@@ -1,0 +1,71 @@
+<section class="greysection merchantdetail">
+	<div class="container-result">
+		<div class="container result-content-suggestions">
+			<div class="row">
+				<div class="col-md-12 titledistance">
+					<h5>About the Merchant, <%= @user.profile.full_name if @user.profile.present? %></h5>
+				</div>
+				<div class="col-md-1 picture-block">
+					<a href="#">
+						<% if @user.get_store_thumb_url.present? %>
+							<img src="<%= @user.get_store_thumb_url %>" class="img-circle" width="90">
+						<% else %>
+							<img src="<%= asset_url('default-avatar.png') %>" class="img-circle" width="90">
+						<% end %>
+					</a>
+				</div>
+				<div class="col-md-8 merchant-info text-block">
+					<!-- <p> Member Since November 2015   </p> -->
+					
+					<h5 class="review-name"><%= @user.profile.full_name if @user.profile.present? %></h5>
+					<!-- <p> Kuala Lumpur, Malaysia  </p> -->
+					<p> <%= @user.store_setting.city if @user.store_setting.present? %>, <%= @user.store_setting.state if @user.store_setting.present? %></p>
+					<p> Member Since <%= @user.store_setting.created_at.strftime('%B %Y') if @user.store_setting.present? %> </p>
+					<br>
+					<a class="btn btn-default btn-small btn-contact " href="#">Contact Me </a>
+
+				</div>
+			</div>
+
+			<hr>
+			<div class="row">
+				<div class="col-md-12 titledistance text-left">
+					<h5>You may also like</h5>
+				</div>
+
+				<% @other_products.each do |product| %>
+					<div class="col-xs-12 col-sm-6 col-md-3" itemscope="" itemtype="http://schema.org/Enumeration">
+						<p class="price"><%= @current_currency %> <%= product.price_with_currency %></p>
+						<p class="heart-wrapper ">
+							<input id="heart8" type="checkbox" class="heart-checkbox" />
+							<label for="heart8"> </label>
+						</p>
+						<a href="<%= product_path product %>"><img src="<%= product.store_logo_url %>" class="img-circle user-thumb" width="52" /></a>
+						<div class="content-suggestions">
+							<a href="<%= product_path product %>">
+								<img class="" src="<%= product.product_overview_url %>" width="262" alt="" itemprop="image">
+							</a>
+						</div>
+						<h4>
+							<a href="<%= product_path product %>"><%= product.name %></a>
+						</h4>
+						<a href="<%= product_path product %>">
+							<p><%= product.city %>, <%= product.country %>
+							</p>
+							<p class="star-rating">
+								<span class="glyphicon glyphicon-star <%= 'empty-star' if product.review_mark <= 0 %>"></span>
+								<span class="glyphicon glyphicon-star <%= 'empty-star' if product.review_mark <= 1 %>"></span>
+								<span class="glyphicon glyphicon-star <%= 'empty-star' if product.review_mark <= 2 %>"></span>
+								<span class="glyphicon glyphicon-star <%= 'empty-star' if product.review_mark <= 3 %>"></span>
+								<span class="glyphicon glyphicon-star <%= 'empty-star' if product.review_mark <= 4 %>"></span>
+							</p>
+						</a>
+						<p></p>
+					</div>
+				<% end %>
+
+			</div>
+
+		</div>
+	</div>
+</section>

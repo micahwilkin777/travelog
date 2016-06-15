@@ -1,0 +1,285 @@
+<%= render "shared/settings_nav", :obj => 'trips' %>
+<div class="side-collapse-container">
+	<section class="header-11-sub profile-page">
+		<div class="container">
+			<div class="row ">
+				<div class="col-md-3">
+					<ul class="sidebar-static">
+						<li><a href="#">Your Trips</a></li>
+						<!-- <li><a href="#">Your Reservations</a></li>
+						<li><a href="#">Reservation Requirements</a></li>
+						<li><a href="#">Add New Listings</a></li> -->
+					</ul>
+					<!-- <a href="/products/new" class="btn btn-block btn-viewprofile">Add New Listings</a> -->
+				</div>
+				<div class="col-md-9">
+					<div class="row" style="margin-bottom: 15px;">
+						<div class="col-md-10"></div>
+						<div class="col-md-2">
+							<select class=" form-control" title="Dropdown" id="listed-change">
+								<option value="all">All</option>
+								<option value="upcomming">Upcomming</option>
+								<option value="previous">Past</option> 
+							</select>
+							
+						</div>
+					</div>
+
+					<div class="panel panel-default upcomming">
+						<div class="panel panel-default profile-photo">
+						<div class="panel-heading"><strong>Upcomming Trips</strong></div>
+							<div class="panel-body">
+								<div class="col-md-12">
+									<% if @upcomming_invoices.count > 0 %>
+										<table class="table table-bordered">
+											<thead>
+												<tr>
+													<th width="19%">Travel Date</th>
+													<th width="33%">Details</th>
+													<th width="36%">Merchant</th>
+													<th width="12%">Status</th>
+												</tr>
+											</thead>
+											<tbody>
+												
+												<% @upcomming_invoices.each do |invoice| %>
+													<tr>
+														<td>
+															<p><%= invoice.booking_date.strftime('%d %B %Y') %><br>
+																
+															</p>
+														</td>
+
+														<td>
+															<p>
+																<%= invoice.product.name %>
+															</p>
+															<p>
+																<%= truncate(strip_tags(invoice.product.highlight), length: 100, escape: false) %>
+															</p>
+															<p>
+																<%= get_all_currency_symbols[invoice.currency] %><%= invoice.total_billed %>
+															</p>
+														</td>
+
+														<td>
+															<table width="100%" border="0" cellspacing="0" cellpadding="0">
+																<tr>
+																	<td width="35%" rowspan="2">
+																		<img src="<%= invoice.product.user_avatar_url %>" width="60" class="img-circle"></td>
+																	<td width="65%">
+																		<h6><%= invoice.product.user.full_name %></h6>
+																	</td>
+																</tr>
+																<tr>
+																	<td>
+																		<p><%= link_to 'View Receipt', slug_trip_checkout_trips_path(invoice.token) %></p>
+																	</td>
+																</tr>
+															</table>
+														</td>
+														
+														<th scope="row">
+															<!-- <p class="merchant-status"><%= invoice.get_merchant_status %></p> -->
+															<% if invoice.fullfilled? %>
+																<select class="form-control change-status" title="Dropdown" invoice-id="<%= invoice.id %>" >
+																	<option value="fullfilled" style="display: none;">Fullfilled</option>
+																	<% invoice.get_guest_available_status_list.each do |status| %>
+																		<option value="<%= status %>"><%= status.capitalize %></option>
+																	<% end %>
+																</select>
+															<% else %>
+																<p class="merchant-status"><%= invoice.status.capitalize %></p>
+															<% end %>
+															
+														</th>
+
+													</tr>
+												<% end %>
+											</tbody>
+										</table>
+									<% else %>
+										<div class="col-md-3">
+											<a href="#" class="thumbnail">
+												<img src="<%= asset_url('placehold_200_200.png') %>" alt="...">
+											</a>
+										</div>
+
+										<div class="col-md-7">
+											<h5>There is no upcomming trip.</h5>
+										</div>
+
+										<div class="col-md-2">
+											
+										</div>
+									<% end %>
+								</div>
+							</div>
+					 	</div>
+					</div>
+
+					<div class="panel panel-default previous">
+						<div class="panel panel-default profile-photo">
+						<div class="panel-heading"><strong>Past Trips</strong></div>
+							<div class="panel-body">
+								<div class="col-md-12">
+									<% if @previous_invoices.count > 0 %>
+										<table class="table table-bordered">
+											<thead>
+												<tr>
+													<th width="19%">Travel Date</th>
+													<th width="33%">Details</th>
+													<th width="36%">Merchant</th>
+													<th width="12%">Status</th>
+												</tr>
+											</thead>
+											<tbody>
+												
+												<% @previous_invoices.each do |invoice| %>
+													<tr>
+														<td>
+															<p><%= invoice.booking_date.strftime('%d %B %Y') %><br>
+																<%= invoice.product.full_address %>
+															</p>
+														</td>
+
+														<td>
+															<p>
+																<%= invoice.product.name %>
+															</p>
+															<p>
+																<%= truncate(strip_tags(invoice.product.highlight), length: 100, escape: false) %>
+															</p>
+															<p>
+																<%= get_all_currency_symbols[invoice.currency] %><%= invoice.amount_cents / 100 %>
+															</p>
+														</td>
+
+														<td>
+															<table width="100%" border="0" cellspacing="0" cellpadding="0">
+																<tr>
+																	<td width="35%" rowspan="2">
+																		<img src="<%= invoice.product.user_avatar_url %>" width="60" class="img-circle"></td>
+																	<td width="65%">
+																		<h6><%= invoice.product.user.full_name %></h6>
+																	</td>
+																</tr>
+																<tr>
+																	<td>
+																		<p><%= link_to 'View Receipt', slug_trip_checkout_trips_path(invoice.token) %></p>
+																	</td>
+																</tr>
+															</table>
+														</td>
+
+														<th scope="row">
+															<!-- <p class="merchant-status"><%= invoice.get_merchant_status %></p> -->
+															<% if invoice.fullfilled? %>
+																<select class="form-control change-status" title="Dropdown" invoice-id="<%= invoice.id %>" >
+																	<option value="fullfilled" style="display: none;">Fullfilled</option>
+																	<% invoice.get_guest_available_status_list.each do |status| %>
+																		<option value="<%= status %>"><%= status.capitalize %></option>
+																	<% end %>
+																</select>
+															<% else %>
+																<p class="merchant-status"><%= invoice.status.capitalize %></p>
+															<% end %>
+															
+															
+														</th>
+														
+													</tr>
+												<% end %>
+											</tbody>
+										</table>
+									<% else %>
+										<div class="col-md-3">
+											<a href="#" class="thumbnail">
+												<img src="<%= asset_url('placehold_200_200.png') %>" alt="...">
+											</a>
+										</div>
+
+										<div class="col-md-7">
+											<h5>There is no previous trip.</h5>
+										</div>
+
+										<div class="col-md-2">
+											
+										</div>
+									<% end %>
+								</div>
+							</div>
+					 	</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	<!-- full-box-border -->
+</div>
+<!-- /side-collapse-container  -->
+
+<script>
+	$(document).ready(function() {
+		$('#listed-change').on('change', function() {
+			var listed_status = $(this).val();
+			if(listed_status == 'upcomming') {
+				$('.panel.upcomming').fadeIn('slow');
+				$('.panel.previous').fadeOut('slow');
+			} else if (listed_status == 'previous') {
+				$('.panel.upcomming').fadeOut('slow');
+				$('.panel.previous').fadeIn('slow');
+			} else {
+				$('.panel.upcomming').fadeIn('slow');
+				$('.panel.previous').fadeIn('slow');
+			}
+		})
+
+		$(document).on('change', '.change-status', function() {
+			var invoice_id = $(this).attr('invoice-id');
+			var update_status = $(this).val();
+			var $parent = $(this).parent();
+
+			var formData = new FormData();
+  		formData.append('status', $(this).val());
+			$.ajax({
+			  url: '/trips/' + invoice_id + '/update_status',
+			  // dataType: "json",
+			  data: formData,
+			  cache: false,
+			  contentType: false,
+			  processData: false,
+			  type: 'POST',
+			  success: function(data) {
+			  	console.log('update status success');
+			  	$parent.empty();
+			  	$parent.append('<p class="guest-status">' + update_status.charAt(0).toUpperCase() + update_status.slice(1) + '</p>');
+
+			  },
+			  error: function(error) {
+	      	console.log(error);
+	      },
+	      timeout: 10000
+			});
+
+		})
+
+	})
+
+
+</script>
+
+
+<!-- custom css by me -->
+<style>
+	.change-status {
+		min-width: 120px;
+	}
+
+	.panel.upcomming, .panel.previous {
+		border: none;
+	}
+	.merchant-status {
+		min-width: 120px;
+	}
+</style>

@@ -1,0 +1,22 @@
+
+<div class="col-xs-12 col-sm-3 col-md-3 sidebar-profile-dashboard">
+	<ul class="sidebar-static">
+	  <li class="<%= 'active' if obj == 'profile' %>"><%= link_to 'Edit Profile', profile_path %></li>
+	  <li class="<%= 'active' if obj == 'photo' %>"><%= link_to 'Upload Profile Photo', profile_avatar_path %></li>
+
+	  <!-- <li class="<%= 'active' if obj == 'document' %>"><a href="/user/profile_document">Trust and Verification</a></li> -->
+
+	  <li class="<%= 'active' if obj == 'photo' %>"><%= link_to 'Security', profile_security_path %></li>
+	  <!-- <li class="<%= 'active' if obj == 'review' %>"><a href="">Reviews</a></li>
+	  <li class="<%= 'active' if obj == 'reference' %>"><a href="">References</a></li> -->
+	</ul>
+	<!-- <a href="" class="btn btn-viewprofile">View Profile</a> -->
+</div>
+
+<style>
+/*	.profile-form input {
+    background-color: #FFF;
+    border: 1px solid #adadad;
+    color: black;
+	}*/
+</style>

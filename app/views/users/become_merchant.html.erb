@@ -1,0 +1,709 @@
+<% content_for :page_title do %>
+Merchant Signup - Travelog.com
+<% end %>
+
+<div class="content-7 merchant-content">
+	<!-- Projects Row -->
+	<div class="row">
+		<%= form_for @store_setting, url: {action: "complete_merchant"}, :html => {class: "merchant-signup-form"} do |f| %>
+			<div class="col-md-8 col-xs-offset-2">
+
+				<div class="col-md-10 text-center merchant-signup-title">
+					<h3>Create your Merchant Account</h3>
+				</div>
+
+				<!-- Signup Menu -->
+				<div class="col-md-10">
+					<div class="btn-group btn-group-justified merchant-signup-wizard" role="group" aria-label="Justified button group">
+
+						<div class="btn-group" role="group"> <button type="button" class="btn btn-default active-btn" id="store-link">Store Details</button> </div>
+						<div class="btn-group" role="group"> <button type="button" class="btn btn-default" id="getting-link">Getting Paid</button> </div>
+						<div class="btn-group" role="group"> <button type="button" class="btn btn-default" id="photo-link">Photo Upload</button> </div>
+					</div>
+				</div>
+
+				<!--Store Details-->
+
+				<div class="col-md-10 store-section">
+					<div class="panel panel-default">
+						<div class="panel-body">
+							<div class="row">
+								<div class="form-group col-md-6">
+									<%= f.text_field :store_username, :class => 'form-control', :placeholder => 'Store Username' %>
+								</div>
+								<div class="form-group  col-md-6">
+									<%= f.text_field :store_name, :class => 'form-control', :placeholder => 'Store Name' %>
+								</div>
+							</div>
+
+							<div class="row">
+								<div class="form-group col-md-6">
+									<%= f.text_field :mobile_number, :class => 'form-control', :placeholder => 'Mobile Number (+1 302-321-6123)' %>
+								</div>
+								<div class="form-group  col-md-6">
+
+									<%= f.text_field :phone_number, :class => 'form-control', :placeholder => 'Phone Number (Optional)' %>
+								</div>
+							</div>
+
+							<div class="row">
+								<div class="form-group col-md-6">
+									<%= f.text_field :website, :class => 'form-control', :placeholder => 'Website (Optional)' %>
+								</div>
+								
+							</div>
+
+							<div class="row">
+								<div class="form-group col-md-3">
+									<p>Account Type:</p>
+								</div>
+								<div class="form-group col-md-3">
+									<input type="radio" name="store_setting[merchant_type]" value="1" checked> Business
+								</div>
+								<div class="form-group col-md-3">
+									<input type="radio" name="store_setting[merchant_type]" value="2"> Personal
+								</div>
+							</div>
+
+							<div class="row">
+								<div class="form-group col-md-12">
+									<%= f.text_field :know_us_text, :class => 'form-control', :placeholder => 'How do you know us (Optional)' %>
+								</div>
+							</div>
+
+							<div class="row">
+								<div class="form-group col-md-12">
+								<p class="fineprint">By Sign Up as a Merchant, you agree to Travelog's <a target="_blank" href="/terms" title="Terms of Use">Terms of Use</a> and <a target="_blank" href="/policy" title="Privacy Policy">Privacy Policy</a>. Travelog may send you communications; you may change your preferences in your account settings.</p>
+								</div>
+							</div>
+
+							<div class="row">
+								<!-- <div class="col-md-6">
+									<button type="button" class="btn btn-success btn-proceed btn-next pull-left" id="store-prev">Previous</button>
+								</div> -->
+								<div class="col-md-6">
+								</div>
+
+
+								<div class="col-md-6">
+									<button type="submit" class="btn btn-success btn-proceed btn-next pull-right" id="store-next">Next</button>
+								</div>
+							</div>
+							
+						</div>
+					</div>
+
+				</div>
+
+				<!--Merchant Details-->
+
+				<div class="col-md-10 getting-section">
+					<div class="panel panel-default">
+						<div class="panel-body">
+
+							<div class="row">
+								<div class="form-group col-md-6">
+									<%= country_select("store_setting", "country", {selected: 'MY'}, { class: 'form-control'} ) %>
+								</div>
+								<div class="form-group  col-md-6">
+									<%= f.text_field :city, :class => 'form-control', :placeholder => 'City' %>
+								</div>
+							</div>
+
+
+							<!-- <div class="row">
+								<div class="form-group col-md-6">
+									<%= f.text_field :phone_number, :class => 'form-control', :placeholder => 'Phone number' %>
+								</div>
+								<div class="form-group  col-md-6">
+								</div>
+							</div> -->
+							<div class="row">
+								<div class="form-group col-md-6">
+									<%= f.text_field :paypal_email, :class => 'form-control', :placeholder => 'Paypal Email (Optional)' %>
+								</div>
+
+								<div class="form-group col-md-6">
+									<%= f.select(:currency, get_currency_list.collect {|p| [ p[:currency], p[:currency] ] }, {include_blank: false} , :class => 'form-control') %>
+								</div>
+								
+							</div>
+
+							<div class="row currency-desc-row">
+								<div class="form-group col-sm-12">
+									<div class="currency-desc-container">
+										<div class="caption">
+											This is <strong>currency for your account.</strong> All your uploaded products will be in this currency.
+										</div>
+										<div class="content">
+											Account Currency:&nbsp;&nbsp;<strong id="currency-str">Malaysian ringgit (RM)</strong>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="row">
+								<div class="col-md-6">
+									<button type="button" class="btn btn-success btn-proceed btn-next pull-left" id="getting-prev">Previous</button>
+								</div>
+								<div class="col-md-6">
+									<button type="submit" id="getting-next" class="btn btn-success btn-proceed btn-next pull-right">Next</button>
+								</div>
+							</div>
+
+							<div class="row sales-fee-row">
+								<div class="col-sm-12">
+									<p class="sales-fee-caption"><strong>Travelog Marketplace Fee.</strong> The percentage of each order that will be paid to Travelog</p>
+									<div class="market-sales-fee">20%</div>
+								</div>
+							</div>
+
+						</div>
+					</div>
+				</div>
+
+				
+
+				<!--Photo Upload -->
+
+
+				<div class="col-md-10 photo-section">
+					<div class="panel panel-default">
+						<div class="panel-body">
+							<div class="row form-group" name="photo-container">
+								<div class="col-md-3 profileholder" name="profileholder">
+									<a class="remove-profile" href="#"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></a>
+									<img src="<%= image_url('placehold_150_150.png') %>" class="img-circle">
+									
+								</div> 
+								
+								<div class="col-md-9">
+									<p>Clear frontal face photos are an important way for hosts and guests to learn about each other. It’s not much fun to host a landscape! Please upload a photo that clearly shows your face.</p>
+									
+									<span class="btn btn-default btn-profile" style="margin-bottom: 20px;">
+										Upload a file form your computer <input type="file" id="file_upload">
+									</span>
+								</div>
+							</div>
+
+							<div class="row">
+								<div class="col-md-6">
+									<button type="button" class="btn btn-success btn-proceed btn-next pull-left" id="photo-prev">Previous</button>
+								</div>
+								<div class="col-md-6">
+									<button type="submit" class="btn btn-success btn-proceed btn-next pull-right">Next</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+			</div>
+		<% end %>
+	</div>
+</div>
+
+<script>
+	$(document).ready(function() {
+		
+		$('.store-section').show();
+		$('.getting-section').hide();
+		$('.photo-section').hide();
+		$('#store_setting_store_username').on('change', function() {
+			var val = $(this).val();
+			val = val.replace(new RegExp(' ', 'g'), '').replace(/[^\w\s]/gi, '');
+			$(this).val(val);
+		})
+		// Validation
+		$('#new_store_setting').formValidation({
+			framework: 'bootstrap',
+			icon: {
+				valid: 'glyphicon glyphicon-ok',
+				invalid: 'glyphicon glyphicon-remove',
+				validating: 'glyphicon glyphicon-refresh'
+			},
+			fields: {
+				// 'store_setting[phone_number]': {
+				// 	validators: {
+				// 		notEmpty: {
+				// 			message: 'The phone number is required'
+				// 		}
+				// 	}
+				// },
+				'store_setting[mobile_number]': {
+					validators: {
+						notEmpty: {
+							message: 'The mobile number is required'
+						}
+					}
+				},
+				'store_setting[store_username]': {
+					validators: {
+						notEmpty: {
+							message: 'The store username is required'
+						},
+						callback: {
+							message: 'The store username is not valid',
+							callback: function(value, validator, $field) {
+								// store_username = $('#store_setting_store_username').val().trim();
+								store_username = $('#store_setting_store_username').val().replace(new RegExp(' ', 'g'), '')
+								store_username = store_username.replace(/[^\w\s]/gi, '');
+
+								return (store_username.length != 0 && gon.store_usernames.indexOf(store_username) == -1);
+							}
+						}
+					}
+				},
+				'store_setting[store_name]': {
+					validators: {
+						notEmpty: {
+							message: 'The store name is required'
+						}
+					}
+				},
+				'store_setting[city]': {
+					validators: {
+						notEmpty: {
+							message: 'The city is required'
+						}
+					}
+				},
+				'store_setting[paypal_email]': {
+
+					validators: {
+						emailAddress: {
+							message: 'The input is not a valid email address'
+						}
+					}
+				},
+				
+				'profileholder': {
+					validators: {
+						callback: {
+							message: 'The photo is required',
+							callback: function(value, validator, $field) {
+								var photo_count = $('[name="store_image[id]"]').length;
+								return (photo_count > 0)
+							}
+						}
+					}
+				}
+			}
+		});
+
+		var resetWizardButton = function() {
+			$('.merchant-signup-wizard button').removeClass('active-btn');
+		}
+
+		$('#store-next').on('click', function(event) {
+			event.preventDefault();
+			$('#new_store_setting').formValidation('revalidateField', 'store_setting[store_username]');
+			$('#new_store_setting').formValidation('revalidateField', 'store_setting[store_name]');
+			$('#new_store_setting').formValidation('revalidateField', 'store_setting[mobile_number]');
+			
+			
+			if (!$(this).prop('disabled')) {
+
+				$('.store-section').hide();
+				$('.getting-section').show();
+				$('.photo-section').hide();
+				resetWizardButton();
+				$('#getting-link').addClass('active-btn');
+			}
+		})
+
+		// $('#store-prev').on('click', function(event) {
+		// 	event.preventDefault();
+		// 	$('.getting-section').show();
+		// 	$('.store-section').hide();
+		// 	$('.photo-section').hide();
+		// 	resetWizardButton();
+		// 	$('#store-link').addClass('active-btn');
+		// 	$('#getting-next').prop('disabled', false).removeClass('disabled');
+		// })
+
+		$('#getting-next').on('click', function(event) {
+			event.preventDefault();
+			// $('#new_store_setting').formValidation('revalidateField', 'store_setting[phone_number]');
+
+			$('#new_store_setting').formValidation('revalidateField', 'store_setting[city]');
+			
+			if (!$(this).prop('disabled')) {
+				$('.store-section').hide();
+				$('.getting-section').hide();
+				$('.photo-section').show();
+				resetWizardButton();
+				$('#photo-link').addClass('active-btn');
+			}
+		})
+
+		$('#getting-prev').on('click', function(event) {
+			event.preventDefault();
+			
+			$('.store-section').show();
+			$('.getting-section').hide();
+			$('.photo-section').hide();
+			resetWizardButton();
+			$('#store-link').addClass('active-btn');
+			$('#store-next').prop('disabled', false).removeClass('disabled');
+		})
+
+		$('#photo-prev').on('click', function(event) {
+			event.preventDefault();
+			$('.store-section').hide();
+			$('.getting-section').show();
+			$('.photo-section').hide();
+			resetWizardButton();
+			$('#getting-link').addClass('active-btn');
+			$('#getting-next').prop('disabled', false).removeClass('disabled');
+		})
+
+		$('#file_upload').on('change', function() {
+
+			if ($('[name="store_image[id]"]').length > 0) {
+				alert("Can't upload more than 1.");
+				return;
+			};
+
+			$('body').loading({});
+
+			var formData = new FormData();
+			formData.append('store_image[store_img]', this.files[0]);
+			$.ajax({
+				url: '/store_images',
+				dataType: "json",
+				data: formData,
+				cache: false,
+				contentType: false,
+				processData: false,
+				type: 'POST',
+				success: function(data) {
+					console.log('success');
+					$('.profileholder img').attr('src', data.store_img.small.url);
+					$('[name="store_image[id]"]').remove();
+					$('.profileholder').append('<input type="hidden" name="store_image[id]" value="' + data.id + '">');
+
+					$('#file_upload').val('');
+					$('#new_store_setting').formValidation('revalidateField', 'profileholder');
+					$('body').loading('stop');
+				},
+				error: function(error) {
+					console.log(error);
+					$('body').loading('stop');
+				},
+				timeout: 100000
+			});
+
+		})
+
+		$(document).on('click', '.remove-profile', function(event) {
+			event.preventDefault();
+			if ($(this).parent().find('input[name="store_image[id]"]').length == 0) {
+				return;
+			}
+
+			$this = $(this)
+			$('body').loading({ message: 'Deleting...'});
+			
+			var attachment_id = $(this).parent().find('input[name="store_image[id]"]').val();
+			$.ajax({
+				type: "POST",
+				url: "/store_images/" + attachment_id,
+				dataType: "json",
+				data: { "_method": "delete" },
+				success: function(){
+					$('.profileholder img').attr('src', "<%= image_url('placehold_150_150.png') %>");
+					$('[name="store_image[id]"]').remove();
+					$('body').loading('stop');
+					
+					console.log('deleted attachment');
+				},
+				error: function(error) {
+					console.log(error);
+					$('body').loading('stop');
+				}
+			});
+			event.preventDefault();
+
+		})
+		$('#store_setting_currency').on('change', function() {
+			var currency = $(this).val();
+			var currency_str = 'Malaysian ringgit (RM)';
+			switch(currency) {
+				case 'MYR':
+					currency_str = 'Malaysian ringgit (RM)';
+					break;
+				case 'USD':
+					currency_str = 'United States dollar (USD)';
+					break;
+				case 'SGD':
+					currency_str = 'Singapore dollar (SGD)';
+					break;
+				case 'THB':
+					currency_str = 'Thai baht (THB)';
+					break;
+				case 'PHP':
+					currency_str = 'Philippine peso (PHP)';
+					break;
+				case 'TWD':
+					currency_str = 'New Taiwan dollar (TWD)';
+					break;
+				default:
+					currency_str = 'Malaysian ringgit (RM)';
+			}
+
+			$('#currency-str').text(currency_str);
+		})
+	})
+	
+</script>
+
+
+<!-- original css -->
+<style type="text/css">
+	.fineprint {
+font-size: 11px;
+    color: #888;
+}
+	
+	.btn-upload {
+		border-color: #c4c4c4;
+		background: white;
+		color: #565a5c;padding: 9px 27px;
+		font-size: 16px;
+	}
+	.fileUpload {
+		position: relative;
+		overflow: hidden;
+		margin: 10px;
+	}
+
+	.fileUpload input.upload {
+		width: 200px;
+		height: 250px;
+		display: block;
+		position: absolute;
+		top: 0;
+		right: 0;
+		margin: 0;
+		padding: 0;
+		font-size: 20px;
+		cursor: pointer;
+		opacity: 0;
+		filter: alpha(opacity=0);
+	}
+	.btn.active-btn {
+		color: #333;
+		background-color: #e6e6e6;
+		border-color: #adadad;
+	}
+
+	ul.sidebar {padding:0;}
+		ul.sidebar li{ list-style:none;margin: 10px 0; }
+		ul.sidebar li a{ color:#adadad;}
+		.profile-details {background-color: #FFF;
+			border:1px solid #e6e6e6; padding:40px 20px;}
+			.profile-form input {background-color: #FFF;
+				border:1px solid #adadad;
+			}
+			.profile-form select {background-color: #FFF;
+				border:1px solid #adadad; width:100px;
+			}
+			.btn-viewprofile { width:200px;color: #333;
+				background-color: #FFF;
+				border-color: #adadad; margin-top:20px;}
+				.birthdate .dropdown-menu {
+					top: 33px;
+				}
+				.profile-details .dropdown-toggle {
+					width: 130px;
+				}
+				.profile-page {
+					padding-top: 40px;
+					background: #fafafa;
+				}
+				.nav-second-profile {    background: #DBDDDE; padding-top:0;}
+				.nav-second-profile li.active {font-weight: bold; color:#000;}
+				.nav-second-profile .navbar-nav>li>a {
+					padding-top: 15px;
+					color: #777;
+				}
+				
+				.profile-photo p{ font-size: 14px;     color: #333; font-family:Arial, Helvetica, sans-serif;}
+				
+				
+				.btn-profile {
+					position: relative;
+					overflow: hidden;
+				}
+				.btn-profile input[type=file] {
+					position: absolute;
+					top: 0;
+					right: 0;
+					min-width: 100%;
+					min-height: 100%;
+					font-size: 100px;
+					text-align: right;
+					filter: alpha(opacity=0);
+					opacity: 0;
+					outline: none;
+					background: white;
+					cursor: inherit;
+					display: block;
+				}
+				.profileholder { background:#fafafa;padding: 10px;}
+				.remove-profile { position:absolute;    position: absolute;
+					top: 10px;
+					left: 178px;
+					color: red;}
+</style>
+
+
+
+<style>
+				 .merchant-content {    background: #EBECED;}
+				 /*nav*/
+				 .navbar-white .navbar .brand {
+				 margin-top: -19px;}
+				 .navbar-white {
+				 border-bottom: 1px solid #dce0e0;
+				 height: 61px;
+				 padding: 0;
+				 background: #FFF;
+				 }
+				 p {    font-size: 14px;
+				 color: #000;}
+				 a {   
+				 color: #000;}
+				 /*nav*/
+				 /*Overrighting original header.css*/
+				 /*Footer*/
+				 .bottom-below-footer { margin-top:100px;}
+				 
+				 .btn-currency { border-radius:1px; background:none; border:1px solid #999; color:#FFF;}
+				 .btn-currency:hover {background:none;color:#FFF;}
+				 .btn-currency:focus {  background:none;color:#FFF;}
+				 .open > ul.currency-dropdown-menu {
+				 margin-top: 0;
+				 }
+				 .open .dropdown-toggle.btn-default.btn-currency {
+				 background: #000;
+				 }
+				 /*Footer*/
+				 /*marchant*/
+				 .merchant-content { padding:40px 0 80px 0;}
+				 .merchant-signup-title { padding:40px 0;}
+				 .merchant-signup-title h3{ margin-bottom:40px;    color: #000;}
+				 .merchant-signup-form .form-group {
+				 /*margin-bottom: 40px;*/
+				 }
+				 .merchant-signup-form .form-control {
+				 border: 1px solid #ccc;
+				 border-radius: 1px;
+				 padding: 20px 10px;
+				 }
+				 .btn-next {    padding: 10px 30px;}
+				 .merchant-content .panel-body {
+				 padding:40px 35px;
+				 }
+				 .merchant-signup-wizard .btn-group>.btn{ padding:10px;
+				 background: #F4F5F6;
+				 border-bottom: 1px solid #E1E3E5;
+				 text-shadow: 0 1px 0 rgba(255, 255, 255, 0.57);
+				 border-radius: 1px;
+				 }
+				 .merchant-info .checkbox {
+				 margin-bottom: 30px;
+				 }
+				 .minfo-btn {    width: 400px; text-align:left; }
+				 .basic-detail .dropdown-toggle{    width: 427px;    width: 302px;
+				 border-radius: 1px;
+				 text-align: left;}
+				 span.caret .pull-right {    margin-top: 9px;}
+				 .panel {    box-shadow: 0 1px 0px 0px #D0D1D5, 0 0px 0px 1px #DCDDE0;
+				 -webkit-box-shadow: 0 1px 0px 0px #D0D1D5, 0 0px 0px 1px #DCDDE0;
+				 -moz-box-shadow: 0 1px 0px 0px #D0D1D5, 0 0px 0px 1px #DCDDE0;}
+				 .tab-first { border-right:0;}
+				 .tab-centre {}
+				 .tab-last { border-left:0;}
+				 .btn-proceed { background:#F4511E; border-radius:2px; border:0;}
+				 .btn-proceed:hover { background:#BF360C;}
+				 .terms {    padding-top: 11px;}
+				 .merchant-select { width:100%; border-radius:1px;}
+				 .merchant-caret {
+				 margin-left: 0;
+				 margin-top: 9px;
+				 }
+				 .activetab { font-weight:bold;}
+				 .categories-checkbox { margin-bottom:40px;}
+				 .paddingzero { padding:0;}
+				 .categories-blurp { margin-bottom:40px;}
+				 .btn-state { width:302px;}
+				 .btn-country {width:302px;}
+				 .country-caret {margin-top: 9px;}
+				 .state-caret {margin-top: 9px;}
+				 /*marchant*/
+			</style>
+
+
+
+<!-- added by me -->
+<style>
+	
+	.form-control-feedback.fv-icon-no-label {
+		right: 20px;
+	}
+	.btn.btn-default.btn-profile:hover {
+		color: #333;
+		background-color: #e6e6e6;
+		border-color: #adadad;
+	}
+
+	#store_setting_country, #store_setting_currency {
+		height: 42px;
+		padding: 0 7px;
+	}
+	.merchant-signup-form .form-group:last-child {
+		/*margin-bottom: 40px;*/
+	}
+	.store-section .panel-body .row:nth-child(3) {
+		margin-bottom: 20px;
+	}
+	.remove-profile {
+		left: inherit;
+		right: 0;
+	}
+
+	.sales-fee-caption {
+		margin-top: 20px;
+	}
+
+	.market-sales-fee {
+		padding: 15px 15px;
+    border: 2px solid #D0DEEB;
+    border-radius: 4px;
+    background-color: #EFF7FF;
+	}
+	.row.currency-desc-row {
+		margin-top: 20px;
+    color: black;
+	}
+	.currency-desc-container .caption {
+		padding: 3px 15px;
+    border: 1px solid #999999;
+    background-color: #D5D9E6;
+	}
+
+	.currency-desc-container .content {
+		text-align: center;
+    padding: 20px 0;
+    border: 1px solid #999999;
+    border-top: none;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+	}
+
+	input[type="radio"] {
+    -webkit-appearance: radio;
+	}
+</style>

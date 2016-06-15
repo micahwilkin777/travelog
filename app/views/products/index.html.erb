@@ -1,0 +1,263 @@
+<%= render "shared/settings_nav", :obj => 'listing' %>
+<div class="side-collapse-container">
+	<section class="header-11-sub profile-page">
+		<div class="container">
+			<div class="row ">
+				<div class="col-sm-3 col-md-3 sidebar-profile-dashboard">
+					<%= render "shared/listing_left_nav", :obj => 'listings' %>
+				</div>
+				<div class="col-md-9">
+					<% if @is_verify_need %>
+						<div class="row">
+							<div class="col-sm-12">
+								<h6>
+									Your Merchant signup status are Pending. To verify your Merchant signup, you need to submit a relavant documents.
+								</h6>
+								<a href="/user/account_document" class="btn btn-success btn-proceed btn-next pull-left btn-verify">Verify</a>
+							</div>
+						</div>
+					<% end %>
+					<div class="row" style="margin-bottom: 15px;">
+						<div class="col-md-10">
+							
+						</div>
+						<div class="col-md-2">
+							<select class=" form-control" title="Dropdown" id="listed-change">
+								<option value="all">All</option>
+								<option value="listed">Listed</option>
+								<option value="unlisted">Unlisted</option> 
+							</select>
+							
+						</div>
+					</div>
+
+					<div class="panel panel-default listed">
+						<div class="panel-heading"> 
+							<h5 class="panel-title">
+								Listed
+							</h5> 
+						</div> 
+						<div class="panel-body">
+							<div class="row">
+								<% @listed_products.each_with_index do |product, index|%>
+									<div class="col-md-12">
+										<div class="col-md-3">
+											<a href="<%= edit_product_path product %>" class="thumbnail">
+												<% if product.product_overview_url.present? %>
+													<img src="<%= product.product_overview_url %>" alt="...">
+												<% else %>
+													<img src="<%= asset_url('placehold_200_200.png') %>" alt="...">
+												<% end %>
+											</a>
+										</div>
+
+										<div class="col-md-6">
+											<h5><%= product.name %>, for traveller in <%= product.city %></h5>
+											<a href="/products/<%= product.id %>/edit">Manage Listing and Price</a>
+										</div>
+
+										<div class="col-md-3">
+										
+											<select class=" form-control <%= product.status %> product-status" title="Dropdown" id="status-change" product-id="<%= product.id %>">
+												<option value="enable" <%= 'selected' if product.status == 'enable' %>>Listed</option>
+												<option value="disable" <%= 'selected' if product.status == 'disable' %>>Unlisted</option>
+											</select>
+											
+										</div>
+									</div>
+									<% unless index == @listed_products.count - 1 %>
+										<!-- <hr> -->
+									<% end %>
+								<% end %>
+								<% if @listed_products.count == 0 %>
+									<div class="col-md-12">
+										<div class="col-md-3">
+											<a href="#" class="thumbnail">
+												<img src="<%= asset_url('placehold_200_200.png') %>" alt="...">
+											</a>
+										</div>
+
+										<div class="col-md-6">
+											<h5>There is no listed product.</h5>
+											<!-- <p>Manage Listing and Calendar</p> -->
+										</div>
+
+										<div class="col-md-3">
+											
+										</div>
+									</div>
+								<% end %>
+							</div>
+						</div>
+					</div>
+
+					<div class="panel panel-default unlisted">
+						<div class="panel-heading"> 
+							<h5 class="panel-title">
+								Unlisted
+							</h5> 
+						</div> 
+						<div class="panel-body">
+							<div class="row">
+								<% @unlisted_products.each_with_index do |product, index|%>
+									<div class="col-md-12">
+										<div class="col-md-3">
+											<a href="<%= edit_product_path product %>" class="thumbnail">
+												<% if product.product_overview_url.present? %>
+													<img src="<%= product.product_overview_url %>" alt="...">
+												<% else %>
+													<img src="<%= asset_url('placehold_200_200.png') %>" alt="...">
+												<% end %>
+											</a>
+										</div>
+
+										<div class="col-md-6">
+											<h5><%= product.name %>, for traveller in <%= product.city %></h5>
+											<p>Manage Listing and Calendar</p>
+										</div>
+
+										<div  class="col-md-3">
+											
+											<% if product.step == 'complete' %>
+												<select class=" form-control <%= product.status %> product-status" title="Dropdown" id="status-change" product-id="<%= product.id %>">
+													<option value="enable" <%= 'selected' if product.status == 'enable' %>>Listed</option>
+													<option value="disable" <%= 'selected' if product.status == 'disable' %>>Unlisted</option>
+												</select>
+												<!-- verification notify -->
+												<% if current_user.merchant_status == 'pending' && product.status == 'enable' %>
+													<p class="product-verification <%= product.verification %>"><%= product.verification.capitalize %> Verification</p>
+												<% end %>
+											<% else %>
+												<a href="<%= edit_product_path product %>" class="btn btn-default btn-list" >
+													<%= 5 - Product.steps[product.step] %> Steps to list
+												</a>
+											<% end %>
+										  
+										</div>
+									</div>
+									<% unless index == @unlisted_products.count - 1 %>
+										<!-- <hr> -->
+									<% end %>
+								<% end %>
+								<% if @unlisted_products.count == 0 %>
+									<div class="col-md-12">
+										<div class="col-md-3">
+											<a href="#" class="thumbnail">
+												<img src="<%= asset_url('placehold_200_200.png') %>" alt="...">
+											</a>
+										</div>
+
+										<div class="col-md-6">
+											<h5>There is no unlisted product.</h5>
+											<!-- <p>Manage Listing and Calendar</p> -->
+										</div>
+
+										<div class="col-md-3">
+											
+										</div>
+									</div>
+								<% end %>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	<!-- full-box-border -->
+</div>
+<!-- /side-collapse-container  -->
+
+<!-- customized by me -->
+<style>
+	.btn-default {
+		padding: 10px 25px;
+	}
+	.product-status.enable {
+		border-color: green;
+    color: green;
+	}
+	.product-status.disable {
+		border-color: red;
+    color: red;
+	}
+	.status-notice {
+		color: green;
+	}
+	.product-verification {
+		color: red;
+    margin: 5px 0 0 15px;
+	}
+</style>
+
+
+
+<script>
+
+	$(document).ready(function() {
+		$('#listed-change').on('change', function() {
+			var listed_status = $(this).val();
+			if(listed_status == 'listed') {
+				$('.panel.listed').fadeIn('slow');
+				$('.panel.unlisted').fadeOut('slow');
+			} else if (listed_status == 'unlisted') {
+				$('.panel.listed').fadeOut('slow');
+				$('.panel.unlisted').fadeIn('slow');
+			} else {
+				$('.panel.listed').fadeIn('slow');
+				$('.panel.unlisted').fadeIn('slow');
+			}
+		})
+
+		$(document).on('change', '.product-status', function() {
+
+			var formData = new FormData();
+			
+			formData.append('status', $(this).val());
+			url = $(this).attr('product-id');
+			url = "/products/" + url + "/set_status";
+			$this = $(this);
+
+			var append_html = '<p class="status-notice">Saving...</p>';
+			$this.before(append_html);
+
+			var merchant_status = "<%= current_user.merchant_status %>";
+			$_this = $(this);
+			
+			$.ajax({
+				url: url,
+				dataType: "json",
+				data: formData,
+				cache: false,
+				contentType: false,
+				processData: false,
+				type: 'POST',
+				success: function(data) {
+					console.log('success');
+					$this.removeClass('enable').removeClass('disable').addClass(data.status);
+					$this.parent().find('.status-notice').text('Saved!').fadeOut('slow');
+
+					if (merchant_status == 'pending' && data.verification != 'accepted') {
+						$_this.parent().find('p.product-verification').remove();
+
+						if (data.status == 'enable') {
+							append_html = '<p class="product-verification ' + data.verification.capitalizeFirstLetter() + '">' + data.verification.capitalizeFirstLetter() + " Verification</p>";
+							$_this.parent().append(append_html);
+						};
+						
+					};
+				},
+				error: function(error) {
+					console.log(error);
+					
+				},
+				timeout: 500000
+			});
+
+		})
+
+	})
+
+
+</script>
+

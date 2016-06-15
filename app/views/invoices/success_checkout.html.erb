@@ -1,0 +1,417 @@
+
+
+<div class="container">
+	<div class="col-md-10 receipt-header">
+		<div class="col-md-3">
+			<p>
+				<%= @invoice.updated_at.strftime('%a, %B %d, %Y') %><br>
+				<!-- Receipt #4567890<br> -->
+				<a href="/" class="travelog-link">www.travelog.com</a>
+				<span class="print-travelog-link">www.travelog.com</span	>
+			</p>
+		</div>
+
+		<div class="col-md-3">
+			<%= @invoice.product.country %>,<br>
+			<%= @invoice.product.city %>,<br>
+			<%= @invoice.product.address %><br>
+		</div>
+		<div class="col-md-6">
+			
+		</div>
+	</div>
+	<div class="col-md-10 receipt-content">
+		<div class="travel-logo">
+			<%= render "layouts/brand_svg" %>
+		</div>
+		<div class="col-md-12">
+			<div class="col-md-8">
+				<h2>Customer Receipt</h2>
+				<p>Confirmation code</p>
+				<h5><%= @invoice.payer_id %></h5>
+			</div>
+			<div class="col-md-4">
+				<a href="" class="btn btn-default pull-right print-btn-receipt">Print</a>
+			</div>
+		</div>
+
+		<div class="col-md-12">
+			<hr>
+			<div class="row">
+				<div class="col-md-3">
+					<p>Customer</p><br>
+					<p><%= @invoice.user.full_name %></p>
+					<p><%= @invoice.user.profile.phone_number %></p>
+					<p><%= @invoice.user.email %></p><br><br>
+					
+					
+				</div>
+				<div class="col-md-3">
+					<p>Merchant</p><br>
+					<!-- <p>Awesome Trips Inc</p> -->
+					<p><%= @invoice.product.user.store_setting.store_name %></p>
+					<p><%= @invoice.product.user.store_setting.phone_number %></p>
+					<p><%= @invoice.product.user.email %></p>
+					
+				</div>
+				<div class="col-md-3">
+					<p>Payment Date</p><br>
+					<!-- <p>Awesome Trips Inc</p> -->
+					<p><%= @invoice.updated_at.strftime('%Y-%m-%d %H:%M:%S') %></p>
+				</div>
+
+				
+			</div>
+			<hr>
+			<div class="row">
+				<div class="col-md-12">
+					<table class="table table-bordered">
+					<tr>
+					<td>Order Name</td>
+					<td><strong><%= @invoice.product.name %></strong></td>
+					</tr>
+					<tr>
+					<td>Travel Date</td>
+					<td><strong><%= @invoice.booking_date %></strong></td>
+					</tr>
+					<tr>
+					<td>Location</td>
+					<td><strong><%= @invoice.product.country %>, <%= @invoice.product.city %></strong></td>
+					</tr>
+						<% if @invoice.variants.present? && @invoice.variants.count > 0 %>
+							<% @invoice.variants.each do |variant| %>
+								<tr>
+									<td><%= get_all_currency_symbols[@invoice.currency] %><%= (variant["price_cents"].to_i * @product_percent_rate / 100).round(2) %>(<%= @invoice.currency %>) x <%= variant["count"] %> <%= variant["name"] %></td>
+									<td><%= get_all_currency_symbols[@invoice.currency] %><%= (variant["price_cents"].to_i * @product_percent_rate / 100 * variant["count"].to_i).round(2) %>(<%= @invoice.currency %>)</td>
+								</tr>
+							<% end %>
+						<% else %>
+							<tr>
+
+								<td><%= get_all_currency_symbols[@invoice.currency] %><%= (@invoice.amount_cents * @product_percent_rate / 100).round(2) %> x 1 <%= @invoice.product.name %></td>
+								<td><%= get_all_currency_symbols[@invoice.currency] %><%= (@invoice.amount_cents * @product_percent_rate / 100).round(2) %>(<%= @invoice.currency %>)</td>
+							</tr>
+						<% end %>
+
+
+						<% if @invoice.is_reward_credit %>
+							<tr>
+								<td>Travelog Credit</td>
+								<td><%= get_all_currency_symbols[@invoice.currency] %><%= @invoice.reward_credit %>(<%= @invoice.currency %>)</td>
+							</tr>
+						<% end %>
+						<% if @invoice.coupon_id.present? %>
+							<tr>
+								<td>Coupon</td>
+								<td><%= get_all_currency_symbols[@invoice.currency] %><%= @invoice.coupon_amounts %>(<%= @invoice.currency %>)</td>
+							</tr>
+						<% end %>
+						<tr>
+							<td>Total</td>
+							<td><strong><%= get_all_currency_symbols[@invoice.currency] %><%= @total_billed %>(<%= @invoice.currency %>)</strong></td>
+						</tr>
+					</table>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					<table class="table table-bordered">
+						
+							<tr>Customer Contact Details</tr>
+						
+						<tr>
+							<td>First Name:</td>
+							<td><strong><%= @invoice.contact_detail.first_name if @invoice.contact_detail.present? %></strong></td>
+						</tr>
+						<tr>
+							<td>Last Name:</td>
+							<td><strong><%= @invoice.contact_detail.last_name if @invoice.contact_detail.present? %></strong></td>
+						</tr>
+						<tr>
+							<td>Email:</td>
+							<td><strong><%= @invoice.contact_detail.email if @invoice.contact_detail.present? %></strong></td>
+						</tr>
+						<tr>
+							<td>Phone Number:</td>
+							<td><strong><%= @invoice.contact_detail.phone_number if @invoice.contact_detail.present? %></strong></td>
+						</tr>
+					</table>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-md-12">
+					<table class="table table-bordered">
+						
+							<tr>Message to Merchant</tr>
+						
+						<tr>
+							<td>Message</td>
+							<td><strong><%= @invoice.contact_detail.message if @invoice.contact_detail.present? %></strong></td>
+						</tr>
+						
+					</table>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					<a href="/trips" class="btn btn-default">Go to Trips</a>
+				</div>
+			</div>
+
+			
+		</div>
+	</div>
+</div>
+
+
+<style>
+	.btn-update-comment {
+		position: absolute;
+		top: 68px;
+		right: 20px;
+	}
+	.comment-item {
+		padding: 20px 40px;
+		background-color: #EBEEF0;
+		margin: 10px 0;
+		position: relative;
+	}
+	.comment-item:last-child {
+		margin-bottom: 40px;
+	}
+	.post-comment {
+		position: absolute;
+		right: 61px;
+		top: 19px;
+		padding: 10px 20px;
+	}
+
+	.comment-item .comment-content {
+		display: inline-block;
+		width: calc(100% - 120px);
+	}
+	.comment-item .dropdown-toggle {
+		padding: 3px 15px 10px;
+	}
+	.comment-item .comment-content p {
+		margin-left: 10px;
+	}
+	.comments.row textarea {
+		width: calc(100% - 100px);
+		padding: 10px 100px 10px 15px;
+		margin: 10px 0px 0px 10px;
+		max-width: calc(100% - 100px);
+	}
+	.comments.row .comment-item textarea {
+		width: 100%;
+		max-width: initial;
+	}
+	.comments.row img.img-circle {
+		vertical-align: top;
+		margin-top: 15px;
+	}
+
+	table {
+		width: 80%;
+	}
+	table td {
+		border: 1px solid #ccc;
+		padding: 10px;
+	}
+	.travel-logo {
+		position: absolute;
+		top: -80px;
+		right: 0;
+		height: 80px;
+	}
+	.receipt-content {
+		position: relative;
+	}
+
+	.receipt-content p {
+		margin-bottom: 1px;
+	}
+
+	.page-wrapper .print-container {
+		width: 1200px;
+	}
+
+	@page  
+	{ 
+			size: auto;   /* auto is the initial value */ 
+			/* this affects the margin in the printer settings */ 
+			margin: 1mm 1mm 1mm 1mm;  
+	} 
+	.ssl-verify {
+		display: none;
+	}
+</style>
+
+<script type="text/javascript">
+	$(document).ready(function() {
+
+		$('.row.comments').on('click', '.edit-comment', function(e) {
+
+			$comment_item = $(this).closest('.comment-item');
+			$dropdown = $(this).closest('ul.dropdown-menu');
+			e.preventDefault();
+			$(this).addClass('hide')
+			$dropdown.find('.update-comment').removeClass('hide');
+			$textarea = $comment_item.find('textarea')
+			$textarea.prop('disabled', false).focus();
+
+		})
+
+		$('.row.comments').on('click', '.update-comment', function(e) {
+
+			e.preventDefault();
+
+			$comment_item = $(this).closest('.comment-item');
+			$textarea = $comment_item.find('textarea')
+
+			var comment = $textarea.val().trim();
+			if (comment.length == 0) {
+				$textarea.focus();
+				return;
+			};
+
+			var formData = new FormData();
+
+			formData.append('comment_id', $comment_item.attr("data-comment-id"));
+			formData.append('content', comment);
+
+			$.ajax({
+				url: '/comments/update_comment',
+				// dataType: "json",
+				data: formData,
+				cache: false,
+				contentType: false,
+				processData: false,
+				type: 'POST',
+				success: function(data) {
+					console.log('success');
+					$('.comment-history').empty();
+					$('.comment-history').append(data);
+				},
+				error: function(error) {
+					console.log(error);
+				},
+				timeout: 2000
+			});
+		})
+
+		$('.row.comments').on('click', '.remove-comment', function(e) {
+
+			e.preventDefault();
+
+			$comment_item = $(this).closest('.comment-item');
+			var formData = new FormData();
+
+			formData.append('comment_id', $comment_item.attr("data-comment-id"));
+			$.ajax({
+				url: '/comments/remove_comment',
+				// dataType: "json",
+				data: formData,
+				cache: false,
+				contentType: false,
+				processData: false,
+				type: 'POST',
+				success: function(data) {
+					console.log('success');
+					$('.comment-history').empty();
+					$('.comment-history').append(data);
+				},
+				error: function(error) {
+					console.log(error);
+				},
+				timeout: 2000
+			});
+		})
+
+		$('#post-comment').on('click', function() {
+			$textarea = $(this).parent().find('textarea')
+			var comment = $textarea.val().trim();
+			if (comment.length == 0) {
+				$textarea.focus();
+				return;
+			};
+
+			var formData = new FormData();
+			formData.append('invoice_id', "<%= @invoice.id %>");
+			formData.append('content', comment);
+			$.ajax({
+				url: '/comments/create_comment',
+				// dataType: "json",
+				data: formData,
+				cache: false,
+				contentType: false,
+				processData: false,
+				type: 'POST',
+				success: function(data) {
+					console.log('success');
+					$('.comment-history').empty();
+					$('.comment-history').append(data);
+					$textarea.val('');
+					$textarea.focus();
+				},
+				error: function(error) {
+					console.log(error);
+				},
+				timeout: 2000
+			});
+
+		});
+
+		$('.print-travelog-link').hide();
+
+		$('.print-btn-receipt').on('click', function(e) {
+			e.preventDefault();
+			$('header').hide();
+			$('footer').hide();
+			$('.btn.btn-default').hide();
+			$('.page-wrapper .container').addClass('print-container');
+			$('.travelog-link').hide();
+			$('.print-travelog-link').show();
+			$('.row.comments').hide();
+			window.print();
+		})
+
+		// window.onafterprint = function(){
+		//   console.log("Printing completed...");
+		//   $('header').show();
+		// 	$('footer').show();
+		// }
+
+		var beforePrint = function() {
+			// $('header').hide();
+			// $('footer').hide();
+			
+		};
+
+		var afterPrint = function() {
+			$('header').show();
+			$('footer').show();
+			$('.travelog-link').show();
+			$('.print-travelog-link').hide();
+			$('.btn.btn-default').show();
+			$('.page-wrapper .container').removeClass('print-container');
+			$('.row.comments').show();
+		};
+
+		if (window.matchMedia) {
+				var mediaQueryList = window.matchMedia('print');
+				mediaQueryList.addListener(function(mql) {
+						if (mql.matches) {
+								beforePrint();
+						} else {
+								afterPrint();
+						}
+				});
+		}
+
+		window.onbeforeprint = beforePrint;
+		window.onafterprint = afterPrint;
+	})
+</script>
+

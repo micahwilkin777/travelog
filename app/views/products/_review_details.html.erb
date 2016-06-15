@@ -1,0 +1,239 @@
+<!-- Reviews  -->
+<section class="reviews">
+	<div>
+		<div class="container">
+			<div class="row">
+				<% if @total_review_count == 0 %>
+				<h5>No Reviews Yet</h5>
+				<br>
+				<span>Be first to review this package! Book this package and you could give this merchant their first review.</span>
+				<% else %>
+				<div class="col-md-6">
+
+					<p class="star-rating">
+						<span class="glyphicon glyphicon-star <%= 'empty-star' if @product.review_mark <= 0 %>"></span>
+						<span class="glyphicon glyphicon-star <%= 'empty-star' if @product.review_mark <= 1 %>"></span>
+						<span class="glyphicon glyphicon-star <%= 'empty-star' if @product.review_mark <= 2 %>"></span>
+						<span class="glyphicon glyphicon-star <%= 'empty-star' if @product.review_mark <= 3 %>"></span>
+						<span class="glyphicon glyphicon-star <%= 'empty-star' if @product.review_mark <= 4 %>"></span>
+					</p>
+				</div>
+				<div class="col-md-12 titledistance" itemscope>
+					<h5><span><%= @total_review_count %></span> Reviews </h5>
+				</div>
+				<% end %>
+			</div>
+
+			<% @product_reviews.each do |product_review| %>
+				<div class="row">
+
+					<div class="col-xs-4 col-sm-2 col-md-1 picture-block">
+						<a href="#"><img src="<%= product_review.avatar_url %>" class="img-circle" width="67" height="67"></a>
+						<p class="star-rating small">
+							<span class="glyphicon glyphicon-star <%= 'empty-star' if product_review.rating_stars <= 0 %>"></span>
+							<span class="glyphicon glyphicon-star <%= 'empty-star' if product_review.rating_stars <= 1 %>"></span>
+							<span class="glyphicon glyphicon-star <%= 'empty-star' if product_review.rating_stars <= 2 %>"></span>
+							<span class="glyphicon glyphicon-star <%= 'empty-star' if product_review.rating_stars <= 3 %>"></span>
+							<span class="glyphicon glyphicon-star <%= 'empty-star' if product_review.rating_stars <= 4 %>"></span>
+						</p>
+
+					</div>
+					<div class="col-xs-8 col-sm-10 col-md-6 text-block">
+						<h6><%= product_review.user.profile.first_name if product_review.user.profile.present? %></h6>
+						<p><%= product_review.message %></p>
+						<hr>
+						<% if user_signed_in? && product_review.user_id == current_user.id %>
+							<a class="remove-review" href="#" review-id="<%= product_review.id %>" product-id="<%= @product.id %>"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></a>
+						<% end %>
+					</div>
+				</div>
+			<% end %>
+
+			<% if current_user.present? && @product.user != current_user && current_user.is_buyed_product?(@product) %>
+				<div class="row">
+					<form id="product-show" action="/products/<%= @product.id %>/write_comment" method="post">
+						<%= tag(:input, :name => 'authenticity_token', :type => "hidden", :value => form_authenticity_token) %>
+						<div class="col-md-6">
+							<div class="col-xs-12">
+								<h4>Post a recommendation</h4>
+								
+							</div>
+						
+							<div class="col-xs-12 star-container">
+								<p class="star-rating" name="star-rating">
+									<span class="glyphicon glyphicon-star empty-star"></span>
+									<span class="glyphicon glyphicon-star empty-star"></span>
+									<span class="glyphicon glyphicon-star empty-star"></span>
+									<span class="glyphicon glyphicon-star empty-star"></span>
+									<span class="glyphicon glyphicon-star empty-star"></span>
+								</p>
+								<input type="hidden" name="rating-stars" value="0" id="rating-stars">
+							</div>
+							
+							<div class="col-xs-12 text-container">
+								<br>
+								<textarea class="form-control testimonials" rows="3" name="message" id="message"></textarea>
+							</div>
+							
+							<div class="col-xs-12">
+								<br>
+								<input type="submit" class="btn btn-default btn-testimonials pull-right" value="Send">
+							</div>
+						</div>
+					</form>
+				</div>
+			<% end %>
+
+			<div class="row">
+				<div class="col-md-6 col-md-offset-1 text-center">
+					<%= paginate @product_reviews %>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+
+<script>
+	$(document).ready(function() {
+		$('#product-show').formValidation({
+			framework: 'bootstrap',
+			icon: {
+				valid: 'glyphicon glyphicon-ok',
+				invalid: 'glyphicon glyphicon-remove',
+				validating: 'glyphicon glyphicon-refresh'
+			},
+			fields: {
+				'message': {
+					row: '.col-xs-12',
+					validators: {
+						notEmpty: {
+							message: 'The comment message is required'
+						}
+					}
+				}, 
+				'star-rating': {
+					row: '.col-xs-12',
+					validators: {
+						callback: {
+							message: 'The star rating is required',
+							callback: function(value, validator, $field) {
+								var star_count = 5 - $('#product-show .star-rating .empty-star').length;
+								console.log(star_count);
+								$('#rating-stars').val(star_count);
+								return (star_count > 0);
+							}
+						}
+					}
+				}
+			}
+		});
+
+		// $('#product-show').on('hover', '.icon-star', function() {
+		// 	$(this).addClass( "hover" );
+		// }, function() {
+		// 	$(this).removeClass( "hover" );
+		// });
+
+		var is_hover = false;
+
+		$('#product-show .glyphicon-star').hover(function() {
+			$(this).removeClass( "empty-star" );
+			$(this).css('cursor', 'pointer');
+
+			var index = $(this).index();
+			if (index > 0) {
+				for(var i = 1; i <= index; i++) {
+					$item = $('#product-show .glyphicon-star:nth-child' + '(' + i.toString() + ')');
+					// $item.addClass('hover');
+					$item.removeClass( "empty-star" );
+				}
+				// $('#product-show .icon-star:nth-child' + '(' + i.toString() + ')').addClass('hover');
+			};
+			is_hover = true;
+		}, function() {
+			// $(this).removeClass( "hover" );
+			if (is_hover) {
+				$(this).addClass( "empty-star" );
+				var index = $(this).index();
+				if (index > 0) {
+					for(var i = 1; i <= index; i++) {
+						$item = $('#product-show .glyphicon-star:nth-child' + '(' + i.toString() + ')');
+						// $item.removeClass('hover');
+						$item.addClass('empty-star');
+					}
+				};
+			};
+			
+		});
+
+		$('#product-show .glyphicon-star').on('click', function() {
+			$('#product-show .glyphicon-star').addClass('empty-star');
+			var index = $(this).index();
+			for(var i = 0; i <= index; i++) {
+				$item = $('#product-show .glyphicon-star:nth-child' + '(' + (i + 1).toString() + ')');
+				$item.removeClass('empty-star');
+			}
+			$('#product-show').formValidation('revalidateField', 'star-rating');
+			is_hover = false;
+		})
+
+		$(document).on('click', '.remove-review', function(event) {
+			event.preventDefault();
+			var review_id = $(this).attr('review-id');
+			var product_id = $(this).attr('product-id');
+			var formData = new FormData();
+			formData.append('review_id', review_id);
+			
+			$this = $(this);
+			// $('body').loading({ message: 'Deleting...'});
+			$.ajax({
+				url: "/products/" + product_id + '/remove_comment',
+			  dataType: "json",
+			  data: formData,
+			  cache: false,
+			  contentType: false,
+			  processData: false,
+			  type: 'POST',
+				success: function(data){
+					
+					if (data.status == 'success') {
+						console.log('deleted review');
+						$this.closest('.row').fadeIn('slow', function() {
+							$(this).remove();
+						});
+					} else {
+						console.log('error deleting review');
+					}
+					
+				},
+				error: function(error) {
+					console.log(error);
+					// $('body').loading('stop');
+				}
+			});
+		})
+
+	});
+</script>
+
+<style>
+	.star-rating .icon-star.hover {
+		color: #ffcd00;
+	}
+	.remove-review {
+		position: absolute;
+    top: 10px;
+    right: 0;
+    color: red;
+	}
+	#product-show.fv-form-bootstrap .fv-icon-no-label {
+		right: 15px;
+	}
+	#product-show.fv-form-bootstrap .star-container .fv-icon-no-label {
+		top: -8px;
+	}
+	#product-show.fv-form-bootstrap .text-container .fv-icon-no-label {
+		top: 18px;
+	}
+</style>

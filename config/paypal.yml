@@ -1,0 +1,14 @@
+development: &sandbox # change to your own
+  username: itsjinlie-facilitator_api1.hotmail.com
+  password: BWFRJLCTQQ58WFJ9
+  signature: An5ns1Kso7MWUdW4ErQKJJJ4qi4-A-.I2OfKc.hbMrsyQ5po718H-F28
+  sandbox: true
+
+test:
+  <<: *sandbox
+
+production: &production
+  username: itsjinlie-facilitator_api1.hotmail.com
+  password: BWFRJLCTQQ58WFJ9
+  signature: An5ns1Kso7MWUdW4ErQKJJJ4qi4-A-.I2OfKc.hbMrsyQ5po718H-F28
+  sandbox: true

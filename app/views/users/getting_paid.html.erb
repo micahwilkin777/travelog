@@ -1,0 +1,186 @@
+<% content_for :page_title do %>
+	<%= 'Profile - Travelog' %>
+<% end %>
+
+<%= render "shared/settings_nav", :obj => 'accounts' %>
+
+<section class="header-11-sub profile-page">
+	<div class="container">
+		 <div class="row ">
+				<%= render 'shared/accounts_nav' %>
+				<div class="col-xs-12 col-sm-9 col-md-9">
+					<!-- <div class="panel-header">
+						Required
+					</div> -->
+					</div>
+					<div class="col-md-8">
+
+					 <div class="profile-details">
+							<%= form_for @store_setting, url: {action: "getting_paid"}, :html => {:class => "form-horizontal profile-form" } do |f| %>
+								<div class="panel-heading">Getting Paid</div>
+								<div class="panel-body">
+
+									<div class="form-group">
+										<%= f.label :country, 'Country', :class=>"col-sm-3 control-label"  %>
+										<div class="col-sm-9">
+											<%= country_select("store_setting", "country", {selected: @store_setting.country}, { class: 'form-control'} ) %>
+										</div>
+									</div>
+
+									<div class="form-group">
+										<%= f.label :city, 'City', :class=>"col-sm-3 control-label"  %>
+										<div class="col-sm-9">
+											<%= f.text_field :city, :class => 'form-control', :placeholder => 'City' %>
+										</div>
+									</div>
+									
+									<div class="form-group">
+										<%= f.label :paypal_email, 'Paypal Email', :class=>"col-sm-3 control-label"  %>
+										<div class="col-sm-9">
+											<%= f.text_field :paypal_email, :class => 'form-control', :placeholder => 'Paypal Email' %>
+										</div>
+									</div>
+
+									<div class="form-group">
+										<%= f.label :currency, 'Currency', :class=>"col-sm-3 control-label"  %>
+										<div class="col-sm-9">
+											<%= f.select(:currency, get_currency_list.collect {|p| [ p[:currency], p[:currency] ] }, {include_blank: false} , :class => 'form-control', :disabled => 'disable') %>
+										</div>
+									</div>
+
+									<div class="row currency-desc-row form-group">
+
+										<div class="col-sm-9 col-sm-offset-3">
+											<div class="currency-desc-container">
+												<div class="caption">
+													This is <strong>currency for your account.</strong> All your uploaded products will be in this currency. To request for a currency change, kindly contact Travelog at support@travelog.com.
+												</div>
+												<div class="content">
+													Account Currency:&nbsp;&nbsp;<strong id="currency-str">Malaysian ringgit (RM)</strong>
+												</div>
+											</div>
+										</div>
+									</div>
+
+									<div class="form-group">
+										<div class="col-sm-offset-3 col-sm-9">
+											<button type="submit" name="commit" class="btn btn-default btn-save">Submit</button>
+										</div>
+									</div>
+								</div>
+							<% end %>
+					 </div>
+				</div>
+		 </div>
+	</div>
+</section>
+
+
+
+<style type="text/css">
+	.profile {
+		padding: 70px 30px;
+	}
+	input[type=file] {
+		display: none;
+	}
+	.attachments-container .btn.delete-attachment {
+		position: absolute;
+		top: 0;
+		right: 15px;
+		height: inherit;
+		padding: 2px 10px;
+		border-radius: 0;
+		opacity: 0.8;
+		background-color: #ccc;
+	}
+	.attachments-container .form-group.col-md-4 {
+		position: relative;
+	}
+	.attachments-container img {
+		width: 100%
+	}
+	.profile-details {
+		padding: 0;
+	}
+
+	.row.currency-desc-row {
+		margin-top: 20px;
+    color: black;
+	}
+	.currency-desc-container .caption {
+		padding: 3px 15px;
+    border: 1px solid #999999;
+    background-color: #D5D9E6;
+	}
+
+	.currency-desc-container .content {
+		text-align: center;
+    padding: 20px 0;
+    border: 1px solid #999999;
+    border-top: none;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+	}
+</style>
+
+<script>
+	$(document).ready(function() {
+		$('form.profile-form').formValidation({
+			framework: 'bootstrap',
+			icon: {
+				valid: 'glyphicon glyphicon-ok',
+				invalid: 'glyphicon glyphicon-remove',
+				validating: 'glyphicon glyphicon-refresh'
+			},
+			fields: {
+				'store_setting[city]': {
+					validators: {
+						notEmpty: {
+							message: 'The city is required'
+						}
+					}
+				},
+				'store_setting[paypal_email]': {
+					validators: {
+						emailAddress: {
+							message: 'The input is not a valid email address'
+						}
+					}
+				}
+			}
+		})
+
+		$('#store_setting_currency').on('change', function() {
+			var currency = $(this).val();
+			var currency_str = 'Malaysian ringgit (RM)';
+			switch(currency) {
+				case 'MYR':
+					currency_str = 'Malaysian ringgit (RM)';
+					break;
+				case 'USD':
+					currency_str = 'United States dollar (USD)';
+					break;
+				case 'SGD':
+					currency_str = 'Singapore dollar (SGD)';
+					break;
+				case 'THB':
+					currency_str = 'Thai baht (THB)';
+					break;
+				case 'PHP':
+					currency_str = 'Philippine peso (PHP)';
+					break;
+				case 'TWD':
+					currency_str = 'New Taiwan dollar (TWD)';
+					break;
+				default:
+					currency_str = 'Malaysian ringgit (RM)';
+			}
+
+			$('#currency-str').text(currency_str);
+		})
+
+		$('#store_setting_currency').trigger('change');
+
+	})
+</script>

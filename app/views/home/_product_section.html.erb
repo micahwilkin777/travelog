@@ -1,0 +1,174 @@
+<section class="content-7 landing-trending">
+	<div>
+		<div class="container">
+			<h3>
+				Things to Do This Week in
+				<div class="dropdown trending-list">
+					<a href="" data-toggle="dropdown" class="select-trending">All Cities <span class="caret"></span></a>
+					<input type="hidden" value="all cities" class="location">
+					<ul class="dropdown-menu" aria-labelledby="" id="trending-location">
+						<li><a href="">All Cities</a></li>
+						<!-- <li><a href="">Kuala Lumpur</a></li>
+						<li><a href="">Johor</a></li>
+						<li><a href="">Kedah</a></li>
+						<li><a href="">Kelantan</a></li>
+						<li><a href="">Melaka</a></li>
+						<li><a href="">Negeri Sembilan</a></li>
+						<li><a href="">Pahang</a></li>
+						<li><a href="">Perak</a></li>
+						<li><a href="">Perlis</a></li>
+						<li><a href="">Pulau Pinang</a></li>
+						<li><a href="">Sabah</a></li>
+						<li><a href="">Sarawak</a></li>
+						<li><a href="">Selangor</a></li>
+						<li><a href="">Terengganu</a></li>
+						<li><a href="">Labuan</a></li> -->
+						<% @cities.each do |city| %>
+							<% if @count_per_city[city] >= 6 %>
+								<li><a href=""><%= city %></a></li>
+							<% end %>
+						<% end %>
+					</ul>
+				</div>
+			</h3>
+			<p class="oneliner">Discover amazing outdoor adventures, activities, and tours</p>
+
+			<div id="product-list">
+				<div class="row">
+					<% @products.each do |product| %>
+						<div class="col-sm-6 col-md-4 col-lg-4 product-card">
+						<% if product.product_discount != 1 %>
+							<p class="price pull-right text-right">
+							<span class="discount">
+
+							from <strike><em><%= get_all_currency_symbols[product.current_currency] %></em> <%= product.price_with_currency %></strike>
+							</span>
+							<br>
+							<em><%= get_all_currency_symbols[product.current_currency] %></em> <%= (product.price_with_currency.to_d * product.product_discount).round(2) %></p>
+						<% else %>
+							<p class="price"><%= get_all_currency_symbols[product.current_currency] %> <%= product.price_with_currency %></p>
+						<% end %>
+							
+
+
+							
+							<a href="<%= product_path product %>"><img src="<%= product.store_logo_url %>" class="img-circle user-thumb" width="52" alt="<%=product.user.store_setting.store_name %>"/></a>
+
+							<p class="star-rating" style="position: absolute;">
+								
+								<i class="fa fa-star <%= 'empty-star' if product.review_mark <= 0 %>"></i>
+								<i class="fa fa-star <%= 'empty-star' if product.review_mark <= 1 %>"></i>
+								<i class="fa fa-star <%= 'empty-star' if product.review_mark <= 2 %>"></i>
+								<i class="fa fa-star <%= 'empty-star' if product.review_mark <= 3 %>"></i>
+								<i class="fa fa-star <%= 'empty-star' if product.review_mark <= 4 %>"></i>
+								
+							</p>
+
+
+							<div class="img-holder">
+								<a href="<%= product_path product %>">
+									<img src="<%= product.product_attachments.first.attachment.square.url if product.product_attachments.first.present? %>" alt="<%= product.name %>" style="width: 100%;">
+								</a>
+							</div>
+							<h4>
+								<a href="<%= product_path product %>"><%=h truncate(product.name, :length => 30) %></a>
+							</h4>
+							<a href="<%= product_path product %>">
+								<p><%= product.city%>, <%= product.country%></p>
+							</a>
+
+						</div>
+					<% end %>
+				</div>
+			</div>
+			<div class="row">
+				<form method="POST" action="/place/all" id="trending-form">
+					<%= tag(:input, :name => 'authenticity_token', :type => "hidden", :value => form_authenticity_token) %>
+					<% ProductCategory.order('id').each do |category| %>
+						<input type="hidden" name="category_<%= category.id %>" value="1">
+					<% end %>
+					<input type="hidden" name="city" value="all cities">
+					<div class="col-sm-6 col-md-4 col-lg-4 col-xs-offset-4 all-destinations-sections">
+						<button type="submit" class="btn btn-block btn-destination">See All Destinations</button>
+						<!-- <a href="#" class="btn btn-block btn-destination">See All Destinations</a> -->
+					</div>
+				</form>
+			</div>
+			
+		</div>
+	</div>
+</section>
+
+<script>
+	$(document).ready(function() { 
+  	// initResponsiveHeader(); 
+  	$('#trending-location li a').on('click', function(event) {
+  		event.preventDefault();
+  		
+  		var location = $(this).text();
+  		mixpanel.track("Trending city",{location});
+  		var formData = new FormData();
+  		formData.append('city', location);
+  		$.ajax({
+			  url: '/home_products',
+			  // dataType: "json",
+			  data: formData,
+			  cache: false,
+			  contentType: false,
+			  processData: false,
+			  type: 'POST',
+			  success: function(data) {
+			  	console.log('success');
+			  	$('.select-trending').empty();
+			  	$('.select-trending').append(location + ' ' + '<span class="caret"></span>');
+			  	$('#trending-form input[name=city]').val(location);
+			  	$('#product-list').empty();
+			  	$('#product-list').append(data);
+			  	console.log(location);
+			  	if (location != 'All Cities') {
+			  		var search_url = '/place/' + location.toLowerCase().replace(new RegExp(' ', 'g'), '-');
+			  		// $('a.btn-destination').attr('href', '/place/' + location.toLowerCase().replace(new RegExp(' ', 'g'), '-'));
+			  		$('#trending-form').attr('action', search_url);
+			  	};
+			  },
+			  error: function(error) {
+	      	console.log(error);
+	      },
+	      timeout: 10000
+			});
+  	})
+
+  	$('#trending-form button').on('click', function() {
+  		// $('#trending-form').find('[name="city"]').val('all cities');
+  	})
+
+  	
+
+  });
+
+</script>
+
+<style>
+	p.star-rating {
+		position: absolute;
+    top: 390px;
+    right: 24px;
+	}
+
+	.glyphicon-star {
+    color: #ffcd00;
+	}
+
+	.glyphicon-star.empty-star {
+		color: #d8d8d8;
+	}
+
+	.star-rating i.empty-star {
+		color: #d8d8d8;	
+	}
+
+	.star-rating i {
+		color: #ffcd00;
+	}
+</style>
+

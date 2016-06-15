@@ -1,0 +1,159 @@
+
+<section class="header-11-sub section-details content">
+	<div class="container">
+		<div class="row ">
+			<div class="col-xs-12">
+				<h1>Booking Receipt</h1>
+				<p>Confirmation Code</p>
+				<h4><%= @invoice.payer_id %></h4>
+			</div>
+		</div>
+		<hr>
+		<div class="row">
+			<div class="col-md-3">
+				<p>Name</p><br>
+				<p>Joe Doe</p><br><br>
+				<p>Location Address</p>
+				<p></p>
+			</div>
+			<div class="col-md-3">
+				<p>Travel Destination</p><br>
+				<p><%= @invoice.product.country %>, <%= @invoice.product.state %></p><br><br>
+				<p>Merchant</p>
+				<p>Awesome Trips Inc</p>
+				<p>+33 6 21761311</p>
+			</div>
+			<div class="col-md-6">
+				<p>Order</p><br>
+				<p>3DN2 Penang Historical Trips</p><br><br>
+				<p>Booking Date</p>
+				<p><%= @invoice.booking_date %></p>
+				<p>Payment Date</p>
+				<p><%= @invoice.updated_at.strftime('%Y-%m-%d %H:%M:%S') %></p>
+			</div>
+		</div>
+		<hr>
+		<div class="row">
+			<div class="col-md-12">
+				<h1>Reservation Charges</h1>
+				<table>
+					<% if @invoice.variants.present? && @invoice.variants.count > 0 %>
+						<% @invoice.variants.each do |variant| %>
+							<tr>
+								<td><%= @currency_symbols[@invoice.currency] %><%= variant["price_cents"].to_i / 100 %>(<%= @invoice.currency %>) x <%= variant["count"] %> <%= variant["name"] %></td>
+								<td><%= @currency_symbols[@invoice.currency] %><%= variant["price_cents"].to_i / 100 * variant["count"].to_i %>(<%= @invoice.currency %>)</td>
+							</tr>
+						<% end %>
+					<% else %>
+						<tr>
+							<td><%= @currency_symbols[@invoice.currency] %><%= @invoice.amount_cents / 100 %> x 1 <%= @invoice.product.name %></td>
+							<td><%= @currency_symbols[@invoice.currency] %><%= @invoice.amount_cents / 100 %></td>
+						</tr>
+					<% end %>
+
+					<% if @invoice.is_reward_credit %>
+						<tr>
+							<td>Travelog Credit</td>
+							<td><%= @currency_symbols[@invoice.currency] %><%= @invoice.reward_credit %></td>
+						</tr>
+					<% end %>
+					<tr>
+						<td>Total</td>
+						<% if @invoice.is_reward_credit %>
+							<td><%= @currency_symbols[@invoice.currency] %><%= @invoice.amount_cents / 100 - @invoice.reward_credit %>(<%= @invoice.currency %>)</td>
+						<% else %>
+							<td><%= @currency_symbols[@invoice.currency] %><%= @invoice.amount_cents / 100 %>(<%= @invoice.currency %>)</td>
+						<% end %>
+					</tr>
+				</table>
+			</div>
+		</div>
+		<hr>
+</section>
+
+<style>
+	table {
+		width: 80%;
+	}
+	table td {
+		border: 1px solid #ccc;
+		padding: 10px;
+	}
+	.container {
+	  width: 1170px;
+	  margin-right: auto;
+    margin-left: auto;
+    padding-left: 15px;
+    padding-right: 15px;
+	}
+	.section-details.content {
+	    background-color: #f9f9f9;
+	    min-height: 150px;
+	    border: 1px solid #dce0e0;
+	}
+	.row {
+	    margin-left: -15px;
+	    margin-right: -15px;
+	}
+
+	.col-xs-1, .col-xs-2, .col-xs-3, .col-xs-4, .col-xs-5, .col-xs-6, .col-xs-7, .col-xs-8, .col-xs-9, .col-xs-10, .col-xs-11, .col-xs-12 {
+	    float: left;
+	}
+	.col-xs-1, .col-sm-1, .col-md-1, .col-lg-1, .col-xs-2, .col-sm-2, .col-md-2, .col-lg-2, .col-xs-3, .col-sm-3, .col-md-3, .col-lg-3, .col-xs-4, .col-sm-4, .col-md-4, .col-lg-4, .col-xs-5, .col-sm-5, .col-md-5, .col-lg-5, .col-xs-6, .col-sm-6, .col-md-6, .col-lg-6, .col-xs-7, .col-sm-7, .col-md-7, .col-lg-7, .col-xs-8, .col-sm-8, .col-md-8, .col-lg-8, .col-xs-9, .col-sm-9, .col-md-9, .col-lg-9, .col-xs-10, .col-sm-10, .col-md-10, .col-lg-10, .col-xs-11, .col-sm-11, .col-md-11, .col-lg-11, .col-xs-12, .col-sm-12, .col-md-12, .col-lg-12 {
+	    position: relative;
+	    min-height: 1px;
+	    padding-left: 15px;
+	    padding-right: 15px;
+	}
+
+	.col-md-3 {
+	    width: 25%;
+	    float: left;
+	}
+	.col-md-6 {
+	    width: 50%;
+	    float: left;
+	}
+	h1 {
+	    font-weight: normal;
+	    font-size: 48px;
+	}
+	.section-details p {
+	    font-size: 14px;
+	    line-height: 1.43;
+	    color: #000;
+	}
+
+	h4 {
+		margin-top: 10px;
+    margin-bottom: 10px;
+    font-weight: 500;
+    color: #2c3e50;
+    font-size: 23px;
+	}
+	.col-xs-12 {
+	    width: 100%;
+	}
+
+	
+	.row:after {
+	    clear: both;
+	}
+	.row:before, .row:after {
+	  content: " ";
+	  display: table;
+	}
+
+	*:before, *:after {
+	    -webkit-box-sizing: border-box;
+	    -moz-box-sizing: border-box;
+	    box-sizing: border-box;
+	}
+
+	* {
+	    -webkit-box-sizing: border-box;
+	    -moz-box-sizing: border-box;
+	    box-sizing: border-box;
+	}
+</style>
+

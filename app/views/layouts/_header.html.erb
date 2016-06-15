@@ -1,0 +1,90 @@
+<header class="header-10">
+	<div class="container">
+		<div class="navbar col-sm-12" role="navigation">
+			<div class="navbar-header nav-dark">
+				<button type="button" class="navbar-toggle"></button>
+				<a class="brand" href="/">
+					<%= render 'layouts/brand_svg' %>
+				</a>
+			</div>
+			<div class="collapse navbar-collapse pull-right profilex" id="bs-example-navbar-collapse-1">
+				<ul class="nav pull-left">
+					<% if user_signed_in? %>
+						<li class="visible-xs visible-sm hidden-md hidden-lg">
+							<a href="#" class="sidebarprofile">
+								<% if current_user.get_avatar_url.present? %>
+									<img src="<%= current_user.get_avatar_url %>" width="40" height = "40" class="img-circle profile-nav"/>
+								<% else %>
+									<img src="<%= asset_url('default-avatar.png') %>" width="40" height = "40" class="img-circle profile-nav"/>
+								<% end %>
+								<% if current_user.profile.present? && current_user.profile.first_name.present? %>
+									<%= current_user.profile.first_name %>
+								<% else %>
+									<%= current_user.email %>
+								<% end %>
+							</a>
+						</li>
+
+						<% unless current_user.status == 'merchant' %>
+							<li class=" hidden-xs hidden-sm"><%= link_to "Become a Merchant", merchant_path %></li>
+						<% end %>
+
+						<li class="visible-xs visible-sm"><%= link_to 'Edit Profile', profile_path  %></li>
+						<li class="visible-xs visible-sm"><a href="/users/invitation/new">Invite Friends</a></li>
+						<% if current_user.status == 'merchant' %>
+							<li class="visible-xs visible-sm"><%= link_to 'Store Settings', accounts_path %></li>
+						<% end %>
+						<li class="visible-xs visible-sm"><a rel="nofollow" data-method="delete" href="/users/sign_out">Log Out</a></li>
+						
+						<!--dropdown x-->
+						<li class="dropdown hidden-xs hidden-sm">
+							<a href="#" class="dropdown-toggle dropdownselectactive" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+								<% if current_user.profile.present? && current_user.profile.first_name.present? %>
+									<%= current_user.profile.first_name %>
+								<% else %>
+									<%= current_user.email %>
+								<% end %>
+
+								<% if current_user.get_avatar_url.present? %>
+									<img src="<%= current_user.get_avatar_url %>" width="40" height = "40" class="img-circle profile-nav"/>
+								<% else %>
+									<img src="<%= asset_url('default-avatar.png') %>" width="40" height = "40" class="img-circle profile-nav"/>
+								<% end %>
+							</a>
+							<ul class="dropdown-menu">
+								<li><%= link_to 'Edit Profile', profile_path  %></li>
+								<li><%= link_to 'Trips', trips_path %></li>
+								<% if current_user.status == 'merchant' %>
+									<li><%= link_to 'Manage Listings', products_path %></li>
+									<li><%= link_to 'Store Settings', accounts_path %></li>
+								<% end %>
+								<li><a href="/users/invitation/new">Travel Credit</a></li>
+								<li><a rel="nofollow" data-method="delete" href="/users/sign_out">Log Out</a></li>
+							</ul>
+						</li>
+						<!--dropdown x-->
+					<% else %>
+						<li class=" hidden-xs hidden-sm"><%= link_to "Become a Merchant", merchant_path %></li>
+						<li class=" hidden-xs hidden-sm"><%= link_to "Login", new_user_session_path() %></li>
+						<li class=" hidden-xs hidden-sm"><%= link_to "Sign Up", new_user_registration_path %></li>
+
+						<li class=" visible-xs visible-sm"><%= link_to "Login", new_user_session_path() %></li>
+						<li class=" visible-xs visible-sm"><%= link_to "Sign Up", new_user_registration_path %></li>
+
+						<!--dropdown x-->
+						<li class="dropdown hidden-xs hidden-sm">
+							<ul class="dropdown-menu">
+								<li><%= link_to "Become a merchant", become_merchant_path %></li>
+								<li><%= link_to "Login", new_user_session_path() %></li>
+								<li><%= link_to "Sign Up", new_user_registration_path %></li>
+							</ul>
+						</li>
+						<!--dropdown x-->
+					<% end %>
+
+					
+				</ul>
+			</div>
+		</div>
+	</div>
+</header>

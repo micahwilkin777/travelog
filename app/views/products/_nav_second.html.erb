@@ -1,0 +1,18 @@
+<nav class="navbar navbar-static-top nav-second-profile sub-header-fixed">
+	<div class="container">
+		<div id="" class="">
+			<ul class="nav navbar-nav">
+				<li class="<%= 'active' if obj == 'dashboard' %>"><a href="/dashboard">Dashboard</a></li>
+				<!-- <li><a href="#">Inbox</a></li> -->
+				<li class="<%= 'active' if obj == 'listing' %>"><a href="/products">Listing</a></li>
+				<li class="<%= 'active' if obj == 'trips' %>"><a href="/trips">Trips</a></li>
+				<li class="<%= 'active' if obj == 'profile' %>"><%= link_to 'Profile', profile_path %></li>
+				<% if current_user.status == 'merchant' %>
+					<li class="<%= 'active' if obj == 'accounts' %>"><%= link_to 'Accounts', accounts_path %></li>
+				<% end %>
+			</ul>
+		</div>
+		<!--/.nav-collapse -->
+	</div>
+</nav>
+

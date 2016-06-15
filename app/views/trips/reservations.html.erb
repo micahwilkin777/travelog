@@ -1,0 +1,170 @@
+<%= render "shared/settings_nav", :obj => 'listing' %>
+<div class="side-collapse-container">
+	<section class="header-11-sub profile-page">
+		<div class="container">
+			<div class="row ">
+				<div class="col-md-3">
+					<%= render "shared/listing_left_nav", :obj => 'reservations' %>
+				</div>
+				<div class="col-md-9">
+					<div class="row" style="margin-bottom: 15px;">
+						<div class="col-md-10"></div>
+						<div class="col-md-2">
+							<select class=" form-control" title="Dropdown" id="listed-change">
+								<option value="all">All</option>
+								<option value="upcomming">Upcomming</option>
+								<option value="previous">Previous</option> 
+							</select>
+							
+						</div>
+					</div>
+
+					<div class="panel panel-default profile-photo">
+						<div class="panel-heading"><strong>Your Reservations</strong></div>
+						<div class="panel-body">
+							<div class="col-md-12">
+								<table class="table table-bordered">
+									<thead>
+										<tr>
+											<th width="12%">Status</th>
+											<th width="19%">Date & Locations</th>
+											<th width="36%">Guest</th>
+											<th width="33%">Details</th>
+										</tr>
+									</thead>
+									<tbody>
+										
+										<% @invoices.each do |invoice| %>
+											<tr>
+												<th scope="row">
+													<p class="accepted"><%= invoice.get_merchant_status %></p>
+												</th>
+												<td>
+													<p><%= invoice.booking_date.strftime('%d %B %Y') %><br>
+														<%= invoice.product.full_address %>
+													</p>
+												</td>
+												<td>
+													<table width="100%" border="0" cellspacing="0" cellpadding="0">
+														<tr>
+															<td width="35%" rowspan="2">
+																<img src="<%= invoice.product.user_avatar_url %>" width="60" class="img-circle"></td>
+															<td width="65%">
+																<h6><%= invoice.product.user.full_name %></h6>
+															</td>
+														</tr>
+														<tr>
+															<td>
+																<p><%= link_to 'View Receipt', '#' %></p>
+															</td>
+														</tr>
+													</table>
+												</td>
+												<td>
+													<p>
+														<%= invoice.product.name %>
+													</p>
+													<p>
+														<%= truncate(strip_tags(invoice.product.highlight), length: 100, escape: false) %>
+													</p>
+													<p>
+														<%= get_all_currency_symbols[invoice.currency] %><%= invoice.amount_cents / 100 %>
+													</p>
+												</td>
+											</tr>
+										<% end %>
+									</tbody>
+								</table>
+							</div>
+						</div>
+				 </div>
+				</div>
+			</div>
+		</div>
+	</section>
+	<!-- full-box-border -->
+</div>
+<!-- /side-collapse-container  -->
+
+<style>
+	ul.sidebar {padding:0;}
+	ul.sidebar li{ list-style:none;margin: 10px 0; }
+	ul.sidebar li a{ color:#adadad;}
+	.listing-details {
+		background-color: #FFF;
+		border:1px solid #e6e6e6; padding:40px 20px;
+	}
+	.profile-form input {background-color: #FFF;
+		border:1px solid #adadad;
+	}
+	.profile-form select {background-color: #FFF;
+		border:1px solid #adadad; width:100px;
+	}
+	.btn-viewprofile { width:200px;color: #333;
+		background-color: #FFF;
+		border-color: #adadad; margin-top:20px;
+	}
+	.birthdate .dropdown-menu {
+		top: 33px;
+	}
+	.profile-details .dropdown-toggle {
+		width: 130px;
+	}
+	.profile-page {
+		padding-top: 40px;
+		background: #fafafa;
+	}
+	.nav-second-profile {  z-index:2;  background: #DBDDDE; padding-top:0;}
+	.nav-second-profile li.active {font-weight: bold; color:#000;}
+	.nav-second-profile .navbar-nav>li>a {
+		padding-top: 15px;
+		color: #777;
+	}
+
+	/*Listings*/
+
+	h5.panel-title {
+		font-weight: normal;
+		font-family: Arial, Helvetica, sans-serif;
+		font-size: 20px;
+		color: #000;
+		line-height: 26px;margin-left: 15px;
+	}
+
+	.header-11-sub p {
+		color: #000;font-family: Arial, Helvetica, sans-serif;
+		font-size: 14px;
+	}
+
+	.btn-list {    background: #2d5be3; color:#FFF; border-color:#2d5be3}
+
+	.form-control {
+		border: 1px solid #ccc;
+	}
+
+	#listed-change {
+		width: 130px;
+		float: right;
+	}
+
+</style>
+
+<script>
+	$(document).ready(function() {
+		$('#listed-change').on('change', function() {
+			var listed_status = $(this).val();
+			if(listed_status == 'upcomming') {
+				$('.panel.upcomming').fadeIn('slow');
+				$('.panel.previous').fadeOut('slow');
+			} else if (listed_status == 'previous') {
+				$('.panel.upcomming').fadeOut('slow');
+				$('.panel.previous').fadeIn('slow');
+			} else {
+				$('.panel.upcomming').fadeIn('slow');
+				$('.panel.previous').fadeIn('slow');
+			}
+		})
+	})
+
+
+</script>

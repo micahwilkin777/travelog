@@ -1,0 +1,127 @@
+<% content_for :page_title do %>
+	<%= 'Profile - Travelog' %>
+<% end %>
+
+
+<%= render "shared/settings_nav", :obj => 'profile' %>
+
+<section class="header-11-sub profile-page">
+	<div class="container">
+		<div class="row ">
+			<%= render 'shared/profile_nav', :obj => 'photo' %>
+			<div class="col-xs-12 col-sm-9 col-md-9">
+				
+				<%= form_for @profile, url: {action: "profile_avatar"}, :html => {:class => "form-horizontal profile-form" } do |f| %>
+					<div class="panel panel-default profile-photo">
+						<div class="panel-heading">Profile Photo</div>
+						<div class="panel-body">
+							<div class="col-xs-12 col-sm-3 col-md-3 profileholder">
+								<a class="remove-profile" href="#"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></a>
+								<% if @profile.user_avatar.present? %>
+									<img src="<%= @profile.user_avatar.avatar.small.url %>" class="img-circle">
+									<input type="hidden" name="user_avatar[id]" value="<%= @profile.user_avatar.id %>" >
+								<% else %>
+									<img src="<%= image_url('placehold_150_150.png') %>" class="img-circle">
+								<% end %>
+								
+							</div> 
+							
+							<div class="col-xs-12 col-sm-9 col-md-9">
+								<p>Clear frontal face photos are an important way for hosts and guests to learn about each other. It’s not much fun to host a landscape! Please upload a photo that clearly shows your face.</p>
+								
+								<span class="btn btn-default btn-profile" style="margin-bottom: 20px;">
+									Upload a file form your computer <input type="file" id="file_upload">
+								</span>
+								<button type="submit" name="commit" class="btn btn-default btn-save" style="display: block; margin-bottom: 20px;">Submit</button>
+							</div> 
+						</div>
+					</div>
+				<% end %>
+			</div>
+		</div>
+	</div>
+</section>
+
+
+<style>
+	.profile-form input {
+		color: black;
+	}
+</style>
+
+<script type="text/javascript">
+	$(document).ready(function() {
+
+		$(document).on('change', '#file_upload', function() {
+
+			if ($('[name="user_avatar[id]"]').length > 0) {
+				alert("Can't upload more than 1.");
+				return;
+			};
+
+			var formData = new FormData();
+			formData.append('user_avatar[avatar]', this.files[0]);
+			$('body').loading({ message: 'Uploading...'});
+			$.ajax({
+				url: '/user_avatars',
+				dataType: "json",
+				data: formData,
+				cache: false,
+				contentType: false,
+				processData: false,
+				type: 'POST',
+				success: function(data) {
+					console.log('success');
+					$('.profileholder img').attr('src', data.avatar.small.url);
+					$('[name="user_avatar[id]"]').remove();
+					$('.profileholder').append('<input type="hidden" name="user_avatar[id]" value="' + data.id + '">');
+
+					$('#file_upload').val('');
+					$('body').loading('stop');
+				},
+				error: function(error) {
+					console.log(error);
+					$('body').loading('stop');
+				}
+			});
+		})
+
+		$(document).on('click', '.remove-profile', function(event) {
+			event.preventDefault();
+			if ($(this).parent().find('input[name="user_avatar[id]"]').length == 0) {
+				return;
+			}
+			var attachment_id = $(this).parent().find('input[name="user_avatar[id]"]').val();
+
+			$this = $(this);
+			$('body').loading({ message: 'Deleting...'});
+			$.ajax({
+				type: "POST",
+				url: "/user_avatars/" + attachment_id,
+				dataType: "json",
+				data: { "_method": "delete" },
+				success: function(){
+					$('.profileholder img').attr('src', "<%= image_url('placehold_150_150.png') %>");
+					$('[name="user_avatar[id]"]').remove();
+					$('body').loading('stop');
+					console.log('deleted attachment');
+				},
+				error: function(error) {
+					console.log(error);
+					$('body').loading('stop');
+				}
+			});
+		})
+	})
+
+		
+</script>
+
+
+<!-- added by me -->
+<style>
+	.remove-profile {
+		left: inherit;
+		right: 0;
+	}
+</style>

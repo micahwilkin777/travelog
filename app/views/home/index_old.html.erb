@@ -1,0 +1,159 @@
+<div class="side-collapse-container">
+	<section class="header-11-sub bg-midnight-blue navbar-none ">
+		<div class="background">
+			&nbsp;
+		</div>
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-12 text-center">
+					<h3>We help you to discover and<br>
+						book amazing things to do
+					</h3>
+					<p>
+						Buy experinces not things
+					</p>
+					<div ng-controller="TestCtrl">
+						<form class="form-inline landing-page-search" method="POST" action="/products/result">
+							<%= tag(:input, :name => 'authenticity_token', :type => "hidden", :value => form_authenticity_token) %>
+							<div class="form-group">
+								<input type="text" name="city" class="form-control places-form" id="search-location"  ng-autocomplete="result1" placeholder="Where do you want to go?" autocomplete = "off">
+							</div>
+							<div class="form-group" ng-controller='DefaultCtrl'>
+								<input type="text" id="demo6" name="search_free_text" class="form-control name-form"  auto-complete ui-items="names" ng-model="selected" placeholder="Search Names" autocomplete="off" >
+							</div>
+							<% ProductCategory.order('id').each do |category| %>
+								<input type="hidden" name="category_<%= category.id %>" value="1">
+							<% end %>
+							<button type="submit" class="btn btn-default search-btn">Search</button>
+						</form>
+					</div>
+					<br>
+				</div>
+			</div>
+		</div>
+	</section>
+	<div class="container landing-content">
+		<!-- Projects Row -->
+		<div class="row">
+			<div class="col-md-12 text-center content-title">
+				<h3>Now trending in Kuala Lumpur</h3>
+			</div>
+		</div>
+
+			<% @products.each_slice(4).each do |slice| %>
+			<div class="row">
+			<% slice.each do |product| %>
+			<div class="col-md-3 portfolio-item">
+				<p class="price"><%= get_all_currency_symbols[product.current_currency] %> <%= product.price_with_currency %></p>
+				<a href="<%= product_path product %>"><img src="<%= product.user.store_setting.store_image.store_img.small if product.user.store_setting.store_image.present? %>" class="img-circle user-thumb" width="52"/></a>
+				<a href="<%= product_path product %>">
+				<img class="img-responsive" src="<%= product.product_attachments.first.attachment.small.url if product.product_attachments.first.present? %>" width="262" alt="">
+				</a>
+				<h4>
+					<a href="<%= product_path product %>"><%= product.name %></a>
+				</h4>
+				<a href="<%= product_path product %>">
+					<p><%= product.city%>, <%= product.country%></p>
+				</a>
+				</div>
+				<% end %>
+			</div>
+			<% end %>
+			
+	
+		<!-- /.row -->
+		<!-- Projects Row -->
+		
+		<!-- /.row -->
+		<div class="row">
+			<div class="col-md-12 text-center content-title">
+				<h3>Discover</h3>
+			</div>
+			<div class="col-md-6 portfolio-item">
+				<div class="text-overlay big-left">
+					<a href="#">Perhentian Island</a>
+				</div>
+				<div class="overlay-bg"></div>
+				<a href="#"  class="overlay-big-left">
+				<img class="img-responsive" src="<%= asset_url('9.png') %>" width="570" alt="">
+				</a>
+			</div>
+			<div class="col-md-6 portfolio-item">
+				<!--Top Right Image-->
+				<div class="text-overlay top-right">
+					<a href="#">Yoda Island</a>
+				</div>
+				<div class="overlay-right-top-bg"></div>
+				<a class="overlay-right-top" href="#">
+				<img class="img-responsive" src="<%= asset_url('10.png') %>" width="570" alt="">
+				</a>
+				<!--Bottom Right Image-->
+				<div class="text-overlay bottom-right">
+					<a href="#">Mount Kinabalu</a>
+				</div>
+				<div class="overlay-right-bottom-bg"></div>
+				<a class="overlay-right-bottom" href="#">
+				<img class="img-responsive" src="<%= asset_url('11.png') %>" width="570" alt="">
+				</a>
+			</div>
+			<!--Discover More-->
+			<div class="col-md-12 text-center view-more">
+				<a href="#" class="view-more-btn">Discover More</a>
+			</div>
+		</div>
+	</div>
+	
+</div>
+<!-- /side-collapse-container  -->
+<script>
+	function initResponsiveHeader() {
+	  var sideslider = $('[data-toggle=collapse-side]');
+	  var sel = sideslider.attr('data-target');
+	  var sel2 = sideslider.attr('data-target-2');
+	  sideslider.click(function(event) {
+			$(sel).toggleClass('in');
+			$(sel2).toggleClass('out');
+	  });
+
+ 	}
+	
+	
+	
+	$(window).load(function() {
+	  $(document).ready(function() { 
+	  initResponsiveHeader(); 
+
+	  });
+	});
+	$(function() {
+		function displayResult(item) {
+		  $('.alert').show().html('You selected <strong>' + item.value + '</strong>: <strong>' + item.text + '</strong>');
+		}
+		// $('#demo6').typeahead({
+		//   source: [
+		// 		'Genting',
+		// 		'Zoo Negara',
+		// 		'Tioman',
+		// 		'Petronas Towers',
+		// 		'Batu Caves',
+		// 		'Gunung Mulu',
+		// 		'Mount Kinabalu',
+		// 		'Bako Park',
+		// 		'Sunway Lagoon',
+		// 		'Pangkor island'],
+		//   onSelect: displayResult
+		// });
+
+		$('#demo6').typeahead({
+		  source: gon.product_categories,
+		  onSelect: displayResult
+		});
+
+		$('#search-location').typeahead({
+			source: gon.search_location_list,
+			onSelect: displayResult
+		});
+	
+	});
+			
+</script>

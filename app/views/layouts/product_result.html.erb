@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+  <% if content_for?(:city) %>
+    <%= yield(:city) %>
+  <% end %>
+
+	<!-- og meta for facebook share -->
+	<meta property="fb:app_id" content="myid" /> 
+  <meta property="og:type"   content="sdff:post" /> 
+  <meta property="og:url"    content="testtest" /> 
+  <meta property="og:title"  content="Sample" /> 
+  <!-- <meta property="og:image"  content="https://fbstatic-a.akamaihd.net/images/devsite/attachment_blank.png" /> -->
+
+
+	<%= favicon_link_tag 'favicon.ico' %>
+  <title><%= page_title yield(:page_title) %></title>
+  <%= stylesheet_link_tag    'application_result', media: 'all' %>
+  <%= javascript_include_tag 'application_result' %>
+  <%= csrf_meta_tags %>
+  <%= Gon::Base.render_data %>
+</head>
+<body>
+
+	<div class="page-wrapper">
+    <%= render 'layouts/header' %>
+    <%= render 'shared/flash' %>
+    <%= yield %>
+    <%= render 'layouts/footer' %>
+  </div>
+	
+
+	<style type="text/css">
+		.header-10 .navbar .brand {
+      margin-top: -9px;
+      padding-top: 0;
+    }
+    .navbar {
+      padding-top: 0;
+    }
+	</style>
+</body>
+</html>

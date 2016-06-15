@@ -1,0 +1,37 @@
+.dropdown-menu.currency-dropdown-menu {
+  display: none;
+
+  .open > & {
+    display: block;
+  }
+}
+
+.header-10 {
+	// overflow: hidden;
+	.navbar-header {
+		max-height: 80px;
+	}
+}
+
+
+
+footer .terms-footer {
+	margin-right: 0;
+}
+
+.navbar.navbar-fixed-top.nav-second-profile {
+  // -webkit-transform: translate3d(0, 0, 0);
+  // -moz-transform: translate3d(0, 0, 0);
+  // -ms-transform: translate3d(0, 0, 0);
+  // -o-transform: translate3d(0, 0, 0);
+  // transform: translate3d(0, 0, 0);
+  // -webkit-transition: all 0.33s cubic-bezier(0.694, 0.0482, 0.335, 1);
+  // -moz-transition: all 0.33s cubic-bezier(0.694, 0.0482, 0.335, 1);
+  // -o-transition: all 0.33s cubic-bezier(0.694, 0.0482, 0.335, 1);
+  // -ms-transition: all 0.33s cubic-bezier(0.694, 0.0482, 0.335, 1);
+  // transition: all 0.33s cubic-bezier(0.694, 0.0482, 0.335, 1);
+  // max-width: 1170px;
+  // margin: 0 auto;
+  max-width: inherit;
+  margin: 70px 0 0;
+}

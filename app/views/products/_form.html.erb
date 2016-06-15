@@ -1,0 +1,981 @@
+<section class="basic-section <%= 'hide' unless @show_section == 'basic' %>">
+	<!--Basic section-->
+	<%= form_for(@product) do |f| %>
+		<div class="row">
+			<div class="col-xs-12 col-md-10">
+				<h4>Basics</h4>
+				<p>
+					Basics travel details are used by user to find their needs.
+				</p>
+				<hr>
+			</div>
+			<div class="col-xs-12 col-md-10">
+				<!-- <h4>Places</h4> -->
+				
+				<div class="form-group row">
+					<%= f.label :name, 'Name:', :class => 'col-xs-12 control-label' %>
+					<div class="col-xs-12">
+						<%= f.text_field :name, autofocus: true, :class => 'form-control' %>
+					</div>
+				</div>
+
+				<div class="form-group row">
+					<%= f.label :product_category_id, 'Product Category:', :class => 'col-xs-12' %>
+					<div class="col-xs-12">
+						<%= f.select(:product_category_id, ProductCategory.order('id ASC').collect {|p| [ p.name, p.id ] }, {include_blank: false} , :class => 'form-control') %>
+					</div>
+				</div>
+
+				<div class="form-group row">
+					<%= f.label :highlight, 'Highlight:', :class => 'col-xs-12' %><br />
+					<div class="col-xs-12">
+						<%= f.text_area :highlight, :class => 'form-control' %>
+					</div>
+				</div>
+
+				
+			</div>
+		</div>
+		<hr>
+		<div class="row">
+			<input type="hidden" name="step-param" value="basic">
+			<div class="col-xs-12 next-bottom paddingzero">
+				<div class="col-xs-6">
+					<!-- <a href="#" class="btn-back">Back</a> -->
+				</div>
+				<div class="col-xs-6">
+					<% if @product.new_record? %>
+						<%= f.submit 'See Next', :class => 'btn btn-next pull-right' %>
+					<% else %>
+						<%= f.submit 'See Next', :class => 'btn btn-next pull-right' %>
+					<% end %>
+					
+				</div>
+			</div>
+		</div>
+	<% end %>
+</section>
+
+<section class="description-section <%= 'hide' unless @show_section == 'description' %>">
+	<!--Description section-->
+	<%= form_for(@product) do |f| %>
+		<div class="row">
+			<div class="col-xs-12 col-md-10">
+				<h4>Tell travelers about your package</h4>
+				<p>
+					Every destination is unique. Highlight what makes your listing excitings so that it stands out to users who want to travel.
+				</p>
+				<hr>
+			</div>
+			<div class="col-xs-12 col-md-10">
+				<h4>Descriptions</h4>
+				
+				<div class="form-group row">
+					<%= f.label :description, 'Description:', :class => 'col-xs-12' %><br />
+					<div class="col-xs-12">
+						<%= f.text_area :description, :class => 'form-control' %>
+					</div>
+				</div>
+				
+			</div>
+		</div>
+		<hr>
+		<div class="row">
+			<div class="col-xs-12 next-bottom paddingzero">
+				<div class="col-xs-6">
+					
+					<% if @product.new_record? %>
+						<a href="#" class="btn-back">Back</a>
+					<% else %>
+						<a href="/products/<%= @product.id %>/edit_basic" class="btn-back">Back</a>
+					<% end %>
+				</div>
+				<div class="col-xs-6">
+					<% if @product.new_record? %>
+						<a href="" class="btn btn-next pull-right">See Next</a>
+						<a href="/products/<%= @product.id %>/edit_location" class="btn btn-next pull-right">See Next</a>
+					<% else %>
+						<input type="hidden" name="step-param" value="description">
+						<%= f.submit 'See Next', :class => 'btn btn-next pull-right' %>
+						
+					<% end %>
+				</div>
+			</div>
+		</div>
+	<% end %>
+</section>
+
+<section class="location-section <%= 'hide' unless @show_section == 'location' %>">
+	<%= form_for(@product) do |f| %>
+		<div class="row">
+			<div class="col-xs-12 col-md-10">
+				<h4>Location</h4>
+				<p>
+					A precise location is important. 
+				</p>
+				<hr>
+			</div>
+			<div class="col-xs-12 col-md-10">
+				<h4>Location</h4>
+				
+				<div class="form-group row">
+					<%= f.label :country, 'Country:', :class => 'col-xs-12' %>
+					<div class="col-xs-12">
+						<%= f.select(:country, get_country_list.collect {|p| [ p[:country], p[:country] ] }, {include_blank: false} , :class => 'form-control') %>
+					</div>
+				</div>
+
+				<div class="form-group row">
+					<%= f.label :address, 'Street Address:', :placeholder => 'House name/number + street/road', :class => 'col-xs-12' %>
+					<div class="col-xs-12">
+						<%= f.text_field :address, :class => 'form-control', :autocomplete => 'off', :id => 'route' %>
+					</div>
+				</div>
+
+				<div class="form-group row">
+					<%= f.label :apt, 'Apt, Suite, Bldg. (optional)', :class => 'col-xs-12' %>
+					<div class="col-xs-12">
+						<%= f.text_field :apt, :class => 'form-control', :placeholder => 'Apt., suite, building access code', :id => 'street_number'%>
+					</div>
+				</div>
+
+				<div class="form-group row">
+					<%= f.label :city, 'City:', :class => 'col-xs-12' %>
+					<div class="col-xs-12">
+						<%= f.text_field :city, :class => 'form-control', :placeholder => 'City', :id => 'locality'%>
+					</div>
+				</div>
+
+				<div class="form-group row">
+					<%= f.label :state, 'State:', :class => 'col-xs-12' %>
+					<div class="col-xs-12">
+						<%= f.text_field :state, :class => 'form-control', :placeholder => 'State', :id => 'administrative_area_level_1' %>
+					</div>
+				</div>
+
+				<div class="form-group row">
+					<%= f.label :zip, 'Zip:', :class => 'col-xs-12' %>
+					<div class="col-xs-12">
+						<%= f.text_field :zip, :class => 'form-control', :id => 'postal_code'%>
+					</div>
+				</div>
+				
+			</div>
+		</div>
+		<hr>
+		<div class="row">
+			<div class="col-xs-12 next-bottom paddingzero">
+				<div class="col-xs-6">
+					<% if @product.new_record? %>
+						<a href="#" class="btn-back">Back</a>
+					<% else %>
+						<a href="/products/<%= @product.id %>/edit_description" class="btn-back">Back</a>
+					<% end %>
+				</div>
+				<div class="col-xs-6">
+					<% if @product.new_record? %>
+						<a href="" class="btn btn-next pull-right">See Next</a>
+						<a href="/products/<%= @product.id %>/edit_photo" class="btn btn-next pull-right">See Next</a>
+					<% else %>
+						<input type="hidden" name="step-param" value="location">
+						<%= f.submit 'See Next', :class => 'btn btn-next pull-right' %>
+					<% end %>
+				</div>
+			</div>
+		</div>
+	<% end %>
+</section>
+
+<section class="photos-section <%= 'hide' unless @show_section == 'photo' %>">
+	<%= form_for(@product) do |f| %>
+		<div class="row">
+			<div class="col-xs-12 col-sm-12 col-lg-12">
+				<h4>Photos</h4>
+				<!-- <p> Add photos of areas guests have access to. You can always come back later and add more.</p> -->
+				<hr>
+				<div class="form-group">
+					<div class="fileUpload btn btn-large btn-upload">
+						<span>Upload</span>
+						<input name="file_attachment" type="file" id="file_upload" class="upload">
+					</div>
+				</div>
+				<hr>
+				
+			</div>
+		</div>
+		<div class="row attachments-container">
+			<% if !@product.new_record? %>
+				<% @product.product_attachments.each do |attachment| %>
+					<div class="col-xs-6 col-md-4 form-group">
+						<!-- <div class="thumbnail panel photo-item upload-photo-frame">
+							
+						</div> -->
+						<img src="<%= attachment.attachment.small.url %>" class="upload-photo-image">
+						<input type="hidden" name="product_attachment[id][]" value="<%= attachment.id %>">
+						<a class="delete-attachment" href="#"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></a>
+					</div>
+				<% end %>
+			<% end %>
+
+			<div class="col-xs-6 col-md-4 form-group">
+				<div class="thumbnail panel photo-item empty-photo-frame" name="empty-photo-frame">
+					<img src="<%= asset_url('placehold.png') %>">
+				</div>
+			</div>
+			
+		</div>
+		<hr>
+		<div class="row">
+			<div class="col-xs-12 next-bottom paddingzero">
+				<div class="col-xs-6">
+					<% if @product.new_record? %>
+						<a href="#" class="btn-back">Back</a>
+					<% else %>
+						<a href="/products/<%= @product.id %>/edit_location" class="btn-back">Back</a>
+					<% end %>
+				</div>
+				<div class="col-xs-6">
+					<% if @product.new_record? %>
+						<a href="" class="btn btn-next pull-right">See Next</a>
+						<a href="/products/<%= @product.id %>/edit_price" class="btn btn-next pull-right">See Next</a>
+					<% else %>
+						<input type="hidden" name="step-param" value="photo">
+						<%= f.submit 'See Next', :class => 'btn btn-next pull-right photo-submit' %>
+					<% end %>
+				</div>
+			</div>
+		</div>
+	<% end %>
+</section>
+
+<section class="pricing-section <%= 'hide' unless @show_section == 'price' %>">
+	<%= form_for(@product) do |f| %>
+		<div class="row">
+
+			<div class="col-xs-12 col-md-10">
+				<h4>Set the price</h4>
+				<p>
+					You can set a price to reflect the different variant prices
+				</p>
+			</div>
+		</div>
+		<hr>
+		<div class="row form-group">
+			<div class="col-xs-12 col-md-10">
+				<!-- <h4>Base price</h4> -->
+				<div class="form-group row">
+
+					<label class="col-xs-12 control-label">Price</label>
+					<div class="col-xs-12 col-sm-6">
+						<div class="input-group">
+							<div class="input-group-addon currency-symbol">RM</div>
+							<input name="product[price_cents]" class="form-control" type="text" value="<%= @product.price_cents.to_d / 100 if @product.price_cents.present? %>" <%= "disabled" if @product.variants.present? && @product.variants.count > 0 %>>
+						</div>
+					</div>
+				</div>
+
+				<div class="form-group row">
+					<div class="col-sm-6">
+						<%= f.label :currency, 'Currency' %>
+							<%= f.select(:currency, get_currency_list.collect {|p| [ p[:currency], p[:currency] ] }, {include_blank: false} , :class => 'form-control') %>
+					</div>
+				</div>
+
+				<!-- discount filed -->
+				<div class="form-group row">
+
+					<label class="col-xs-12 control-label">Discount</label>
+					<div class="col-xs-12 col-sm-6">
+						<div class="input-group">
+							<div class="input-group-addon">%</div>
+							<input name="product[discount]" class="form-control" type="text" value="<%= @product.discount %>">
+						</div>
+					</div>
+				</div>
+
+			</div>
+		</div>
+
+		<div class="form-group row">
+			<%= f.label :refund_day, 'What is your cancellation policy for this product type?', :class => 'col-sm-12' %><br />
+			
+			<div class="col-xs-6 col-sm-6">
+				<div class="input-group">
+					<div class="input-group-addon">%</div>
+					<%= f.text_field :refund_percent, :class => 'form-control refund-percent', :placeholder => 'Refund Percent' %>
+				</div>
+				<label class="refund-style">refund if cancelled</label>
+				
+			</div>
+
+			<div class="col-xs-6 col-sm-6">
+				<div class="input-group">
+					<%= f.text_field :refund_day, :class => 'form-control refund-day', :placeholder => 'Refund Day' %>
+				</div>
+				<label class="refund-style">days in advance</label>
+			</div>
+		</div>
+
+
+		<div class="form-group row">
+			<div class="col-xs-12">
+				<label>
+					<%= f.check_box :refundable, checked: @product.refundable == 1 %>
+					Refundable
+				</label>
+			</div>
+		</div>
+
+		<!-- <div class="form-group refund-area row">
+			<%= f.label :refund_day, 'Refund Day:', :class => 'col-sm-12' %><br />
+			<div class="col-xs-12 col-sm-6">
+				<%= f.text_field :refund_day, :class => 'form-control', :placeholder => 'Refund Day' %>
+			</div>
+		</div>
+
+		<div class="form-group refund-area row">
+			<%= f.label :refund_percent, 'Refund Percent:', :class => 'col-sm-12' %><br />
+			<div class="col-xs-12 col-sm-6">
+				<%= f.text_field :refund_percent, :class => 'form-control', :placeholder => 'Refund Percent' %>
+			</div>
+		</div> -->
+
+		<div class="form-group row">
+			<label class="col-xs-12 control-label">Variants</label>
+			<div class="col-sm-6">
+				<button type="button" id="add-variant-button" class="btn btn-default btn-sm active"><i class="fa fa-plus"></i></button>
+			</div>
+		</div>
+		<div class="variants-container form-group">
+			<div class="form-group row hide" id="variantTemplate">
+				<div class="col-xs-8">
+					<div class="col-xs-12">
+						<label for="variant_name">Variant Name:</label><br>
+						<input class="form-control" type="text" name="variant[][name]" id="variant_name">
+					</div>
+					<div class="col-xs-12">
+						<label for="variant_price">Variant Price:</label><br>
+						<div class="input-group">
+							<div class="input-group-addon currency-symbol">$</div>
+							<input class="form-control" type="text" name="variant[][price_cents]" id="variant_price">
+						</div>
+					</div>
+					<div class="col-xs-12">
+						<label for="variant_min_count">Min Count:</label><br>
+						<input class="form-control" type="text" name="variant[][min_count]" id="variant_min_count">
+					</div>
+					<div class="col-xs-12">
+						<label for="variant_max_count">Max Count:</label><br>
+						<input class="form-control" type="text" name="variant[][max_count]" id="variant_max_count">
+					</div>
+					
+				</div>
+				<div class="col-xs-4">
+					<button type="button" class="btn btn-default removeButton active"><i class="fa fa-minus"></i></button>
+				</div>
+				
+			</div>
+			<% if !@product.new_record? %>
+				<% @product.variants.each do |variant| %>
+					<div class="form-group row">
+						<div class="col-xs-8">
+							<div class="col-xs-12">
+								<label for="variant_name">Variant Name:</label><br>
+								<input class="form-control" type="text" value="<%= variant.name %>" name="variant[][name]" id="variant_name">
+							</div>
+							<div class="col-xs-12">
+								<label for="variant_price">Variant Price:</label><br>
+								<div class="input-group">
+									<div class="input-group-addon currency-symbol">$</div>
+									<input class="form-control" type="text" value="<%= variant.price_cents.to_d / 100 %>" name="variant[][price_cents]" id="variant_price">
+								</div>
+							</div>
+
+							<div class="col-xs-12">
+								<label for="variant_min_count">Min Count:</label><br>
+								<input class="form-control" type="text" value="<%= variant.min_count %>" name="variant[][min_count]" id="variant_min_count">
+							</div>
+							<div class="col-xs-12">
+								<label for="variant_max_count">Max Count:</label><br>
+								<input class="form-control" type="text" value="<%= variant.max_count %>" name="variant[][max_count]" id="variant_max_count">
+							</div>
+
+						</div>
+						<div class="col-xs-4">
+							<button type="button" class="btn btn-default removeButton active"><i class="fa fa-minus"></i></button>
+						</div>
+					</div>
+				<% end %>
+			<% end %>
+		</div>
+
+		<hr>
+		<div class="row">
+			<div class="col-xs-12 next-bottom paddingzero">
+				<div class="col-xs-6">
+					<% if @product.new_record? %>
+						<a href="#" class="btn-back">Back</a>
+					<% else %>
+						<a href="/products/<%= @product.id %>/edit_photo" class="btn-back">Back</a>
+					<% end %>
+				</div>
+				<div class="col-xs-6">
+					<% if @product.new_record? %>
+						<a href="" class="btn btn-next pull-right">See Next</a>
+						<a href="/products/<%= @product.id %>/edit_price" class="btn btn-next pull-right">See Next</a>
+					<% else %>
+						<input type="hidden" name="step-param" value="price">
+						<%= f.submit 'Save', :class => 'btn btn-next pull-right', :id => 'product-submit' %>
+					<% end %>
+				</div>
+			</div>
+		</div>
+
+	<% end %>
+</section>
+
+
+<script>
+
+	$(window).load(function() {
+		$(document).ready(function() {
+
+			$(document).on('click', '#product-submit', function() {
+				
+			})
+
+			var showProductSave = function() {
+				if (gon.product_status == 'enable') {
+					$('#product-submit').val('List');
+					$('#product-submit').text('List');
+				} else if (gon.product_status == 'disable') {
+					$('#product-submit').val('Save');
+					$('#product-submit').text('Save');
+				};
+			}
+
+			showProductSave();
+
+			$('body').loading({
+				stoppable: true
+			});
+
+			var adjustProductAttachments = function() {
+				$('.attachments-container .clearfix').remove();
+				index = 0;
+				$('.attachments-container .col-md-4').each(function() {
+					index++;
+					if (index % 3 == 0) {
+						$(this).after('<div class="clearfix"></div>');
+					};
+				})
+			}
+
+			var updateCurrencySymbol = function() {
+				switch($('#product_currency').val()) {
+					case 'USD':
+						$('.currency-symbol').text('$');
+						break;
+					case 'MYR':
+						$('.currency-symbol').text('RM');
+						break;
+					case 'SGD':
+						$('.currency-symbol').text('$');
+						break;
+					case 'THB':
+						$('.currency-symbol').text('฿');
+						break;
+					case 'PHP':
+						$('.currency-symbol').text('$');
+						break;
+					case 'TWD':
+						$('.currency-symbol').text('NT$');
+						break;
+				}
+			}
+
+			var showRefundableFields = function() {
+
+				$option_refund_day   = $('form').find('[name="product[refund_day]"]');
+				$option_refund_percent   = $('form').find('[name="product[refund_percent]"]');
+
+				if ($('#product_refundable').prop('checked')) {
+					$('.refund-area').css('display', 'block');
+					$('#product_refund_percent').prop('disabled', false);
+					$('#product_refund_day').prop('disabled', false);
+					$('#product_refund_percent').focus();
+					
+					// $('form').formValidation('revalidateField', 'product[refund_day]');
+					// $('form').formValidation('revalidateField', 'product[refund_percent]');
+				} else {
+
+					// $('form').formValidation('revalidateField', 'product[refund_day]');
+					// $('form').formValidation('revalidateField', 'product[refund_percent]');
+					
+					$('#product_refund_percent').prop('disabled', true);
+					$('#product_refund_day').prop('disabled', true);
+
+					$('.refund-area').css('display', 'none');
+					
+				}
+			}
+
+
+
+			$('#product_description').froalaEditor({key: 'gtscuaiid1D6jef=='})
+
+			.on('froalaEditor.contentChanged', function() {
+				$('form').formValidation('revalidateField', 'product[description]');
+			});
+
+			$('#product_highlight').froalaEditor({key: 'gtscuaiid1D6jef=='})
+			$('#product_highlight').froalaEditor()
+			.on('froalaEditor.contentChanged', function() {
+				$('form').formValidation('revalidateField', 'product[highlight]');
+			});
+
+			$('textarea').css({'display': 'block', 'opacity': '0', 'height': '0px'});
+
+			// $('select').selectpicker({
+			// 	liveSearch: false,
+			// 	maxOptions: 1
+			// });
+			adjustProductAttachments();
+			// showRefundableFields();
+			updateCurrencySymbol();
+
+			$(document).on('change', '#product_refundable', function() {
+				showRefundableFields();
+			})
+
+			
+			$(document).on('click', '#add-photo-button', function() {
+				attachment_count = $('.attachments-container .col-md-4').length
+				if (attachment_count < 5) {
+					$('#file_upload').trigger('click');
+				} else {
+					alert("Can't upload more than 5.");
+				}
+				
+			})
+
+			$(document).on('change', '#file_upload', function() {
+
+				var count = $('.attachments-container .upload-photo-image').length;
+				if (count >= 5) {
+					alert("Can't upload more than 5.");
+					return false;
+				}
+
+				$('body').loading({ message: 'Uploading...'});
+				var formData = new FormData();
+				formData.append('product_attachment[attachment]', this.files[0]);
+				$.ajax({
+					url: '/product_attachments',
+					dataType: "json",
+					data: formData,
+					cache: false,
+					contentType: false,
+					processData: false,
+					type: 'POST',
+					success: function(data) {
+						console.log('success');
+						append_html = '<div class="col-xs-6 col-md-4 form-group">';
+						append_html += '<img class="upload-photo-image" src="' + data.attachment.small.url + '" data-id="' + data.id + '">';
+						append_html += '<input type="hidden" name="product_attachment[id][]" value="' + data.id + '">';
+						append_html += '<a class="delete-attachment" href="#"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></a>';
+						append_html += '</div>';
+						$('.attachments-container .empty-photo-frame').parent().before(append_html);
+						$('#file_upload').val('');
+						$('form').formValidation('revalidateField', 'empty-photo-frame');
+
+						adjustProductAttachments();
+						$('body').loading('stop');
+					},
+					error: function(error) {
+						console.log(error);
+						$('body').loading('stop');
+					},
+					timeout: 500000
+				});
+			})
+
+			$('.attachments-container').on('click', '.delete-attachment', function(event) {
+				$(this).parent().fadeOut('slow', function() {
+					$(this).remove();
+				});
+				var attachment_id = $(this).parent().find('input[name="product_attachment[id][]"]').val();
+				$.ajax({
+					type: "POST",
+					url: "/product_attachments/" + attachment_id,
+					dataType: "json",
+					data: { "_method": "delete" },
+					complete: function(){
+						console.log('deleted attachment');
+					}
+				});
+				event.preventDefault();
+
+			})
+
+			// change currency symbol
+			$(document).on('change', '#product_currency', function() {
+				updateCurrencySymbol();
+			})
+
+			$('form').formValidation({
+				framework: 'bootstrap',
+				icon: {
+					valid: 'glyphicon glyphicon-ok',
+					invalid: 'glyphicon glyphicon-remove',
+					validating: 'glyphicon glyphicon-refresh'
+				},
+				fields: {
+					'product[name]': {
+						row: '.col-xs-12',
+						validators: {
+							notEmpty: {
+								message: 'The product name is required'
+							}
+						}
+					},
+					'product[city]': {
+						row: '.col-xs-12',
+						validators: {
+							notEmpty: {
+								message: 'The city is required'
+							}
+						}
+					},
+					'product[state]': {
+						row: '.col-xs-12',
+						validators: {
+							notEmpty: {
+								message: 'The state is required'
+							}
+						}
+					},
+					'product[description]': {
+						row: '.col-xs-12',
+						validators: {
+							callback: {
+								message: 'The description is required and cannot be empty',
+								callback: function(value, validator, $field) {
+									var code = $('[name="product[description]"]').val();
+									// <p><br></p> is code generated by Summernote for empty content
+									return (code !== '' && code !== '<p><br></p>');
+								}
+							}
+						}
+					},
+					'product[highlight]': {
+						row: '.col-xs-12',
+						validators: {
+							callback: {
+								message: 'The highlight is required and cannot be empty',
+								callback: function(value, validator, $field) {
+									var code = $('[name="product[highlight]"]').val();
+									// <p><br></p> is code generated by Summernote for empty content
+									return (code !== '' && code !== '<p><br></p>');
+								}
+							}
+						}
+					},
+					// 'product[refund_day]': {
+					// 	row: '.col-xs-12',
+					// 	validators: {
+					// 		callback: {
+					// 			message: 'The refund day is required',
+					// 			callback: function(value, validator, $field) {
+					// 				var code = $('[name="product[refund_day]"]').val();
+					// 				return (!$('#product_refundable').prop('checked') || code !== '')
+					// 			}
+					// 		}
+					// 	}
+					// },
+					// 'product[refund_percent]': {
+					// 	row: '.col-xs-12',
+					// 	validators: {
+					// 		callback: {
+					// 			message: 'The refund day is required',
+					// 			callback: function(value, validator, $field) {
+					// 				var code = $('[name="product[refund_percent]"]').val();
+					// 				return (!$('#product_refundable').prop('checked') || code !== '')
+					// 			}
+					// 		}
+					// 	}
+					// },
+					'product[price_cents]': {
+						row: '.col-xs-12',
+						validators: {
+							callback: {
+								message: 'The base price is required',
+								callback: function(value, validator, $field) {
+									var code = $('[name="product[price_cents]"]').val();
+									var variant_count = $('.variants-container.form-group > .form-group.has-feedback').length
+									return (variant_count > 0 || code !== '')
+								}
+							}
+						}
+					},
+					'product[discount]': {
+						row: '.col-xs-12',
+						validators: {
+							notEmpty: {
+								message: 'The discount is required'
+							},
+							numeric: {
+								message: 'The discount must be a numeric number'
+							}
+						}
+					},
+					'variant[][name]': {
+						row: '.col-xs-12',
+						validators: {
+							notEmpty: {
+								message: 'The variant name is required'
+							}
+						}
+					},
+					'variant[][price_cents]': {
+						row: '.col-xs-12',
+						validators: {
+							notEmpty: {
+								message: 'The variant price is required'
+							},
+							numeric: {
+								message: 'The price must be a numeric number'
+							}
+						}
+					},
+					'variant[][min_count]': {
+						row: '.col-xs-12',
+						validators: {
+							numeric: {
+								message: 'The min count must be a numeric number'
+							}
+						}
+					},
+					'variant[][max_count]': {
+						row: '.col-xs-12',
+						validators: {
+							numeric: {
+								message: 'The max count must be a numeric number'
+							}
+						}
+					},
+					'empty-photo-frame': {
+						row: '.col-xs-12',
+						validators: {
+							callback: {
+								message: 'The photo is required',
+								callback: function(value, validator, $field) {
+									var count = $('.attachments-container .upload-photo-image').length;
+									return (count > 0)
+								}
+							}
+						}
+					}
+				}
+			})
+			.on('click', '#add-variant-button', function() {
+		
+				var $template = $('#variantTemplate');
+				$clone = $template.clone().removeClass('hide').removeAttr('id');
+				$('.variants-container').append($clone);
+				$option_name   = $clone.find('[name="variant[][name]"]');
+				$option_price_cents   = $clone.find('[name="variant[][price_cents]"]');
+
+				// Add new field
+				$('form').formValidation('addField', $option_name);
+				$('form').formValidation('addField', $option_price_cents);
+
+				$('form').find('[name="product[price_cents]"]').prop('disabled', true);
+				
+			})
+			.on('click', '.removeButton', function() {
+				var $row    = $(this).closest('.form-group');
+				$option_name   = $row.find('[name="variant[][name]"]');
+				$option_price_cents   = $row.find('[name="variant[][price_cents]"]');
+
+				
+				// Remove field
+				$('form').formValidation('removeField', $option_name);
+				$('form').formValidation('removeField', $option_price_cents);
+
+				// Remove element containing the option
+				$row.remove();
+
+				var count_variants = $('form .variants-container > .form-group').length - 1;
+				if(count_variants == 0) {
+					$('form').find('[name="product[price_cents]"]').prop('disabled', false);
+				}
+
+			})
+
+		 
+
+			showRefundableFields();
+
+			$('body').loading('stop');
+
+		});
+
+	});
+
+
+	$(function() {
+		function displayResult(item) {
+			$('.alert').show().html('You selected <strong>' + item.value + '</strong>: <strong>' + item.text + '</strong>');
+		}
+		$('#demo6').typeahead({
+			source: [
+				'Genting',
+				'Zoo Negara',
+				'Tioman',
+				'Petronas Towers',
+				'Batu Caves',
+				'Gunung Mulu',
+				'Mount Kinabalu',
+				'Bako Park',
+				'Sunway Lagoon',
+				'Pangkor island'
+			],
+			onSelect: displayResult
+		});
+
+	});
+
+	// This example displays an address form, using the autocomplete feature
+	// of the Google Places API to help users fill in the information.
+
+	var placeSearch, autocomplete;
+	var componentForm = {
+		street_number: 'short_name',
+		route: 'long_name',
+		locality: 'long_name',
+		administrative_area_level_1: 'short_name',
+		// country: 'long_name',
+		postal_code: 'short_name'
+	};
+
+	function initAutocomplete() {
+		// Create the autocomplete object, restricting the search to geographical
+		// location types.
+		autocomplete = new google.maps.places.Autocomplete(
+				/** @type {!HTMLInputElement} */(document.getElementById('route')),
+				{types: ['geocode']});
+
+		// When the user selects an address from the dropdown, populate the address
+		// fields in the form.
+		autocomplete.addListener('place_changed', fillInAddress);
+	}
+
+	// [START region_fillform]
+	function fillInAddress() {
+		// // Get the place details from the autocomplete object.
+		var place = autocomplete.getPlace();
+		console.log(place.address_components);
+
+		for (var component in componentForm) {
+			document.getElementById(component).value = '';
+			document.getElementById(component).disabled = false;
+		}
+
+		// // Get each component of the address from the place details
+		// // and fill the corresponding field on the form.
+
+		for (var i = 0; i < place.address_components.length; i++) {
+			var addressType = place.address_components[i].types[0];
+			if (componentForm[addressType]) {
+				var val = place.address_components[i][componentForm[addressType]];
+				document.getElementById(addressType).value = val;
+			}
+		}
+
+		$('form').formValidation('revalidateField', 'product[city]');
+		$('form').formValidation('revalidateField', 'product[state]');
+	}
+	// [END region_fillform]
+
+	// [START region_geolocation]
+	// Bias the autocomplete object to the user's geographical location,
+	// as supplied by the browser's 'navigator.geolocation' object.
+	function geolocate() {
+		if (navigator.geolocation) {
+			navigator.geolocation.getCurrentPosition(function(position) {
+				var geolocation = {
+					lat: position.coords.latitude,
+					lng: position.coords.longitude
+				};
+				var circle = new google.maps.Circle({
+					center: geolocation,
+					radius: position.coords.accuracy
+				});
+				autocomplete.setBounds(circle.getBounds());
+			});
+		}
+	}
+	// [END region_geolocation]
+</script>
+
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCK70SDLsZG5fYn8kLfMj1I7Dy2zXoq6Qk&signed_in=true&libraries=places&callback=initAutocomplete" async defer>
+	
+</script>
+
+
+<!-- custom style by me for photo delete -->
+<style>
+	.delete-attachment {
+		position: absolute;
+		top: 10px;
+		right: 25px;
+		color: red;
+	}
+
+	section .fv-form-bootstrap .fv-icon-no-label {
+		right: 15px;
+		z-index: 100;
+	}
+	
+	.variants-container .has-feedback label ~ .form-control-feedback {
+		right: 15px;
+	}
+
+	.variants-container .btn-default {
+		padding: 5px 10px;
+	}
+	#add-variant-button.btn-default {
+		padding: 5px 10px;
+		margin-left: 15px;
+	}
+
+	.form-control.refund-percent, .form-control.refund-day {
+		width: 150px;
+	}
+	.input-group .form-control.refund-percent, .input-group .form-control.refund-day {
+		border-top-right-radius: 2px;
+		border-bottom-right-radius: 2px;
+	}
+
+	.input-group .refund-percent.form-control:not(:first-child):not(:last-child) {
+		border-top-right-radius: 2px;
+		border-bottom-right-radius: 2px;
+	}
+
+	span.refund-style {
+		margin-left: 20px;
+		line-height: 30px;
+	}
+
+	input[type=checkbox], input[type=checkbox]:hover, input[type=checkbox]:active, input[type=checkbox]:focus {
+		-webkit-appearance: checkbox !important;
+	}
+
+	.alert {
+		z-index: 101;
+    position: fixed;
+    width: 100%;
+    top: 132px;
+	}
+</style>

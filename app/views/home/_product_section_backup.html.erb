@@ -1,0 +1,111 @@
+<section class="content-7 landing-trending">
+	<div>
+		<div class="container">
+			<h3>
+				Now trending in 
+				<div class="dropdown trending-list">
+					<a href="" data-toggle="dropdown" class="select-trending">All Cities <span class="caret"></span></a>
+					<input type="hidden" value="all cities" class="location">
+					<ul class="dropdown-menu" aria-labelledby="" id="trending-location">
+						<li><a href="">All Cities</a></li>
+						<!-- <li><a href="">Kuala Lumpur</a></li>
+						<li><a href="">Johor</a></li>
+						<li><a href="">Kedah</a></li>
+						<li><a href="">Kelantan</a></li>
+						<li><a href="">Melaka</a></li>
+						<li><a href="">Negeri Sembilan</a></li>
+						<li><a href="">Pahang</a></li>
+						<li><a href="">Perak</a></li>
+						<li><a href="">Perlis</a></li>
+						<li><a href="">Pulau Pinang</a></li>
+						<li><a href="">Sabah</a></li>
+						<li><a href="">Sarawak</a></li>
+						<li><a href="">Selangor</a></li>
+						<li><a href="">Terengganu</a></li>
+						<li><a href="">Labuan</a></li> -->
+						<% @cities.each do |city| %>
+							<% if @count_per_city[city] >= 6 %>
+								<li><a href=""><%= city %></a></li>
+							<% end %>
+						<% end %>
+					</ul>
+				</div>
+			</h3>
+
+			<div id="product-list">
+				<% @products.each_slice(3).each do |slice| %>
+					<div class="row">
+						<% slice.each do |product| %>
+							<div class="col-sm-4 product-card">
+								<p class="price pull-right text-right"><%= get_all_currency_symbols[product.current_currency] %> <%= product.price_with_currency %></p>
+								<a href="<%= product_path product %>"><img src="<%= product.store_logo_url %>" class="img-circle user-thumb" width="52"/></a>
+								<a href="<%= product_path product %>">
+									<img class="img-responsive" src="<%= product.product_attachments.first.attachment.small.url if product.product_attachments.first.present? %>" alt="" style="width: 100%;">
+								</a>
+								<h4>
+									<a href="<%= product_path product %>"><%= product.name %></a>
+								</h4>
+								<a href="<%= product_path product %>">
+									<p><%= product.city%>, <%= product.country%></p>
+								</a>
+							</div>
+						<% end %>
+					</div>
+				<% end %>
+			</div>
+			<div class="row">
+				<form method="POST" action="/products/result" id="trending-form">
+					<%= tag(:input, :name => 'authenticity_token', :type => "hidden", :value => form_authenticity_token) %>
+					<% ProductCategory.order('id').each do |category| %>
+						<input type="hidden" name="category_<%= category.id %>" value="1">
+					<% end %>
+					<input type="hidden" name="city" value="all cities">
+					<div class="col-sm-6 col-md-4 col-lg-4 col-xs-offset-4 all-destinations-sections">
+						<button type="submit" class="btn btn-block btn-destination">See All Destinations</button>
+					</div>
+				</form>
+			</div>
+			
+		</div>
+	</div>
+</section>
+
+<script>
+	$(document).ready(function() { 
+  	// initResponsiveHeader(); 
+  	$('#trending-location li a').on('click', function(event) {
+  		event.preventDefault();
+  		var location = $(this).text();
+  		var formData = new FormData();
+  		formData.append('city', location);
+  		$.ajax({
+			  url: '/home_products',
+			  // dataType: "json",
+			  data: formData,
+			  cache: false,
+			  contentType: false,
+			  processData: false,
+			  type: 'POST',
+			  success: function(data) {
+			  	console.log('success');
+			  	$('.select-trending').empty();
+			  	$('.select-trending').append(location + ' ' + '<span class="caret"></span>');
+			  	$('#trending-form input[name=city]').val(location);
+			  	$('#product-list').empty();
+			  	$('#product-list').append(data);
+			  },
+			  error: function(error) {
+	      	console.log(error);
+	      },
+	      timeout: 10000
+			});
+  	})
+
+  	$('#trending-form button').on('click', function() {
+  		// $('#trending-form').find('[name="city"]').val('all cities');
+  	})
+
+  	
+
+  });
+</script>

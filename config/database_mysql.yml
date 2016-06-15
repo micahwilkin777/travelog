@@ -1,0 +1,38 @@
+# SQLite version 3.x
+#   gem install sqlite3
+#
+#   Ensure the SQLite 3 gem is defined in your Gemfile
+#   gem 'sqlite3'
+#
+# default: &default
+#   adapter: sqlite3
+#   pool: 5
+#   timeout: 5000
+
+mysql: &mysql
+  adapter: mysql2
+  host: "aa17cml4c3xv7if.c4ti23uotlqc.us-west-2.rds.amazonaws.com"
+  port: 3400
+  username: "root"
+  password: "travelogdb"
+#  socket: /tmp/mysql.sock
+  encoding: utf8
+  collation: utf8_bin
+
+
+common: &common
+  # Choose one of the following
+  #<<: *postgresql
+  <<: *mysql
+
+combined: &combined
+  <<: *common
+development:
+  <<: *combined
+  database: travelog_development
+production:
+  <<: *combined
+  database: travelog_production
+test:
+  <<: *combined
+  database: "travelog_test"

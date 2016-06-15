@@ -1,0 +1,192 @@
+<% content_for :page_title do %>
+	<%= 'Travelog - Signin' %>
+<% end %>
+</nav>
+<div class="container signupLogin-content">
+	<!-- Projects Row -->
+	<div class="row">
+		<div class="col-md-offset-3 col-md-6 col-lg-6 signin-page text-center">
+			<h3>Welcome Back!</h3>
+			<hr>
+			<%= form_for(resource, :html=> {:class => 'text-left'}, as: resource_name, url: session_path(resource_name)) do |f| %>
+		 
+
+				<div class="form-group">
+					<%= f.label :email, 'Email address' %><br />
+					<%= f.email_field :email, autofocus: true, :class=>'form-control', :placeholder => 'Email' %>
+				</div>
+
+				<div class="form-group">
+					<%= f.label :password %><br />
+					<%= f.password_field :password, autocomplete: "off",:class=>'form-control', :placeholder => 'Password' %>
+				</div>
+
+				<%= f.submit "Sign in", :class=> 'btn btn-default signin-btn' %>
+				<%- if devise_mapping.recoverable? && controller_name != 'passwords' && controller_name != 'registrations' %>
+					<%= link_to "Forgot your password?", new_password_path(resource_name) %><br />
+				<% end -%>
+				<div class="col-md-12 fb-btn-row">
+					<a href="/users/auth/facebook" class="btn-facebook">
+						<svg class="svg-icon icon-facebook" viewBox="0 0 20 20">
+							<path fill="none" d="M11.344,5.71c0-0.73,0.074-1.122,1.199-1.122h1.502V1.871h-2.404c-2.886,0-3.903,1.36-3.903,3.646v1.765h-1.8V10h1.8v8.128h3.601V10h2.403l0.32-2.718h-2.724L11.344,5.71z"></path>
+						</svg>
+						Sign In with Facebook
+					</a>
+				</div>
+
+				<div class="col-md-12 text-center">
+					<p class="signinToLogin">Not yet a member? <strong><%= link_to "Sign Up", new_user_registration_path %></strong></p>
+				</div>
+
+				
+			<% end %>
+			
+		</div>
+	</div>
+</div>
+
+<style>
+		/*detail page only*/
+		/*Overrighting original header.css*/
+		p {    font-size: 14px;
+				color: #000;}
+				a {   
+						color: #000;}
+						/*Footer*/
+						.bottom-below-footer { margin-top:100px;}
+						.btn-currency { border-radius:1px; background:none; border:1px solid #999;}
+						.btn-currency:hover, focus, active {background:none;}
+						.btn-currency:hover,active {  background:none;}
+						.open > ul.currency-dropdown-menu {
+								margin-top: 0;
+						}
+						.open .dropdown-toggle.btn-default.btn-currency {
+								background: #000;
+						}
+						/*Footer*/
+						.navbar-white .navbar .brand {
+								margin-top: -19px;}
+								.navbar-white {
+										border-bottom: 1px solid #dce0e0;
+										height: 61px;
+										padding: 0;
+										background: #FFF;
+								}
+								.header-gradient {
+										width: 100%;
+										height: 2px;
+										background: #c02425;
+										background: -webkit-linear-gradient(to left, #c02425, #f0cb35);
+										background: linear-gradient(to left, #c02425, #f0cb35);
+								}
+								.signin-page {
+										height: 600px
+								}
+								.signin-page h3{
+										margin-bottom:40px;
+								}
+								
+								
+								/* Landscape tablets and medium desktops */
+								@media (min-width: 992px) and (max-width: 1199px) {
+										.signin-page .form-control {
+												width:450px;
+										}
+
+								}
+
+								/* Portrait tablets and small desktops */
+								@media (min-width: 768px) and (max-width: 991px) {
+										.signin-page .form-control {
+												width:450px;
+										}
+								}
+
+								/* Landscape phones and portrait tablets */
+								@media (max-width: 767px) {
+										.signin-page .form-control {
+												width:450px;
+										}
+								}
+								/* Portrait phones and smaller */
+								@media (max-width: 480px) {
+										.signin-page {
+												padding: 30px;
+										}
+										.signin-page .form-control {
+												width: 354px;
+										}
+										.signin-btn {
+												width: 354px;
+										}
+										.btn-facebook {
+												width: 354px;
+										}
+
+								}
+
+								
+								
+								.signin-page .form-control {
+										border: 1px solid #ccc;
+										width:450px;
+								}
+								.signin-btn {
+										width: 449px;
+										margin-top: 24px;
+										background: #2e71f0;
+										border: 1px solid #2e71f0;
+										color: #fff;
+										-webkit-border-radius: 2px;
+										-moz-border-radius: 2px;
+										border-radius: 2px;
+										-webkit-transition: all .3s ease-out;
+										transition: all .3s ease-out
+								}
+								.signin-btn:hover {
+										background: #007aff;
+										color: #fff;
+										border: 1px solid #2e71f0
+								}
+								.content-7  {
+										padding-top: 40px;
+										padding-bottom: 40px;
+								}
+								.signin-page .form-control {
+										border: 1px solid #ccc;
+										border-radius: 1px;
+								}
+				 /* -----
+				 SVG Icons
+				 ----- */
+				 .svg-icon {
+						width: 1em;
+						height: 1em;
+				 }
+				 .svg-icon path,
+				 .svg-icon polygon,
+				 .svg-icon rect {
+						fill: #4691f6;
+				 }
+				 .svg-icon circle {
+						stroke: #4691f6;
+						stroke-width: 1;
+				 }
+				 /* -----
+				 SVG Icons
+				 ----- */
+				 .icon-facebook{    position: absolute;
+						position: absolute;
+						top: 15px;
+						left: 121px;}
+						.icon-facebook path{fill:#FFF;}
+						.btn-facebook { background:#3b5999; border:0; border-radius:1px; color:#FFF;width: 450px;
+								padding: 12px 123px;
+								margin-left: -15px;}
+								.btn-facebook:hover, active, focus {
+										color: #FFF;
+										background: #1A237E;
+								}
+								.fb-btn-row {     margin-top: 34px;
+										margin-bottom: 40px;}
+</style>

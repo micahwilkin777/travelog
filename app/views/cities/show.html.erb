@@ -1,0 +1,483 @@
+<% content_for :city do %>
+	<meta property="m_title" content="<%= @city.m_title %>">
+	<meta property="m_desc" content="<%= @city.m_desc %>">
+	<meta property="m_key" content="<%= @city.m_key %>">
+<% end %>
+<%= @city %>
+<div class="page-wrapper">
+	<section class="header-10-sub v-center ">
+		<div class="background citiesbg">
+			&nbsp;
+		</div>
+		<div>
+			<div class="container">
+				<div class="row">
+					<div class="col-md-3 banner-city-info">
+
+						<h1>
+							<%= @city.name %><br>
+							Tour<br>
+							Packages
+						</h1>
+
+						<p>
+							<%= @city.description %>
+						</p>
+
+						<h4>Popular Cities</h4>
+						<h5><%= @city.name %></h5>
+
+						<a href="" class="fbsharebtn">Share on Facebook</a>
+
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+
+	<section class="content-7">
+
+		<div class=" container">
+			<div class="row">
+				<div class="col-md-12 text-center city-title">
+					<h2>Select a tour package</h2>
+				</div>
+				<div class="col-xs-12 col-sm-12 col-md-12 tourtypes">
+					<div class="col-xs-6 col-sm-4 col-md-1 col-md-offset-2 text-center">
+						<a href="<%= category_city_url %>?category_name=Sightseeing"><img src="/assets/img/sample-04/sightseeing.png" width="100" class="img-circle"></a>
+						<br>
+						<a href="<%= category_city_url %>category_name=Sightseeing">Sightseeing</a>
+					</div>
+					<div class="col-xs-6 col-sm-4 col-md-1 text-center">
+						<a href="<%= category_city_url %>?category_name=Food"><img src="/assets/img/sample-04/food.png" width="100" class="img-circle"></a>
+						<br>
+						<a href="<%= category_city_url %>?category_name=Food">Food</a>
+					</div>
+					<div class="col-xs-6 col-sm-4 col-md-1 text-center">
+						<a href="<%= category_city_url %>?category_name=Shopping"><img src="/assets/img/sample-04/shoppingmarkets.png" width="100" class="img-circle"></a>
+						<br>
+						<a href="<%= category_city_url %>?category_name=Shopping">Shopping</a>
+					</div>
+					<div class="col-xs-6 col-sm-4 col-md-1 text-center">
+						<a href="<%= category_city_url %>?category_name=Landmarks"><img src="/assets/img/sample-04/landmarks.png" width="100" class="img-circle"></a>
+						<br>
+						<a href="<%= category_city_url %>?category_name=Landmarks">Landmarks</a>
+					</div>
+					<div class="col-xs-6 col-sm-4 col-md-1 text-center">
+						<a href="<%= category_city_url %>?category_name=Museums"><img src="/assets/img/sample-04/museums.png" width="100" class="img-circle"></a>
+						<br>
+						<a href="<%= category_city_url %>?category_name=Museums">Museums</a>
+					</div>
+					<div class="col-xs-6 col-sm-4 col-md-1 text-center">
+						<a href="<%= category_city_url %>?category_name=Nightlife"><img src="/assets/img/sample-04/nightlife.png" width="100" class="img-circle"></a>
+						<br>
+						<a href="<%= category_city_url %>?category_name=Nightlife">Nightlife</a>
+					</div>
+					<div class="col-xs-6 col-sm-4 col-md-1 text-center">
+						<a href="<%= category_city_url %>?category_name=Events"><img src="/assets/img/sample-04/events.png" width="100" class="img-circle"></a>
+						<br>
+						<a href="<%= category_city_url %>?category_name=Events">Events</a>
+					</div>
+				</div>
+			</div>
+				
+			<div class="row">
+				<% @products.each do |product| %>
+					<div class="col-xs-12 col-sm-6 col-md-4">
+						<div class="city-package">
+							<img src="<%= product.product_overview_url %>" class="img-responsive"> 
+							<div class="col-xs-6 col-sm-6 col-md-6 city-info">
+								<p class="days">4 Days</p>
+								<h4><%= product.name %></h4>
+								<p class="location-city"><%= product.city %></p>
+								<div>
+									<span class="glyphicon <%= product.review_mark > 0 ? 'glyphicon-star' : 'glyphicon-star-empty' %>" aria-hidden="true"></span>
+									<span class="glyphicon <%= product.review_mark > 1 ? 'glyphicon-star' : 'glyphicon-star-empty' %>" aria-hidden="true"></span>
+									<span class="glyphicon <%= product.review_mark > 2 ? 'glyphicon-star' : 'glyphicon-star-empty' %>" aria-hidden="true"></span>
+									<span class="glyphicon <%= product.review_mark > 3 ? 'glyphicon-star' : 'glyphicon-star-empty' %>" aria-hidden="true"></span>
+									<span class="glyphicon <%= product.review_mark > 4 ? 'glyphicon-star' : 'glyphicon-star-empty' %>" aria-hidden="true"></span>
+								</div>
+							</div>
+
+							<div class="col-xs-6 col-sm-6 col-md-6 city-price">
+								<p>Per Person</p>
+								<!-- <h4>MYR 8888.88</h4> -->
+								<h4><%= get_all_currency_symbols[product.currency] %> <%= product.price_cents / 100 %></h4>
+							</div>
+
+						</div>
+					</div>
+				<% end %>
+				<% if @products.count == 0 %>
+					<div class="empty-package">
+						There is no product
+					</div>
+				<% end %>
+			</div>
+			
+
+
+		</div>
+
+
+	</section>
+</div>
+
+<script>
+	$(document).ready(function() {
+		$('.header-10-sub .background').css({'background-image': 'url(' + gon.city_cover_image_url + ')'});
+	})
+
+	$(window).load(function() {
+	  $('.city-package > img').on('load', function() {
+			$(this).css('height', $(this).width() + 'px');
+		}).each(function() {
+			if(this.complete)
+				$(this).load();
+		})
+	});
+</script>
+
+<style>
+	/*.banner-city-info h1 {
+		color: #FFF;
+		z-index: 99;
+		margin-top: 20px;
+    margin-bottom: 10px;
+	}
+	.banner-city-info p {
+	    color: #FFF;
+	    z-index: 99;
+	    line-height: normal;
+	    font-size: 14px;
+	}
+	.banner-city-info h4 {
+	    color: #FFF;
+	    z-index: 99;
+	    font-size: 18px;
+	}
+	.banner-city-info h5 {
+	    color: #FFF;
+	    z-index: 99;
+	    font-size: 14px;
+	}
+
+	.fbsharebtn {
+	    padding: 5px;
+	    background: #3b5999;
+	    color: #FFF;
+	    border-radius: 1px;
+	    z-index: 999;
+	}
+
+	.banner-city-info {
+	    background: rgba(0, 0, 0, 0.9);
+	    opacity: 0.5;
+	    position: absolute;
+	    top: -200px;
+	    left: 1px;
+	    height: 400px;
+	}
+	.content-7 {
+	    padding-top: 0;
+	    padding-bottom: 40px;
+	}
+	.city-title {
+    margin: 40px 0;
+}
+	.tourtypes {
+    margin: 40px 0;
+}
+	.tourtypes a {
+    padding-right: 20px;
+    opacity: 0.5;
+}
+	
+	.city-package {
+    display: block;
+    background-color: #ffffff;
+    border: 1px solid #dddddd;
+    border-radius: 2px;
+    -webkit-transition: all 0.2s ease-in-out;
+    transition: all 0.2s ease-in-out;
+    margin-bottom: 40px;
+    width: 350px;
+    height: 350px;
+    overflow-y: hidden;
+    overflow-x: hidden;
+}
+
+	.city-package img {
+		max-width: inherit;
+	}
+
+	.city-info {
+    position: absolute;
+    top: 262px;
+    left: 21px;
+    display: block;
+}
+
+	.city-price {
+    position: absolute;
+    top: 302px;
+    left: 210px;
+    display: block;
+}
+
+	.highlight-list {
+	    padding: 10px 0;
+	    border-bottom: 1px solid #EEEEEE;
+	}
+
+	p {
+    font-size: 14px;
+}
+
+	.city-info .days {
+    background: #F4511E;
+    width: 70px;
+    padding: 2px 8px;
+}
+
+	.city-info p {
+    color: #FFF;
+}
+
+	.city-price h4 {
+    color: #000;
+    background: #FFF;
+    padding: 5px;
+    border: 1px solid #BDBDBD;
+    width: 160px;
+}
+
+	.content-7 h4 {
+    font-weight: normal;
+}
+
+.city-package > img {
+	width: 100%;
+}*/
+
+.content-7 {
+	    padding-top: 0;
+	    padding-bottom: 40px;
+	}
+
+.glyphicon-star {
+    color: #ffcd00;
+}
+
+.empty-package {
+	text-align: center;
+  font-size: 25px;
+}
+
+/*----------------------------------------------------------CITIES----------------------------------------------------------*/
+
+
+.header-10-sub .background.citiesbg {
+    /*background-image: url(../img/cities.jpg);*/
+    opacity: 85;
+    filter: alpha(opacity=8500);
+    opacity: 0.85;
+    filter: alpha(opacity=85);
+}
+
+.fbsharebtn { padding:5px; background:#3b5999; color:#FFF; border-radius:1px; z-index:999}
+.fbsharebtn:hover {background:#3b5999; color:#FFF; }
+
+
+.city-title { margin:40px 0;}
+
+.tourtypes {margin-bottom:40px;}
+.tourtypes a {  opacity:0.5; font-size:14px; color:#000;}
+
+.tourtypes a img{  margin-bottom:20px;}
+
+
+.tourtypes a:hover { opacity: initial;}
+/* Portrait tablets and small desktops */
+@media (min-width: 768px) and (max-width: 991px) {
+.tourtypes a img{  opacity:0.5; margin-top:20px; margin-bottom:20px;}
+.tourtypes a { font-size:16px;}
+}
+
+/* Landscape phones and portrait tablets */
+@media (max-width: 767px) {
+.tourtypes a img{  opacity:0.5; margin-top:20px; margin-bottom:20px;}
+.tourtypes a { font-size:16px;}
+}
+
+/* Portrait phones and smaller */
+@media (max-width: 480px) {
+.tourtypes a img{  opacity:0.5; margin-top:20px; margin-bottom:20px;}
+.tourtypes a { font-size:20px;}
+}
+
+
+
+
+.city-package {    display: block;
+    background-color: #ffffff;
+    border: 1px solid #dddddd;
+    border-radius: 2px;
+    -webkit-transition: all 0.2s ease-in-out;
+    transition: all 0.2s ease-in-out; margin-bottom:40px;
+	width: 350px;
+  height: 350px;
+  overflow-y: hidden;
+  overflow-x: hidden;
+	}
+	
+	.city-package img {
+    max-width: inherit;
+	}
+	
+.city-package .caption{    padding: 5px;}
+.glyphicon-star-empty {color: #ffcd00;}
+
+
+
+
+
+
+
+
+
+
+.highlight-list { padding:10px 0; border-bottom:1px solid #EEEEEE; display:block; }
+
+
+.city-price { position: absolute;
+        top: 293px;
+    left: 200px; display:block;
+	z-index:99;
+	
+     }
+
+.city-price h4 { color:#000; background:#FFF; padding:5px;border: 1px solid #BDBDBD;    width: 160px; z-index:99;}
+.city-price p { color:#FFF;}
+
+
+
+/* Large desktops and laptops */
+@media (min-width: 1200px) {
+.city-info { position:absolute;top: 192px;
+    left: 21px; display:block;}
+	
+	.city-price { position: absolute;
+        top: 269px;
+    left: 190px; display:block;
+	z-index:99;
+	
+     }
+
+	
+}
+
+
+
+
+
+/* Portrait tablets and small desktops */
+@media (min-width: 768px) and (max-width: 991px) {
+.city-info {
+    position: absolute;
+    top: 192px;
+    left: 21px;
+    display: block;
+}
+.city-price {
+    position: absolute;
+    top: 269px;
+    left: 200px;
+    display: block;
+    z-index: 99;
+}
+.city-price h4 { color:#000; font-size:18px; background:#FFF; padding:5px;border: 1px solid #BDBDBD; width: 135px; z-index:99;}
+.city-price p { color:#FFF;}
+
+}
+
+/* Landscape phones and portrait tablets */
+@media (max-width: 767px) {
+	.city-info {
+    position: absolute;
+    top: 192px;
+    left: 21px;
+    display: block;
+}
+.city-price {
+    position: absolute;
+    top: 269px;
+    left: 200px;
+    display: block;
+    z-index: 99;
+}
+.city-price h4 { color:#000; font-size:18px; background:#FFF; padding:5px;border: 1px solid #BDBDBD; width: 135px; z-index:99;}
+.city-price p { color:#FFF;}
+}
+
+/* Portrait phones and smaller */
+@media (max-width: 480px) {
+
+.city-price {
+    position: absolute;
+    top: 269px;
+    left: 200px;
+    display: block;
+    z-index: 99;
+}
+.city-price h4 { color:#000; font-size:18px; background:#FFF; padding:5px;border: 1px solid #BDBDBD; width: 135px; z-index:99;}
+.city-price p { color:#FFF;}
+
+}
+
+
+
+
+
+
+
+
+.city-info h4 { color:#FFF;}
+.city-info p { color:#FFF;}
+.city-info .days {    background: #F4511E;
+    width: 70px;padding: 2px 8px;}
+	
+	.banner-city-info {     background: rgba(0, 0, 0, 0.9);
+    opacity: 0.5;
+    position: absolute;
+    top: -200px;
+    left: 1px;
+    height: 400px;}
+	
+	/* Portrait phones and smaller */
+@media (max-width: 480px) {
+
+.banner-city-info {     background: rgba(0, 0, 0, 0.9);
+    opacity: 0.5;
+    position: absolute;
+    top: -217px;
+    left: 1px;
+    height: 400px;}
+	
+
+}
+
+	
+	
+	
+	
+	
+	
+	.banner-city-info h1 {color:#FFF; z-index:99;}
+	.banner-city-info h4 {color:#FFF; z-index:99;font-size: 18px;}
+	.banner-city-info p {color:#FFF; z-index:99;    line-height: normal;}
+	.banner-city-info h5 {color:#FFF; z-index:99;font-size: 14px;}
+
+
+</style>

@@ -1,0 +1,13 @@
+<p><%= "Hello #{@invitee.email}" %></p>
+
+<p><%= "#{@inviter_name} has invited you to Travelog, you can accept it through the link below." %></p>
+
+<p><%= link_to "Accept invitation", @accept_link %></p>
+
+<% if @invitee.invitation_due_at %>
+  <p><%= "This invitation will be due in #{@invitee.invitation_due_at}" %></p>
+<% end %>
+
+<p><%= "If you don't want to accept the invitation, please ignore this email.<br />Your account won't be created until you access the link above and set your password.".html_safe %></p>
+
+

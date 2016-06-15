@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<% if content_for?(:meta) %>
+    <%= yield(:meta) %>
+  <% end %>
+	
+	<%= favicon_link_tag 'favicon.ico' %>
+  <title><%= page_title yield(:page_title) %></title>
+  <%= stylesheet_link_tag    'application_static', media: 'all' %>
+  <%= javascript_include_tag 'application_static' %>
+  <%= csrf_meta_tags %>
+  <%= Gon::Base.render_data %>
+
+</head>
+<body>
+
+	
+
+	<div class="page-wrapper">
+		<%= render 'layouts/header' %>
+		<!-- Second navbar -->
+		<%= render 'shared/static_nav', :obj => @nav_obj %>
+		<%= yield %>
+		<%= render 'layouts/footer' %>
+	</div>
+	
+	<style type="text/css">
+		
+	.h4-behave {
+		font-size: 32px;
+	}
+	.panel {
+    border: 1px solid #dce0e0;
+    background-color: #fff;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
+}
+.panel-body {
+    position: relative;
+    margin: 0;
+    padding: 20px;
+   
+}
+.row-space-4 {
+    margin-bottom: 25px;
+}
+	.col-6 {
+    width: 50%;
+    float: left;
+}
+.press-content a {
+    color: #565a5c;
+}
+small {
+    font-size: 0.85em;
+}
+	</style>
+</body>
+</html>

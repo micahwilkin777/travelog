@@ -1,0 +1,210 @@
+<footer class="footer-3">
+	<div class="container">
+		<div class="row">
+			<!--bottom-footer-->
+			<div class="col-sm-12 col-sm-3 col-md-3">
+				<form method="POST" action="/set_currency" id="set-currency">
+					<%= tag(:input, :name => 'authenticity_token', :type => "hidden", :value => form_authenticity_token) %>
+					<div class="btn-group">
+						<button type="button" class="btn btn-default dropdown-toggle btn-currency" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							<span id="currency-span">MYR </span>
+							<span class="caret"></span>
+						</button>
+						<ul class="dropdown-menu currency-dropdown-menu">
+							<% get_all_currencies.each do |currency| %>
+								<li>
+									<a href=""><%= currency %></a>
+								</li>
+							<% end %>
+						</ul>
+						
+					</div>
+					<input type="hidden" id="footer-currency" name="footer-currency">
+					<input type="hidden" name="current-url">
+				</form>
+
+
+			</div>
+
+			<div class="col-sm-12 col-sm-3 col-md-3">
+				<ul>
+					<li><a href="/about">About</a></li><br>
+					<li><a href="/contact">Contact</a></li><br>
+					<li><a href="/press">Press</a></li><br>
+					<!-- <li><a href="#">Blog</a></li><br>
+					<li><a href="#">Career</a></li> -->
+				</ul>
+			</div>
+
+			<div class="col-sm-12 col-sm-3 col-md-3">
+				<ul>
+
+					
+					<li><a href="https://travelog.zendesk.com" target="_blank">FAQ</a></li><br>
+					<li><a href="/policy">Policies</a></li><br>
+					<li><a href="/terms">Terms</a></li>
+					
+				</ul>
+			</div>
+
+
+			<div class="col-sm-12 col-sm-3 col-md-3 social-footer">
+				<div>
+					<a href="https://www.facebook.com/travelogcom/"><img src="<%= asset_url('Facebook.png') %>" width="42" alt="Facebook"></a>
+					<a href="https://twitter.com/travelogcom"><img src="<%= asset_url('Twitter.png') %>" width="42" alt="Twitter"></a>
+					<a href="https://www.instagram.com/travelogcom/"> <img src="<%= asset_url('Instagram.png') %>" width="42" alt="Instagram"></a>
+				</div>
+				
+				<div class="ssl-verify">
+					<table width="200" border="0" cellpadding="2" cellspacing="0" title="Click to Verify - This site chose Symantec SSL for secure e-commerce and confidential communications.">
+						<tr>
+							<td width="135" align="center" valign="top"><script type="text/javascript" src="https://seal.websecurity.norton.com/getseal?host_name=www.travelog.com&amp;size=S&amp;use_flash=NO&amp;use_transparent=YES&amp;lang=en"></script><br />
+							<a href="http://www.symantec.com/ssl-certificates" target="_blank"  style="color:#fff; text-decoration:none; font:bold 7px verdana,sans-serif; letter-spacing:.5px; text-align:center; margin:0px; padding:0px;">ABOUT SSL CERTIFICATES</a></td>
+
+						</tr>
+						<br><br>
+						<tr>
+							<td width="135" align="center" valign="top">
+							<span class="pata-logo">
+							<img style="max-width: 38px; margin-right: 18px;" src="https://s3-us-west-2.amazonaws.com/travelog/assets/pata.jpg" alt="" data-pin-nopin="true"></span>
+							<td  width="135" align="center" valign="top">
+							<p style="font-size:10px">PATA ID: 8247</p>
+							</td>
+
+							</td>
+						</tr>
+
+					</table>
+					<img src="https://www.paypalobjects.com/webstatic/en_US/i/buttons/ppcredit-logo-large.png" alt="PayPal Credit" />
+				</div>	
+			</div>
+
+			<br>
+			<div>
+				
+			                 
+			</div>
+
+		</div>
+
+		<div class="row support-contact">
+
+		<div class="col-sm-12 col-sm-3 col-md-3">
+			<div class="col-sm-12 contact">
+				<i class="fa fa-envelope fa-3"></i>
+				<span>support@travelog.com</span>
+			</div>
+			<div class="col-sm-12 contact">
+				<i class="fa fa-phone fa-3"></i>
+				<span>+603-8081 5671</span>
+			</div>
+			<div class="col-sm-12 contact">
+				<i class="fa fa-whatsapp fa-3"></i>
+				<span>+6013-5418888</span>
+			</div>
+		</div>
+		</div>
+
+		<div class="row bottom-below-footer">
+			<!--bottom-footer-->
+		
+			<div class="col-sm-12 col-sm-3 col-md-3">
+				<a href="https://mixpanel.com/f/partner" rel="nofollow">
+					<img src="//cdn.mxpnl.com/site_media/images/partner/badge_light.png" alt="Mobile Analytics" />
+				</a>
+			</div>
+			<div class="col-sm-12 col-sm-5 col-md-5">
+				<p class="footerright">© 2016 Travelog.com All rights reserved</p>
+			</div>
+
+		</div>
+	</div>
+</footer>
+
+<style>
+	.support-contact i {
+		font-size: 16px;
+	}
+	.support-contact .contact {
+		margin-bottom: 10px;
+	}
+	.support-contact span {
+		font-size: 15px;
+    margin: 0px 15px 0 10px;
+    vertical-align: top;
+    padding-top: 3px;
+	}
+	.support-contact span {
+		font-size: 15px;
+    margin: 0px 15px 0 10px;
+    vertical-align: top;
+    padding-top: 3px;
+	}
+</style>
+
+<script>
+	$(document).ready(function() {
+		// $('#footer-currency').val(gon.current_currency);
+		if (window.location.href.indexOf("/products/result") > -1) {
+			$('[name="current-url"]').val(gon.current_location);
+		} else {
+			$('[name="current-url"]').val(window.location.href);
+		}
+
+
+		$('#footer-currency').on('change', function() {
+			// $(this).closest('form').submit();
+		})	
+
+		var displayCurrencyExchangeForm = function() {
+			$('#currency-span').text(gon.current_currency + ' ');
+			$('#footer-currency').text(gon.current_currency);
+			if (gon.is_display_currency_exchange)
+				$('#set-currency').css('display', 'block');
+			else
+				$('#set-currency').css('display', 'none');
+		}
+
+		displayCurrencyExchangeForm();
+
+
+		$('#set-currency ul li a').on('click', function(event) {
+			// $('#currency-span').text(gon.current_currency + ' ');
+			// $(this).closest('form').submit();
+			event.preventDefault();
+			$('#footer-currency').val($(this).text());
+			$(this).closest('form').submit();
+		})
+	})
+
+	
+
+
+
+</script>
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-71298209-1', 'auto');
+  ga('send', 'pageview');
+  
+
+</script>
+
+<!-- Start of travelog Zendesk Widget script -->
+<script>
+/*<![CDATA[*/
+ window.zEmbed||function(e,t){var n,o,d,i,s,a=[],r=document.createElement("iframe");window.zEmbed=function(){a.push(arguments)},window.zE=window.zE||window.zEmbed,r.src="javascript:false",r.title="",r.role="presentation",(r.frameElement||r).style.cssText="display: none",d=document.getElementsByTagName("script"),d=d[d.length-1],d.parentNode.insertBefore(r,d),i=r.contentWindow,s=i.document;try{o=s}catch(c){n=document.domain,r.src='javascript:var d=document.open();d.domain="'+n+'";void(0);',o=s}o.open()._l=function(){var o=this.createElement("script");n&&(this.domain=n),o.id="js-iframe-async",o.src=e,this.t=+new Date,this.zendeskHost=t,this.zEQueue=a,this.body.appendChild(o)},o.write('<body onload="document._l();">'),o.close()}("//assets.zendesk.com/embeddable_framework/main.js","travelog.zendesk.com");
+/*]]>*/
+</script>
+<!-- End of travelog Zendesk Widget script -->
+
+
+
+
+
+

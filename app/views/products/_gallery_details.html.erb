@@ -1,0 +1,65 @@
+<section class="gallery">
+	<div>
+		<div class="container">
+			<div class="row">
+				<div id="lightgallery" class="col-md-7 detailpage-images-gallery" >
+					<% if @product.product_attachments.present? && @product.product_attachments.count > 0 %>
+						<% @product.product_attachments.each_with_index do |attachment, index| %>
+							<% if index == 0 %>
+
+								<div class="col-sm-6 col-md-6 topleftimg <%='hidden-xs' if index != @product.product_attachments.count - 1 %>" data-responsive="<%= attachment.attachment.large.url %>" data-src="<%= attachment.attachment.large.url %>" data-sub-html="<%= @product.highlight %>">                
+									<a href="">
+										<img src="<%= attachment.attachment.small.url %>" class="img-responsive">
+									</a>
+								</div>
+							<% elsif index == 1 %>
+
+								<div class="col-sm-6 col-md-6 toprightimg <%='hidden-xs' if index != @product.product_attachments.count - 1 %>" data-responsive="<%= attachment.attachment.large.url %>" data-src="<%= attachment.attachment.large.url %>" data-sub-html="<%= @product.highlight %>">                
+									<a href="">
+										<img src="<%= attachment.attachment.small.url %>" class="img-responsive">
+									</a>
+								</div>
+							<% elsif index == 2 %>
+
+								<div class="col-sm-4 col-md-4 bottomleftimg <%='hidden-xs' if index != @product.product_attachments.count - 1 %>" data-responsive="<%= attachment.attachment.large.url %>" data-src="<%= attachment.attachment.large.url %>" data-sub-html="<%= @product.highlight %>">                
+									<a href="">
+										<img src="<%= attachment.attachment.small.url %>" class="img-responsive">
+									</a>
+								</div>
+							<% elsif index == 3 %>
+
+								<div class="col-sm-4 col-md-4 bottomcentreimg <%='hidden-xs' if index != @product.product_attachments.count - 1 %>" data-responsive="<%= attachment.attachment.large.url %>" data-src="<%= attachment.attachment.large.url %>" data-sub-html="<%= @product.highlight %>">                
+									<a href="">
+										<img src="<%= attachment.attachment.small.url %>" class="img-responsive">
+									</a>
+								</div>
+							<% elsif index == 4 %>
+								<div class="col-sm-4 col-md-4 bottomrightimg <%='hidden-xs' if index != @product.product_attachments.count - 1 %>" data-responsive="<%= attachment.attachment.large.url %>" data-src="<%= attachment.attachment.large.url %>" data-sub-html="<%= @product.highlight %>">
+									<div class="gallery-overlay-cover"></div>
+									<a href="">
+										<img src="<%= attachment.attachment.small.url %>" class="img-responsive">
+									</a>
+								</div>
+							<% else %>
+							<% end %>
+							
+						<% end %>
+					<% end %>
+
+				</div>
+			</div>
+			<!--gallery-->   
+		</div>
+
+	</div>
+</section>
+
+<style>
+	.lg-sub-html {
+		background: white;
+		max-height: 100px;
+	}
+	.gallery-overlay-cover:hover {
+	  cursor: pointer;
+	}
+</style>

@@ -1,0 +1,87 @@
+<% content_for :page_title do %>
+  <%= 'Signin - Travelog.com' %>
+<% end %>
+<section class="content-7 v-center">
+  <div class="container">
+	  <div class="row">
+			<div class="col-sm-6 col-sm-offset-3 access-page text-center">
+				<div class="users-form-container">
+					<h4>Welcome Back!</h4>
+				  <%= form_for(resource, :html=> {:class => 'text-left'}, as: resource_name, url: session_path(resource_name)) do |f| %>
+						<div class="form-group">
+						  <%= f.label :email, 'Email address' %><br />
+						  <%= f.email_field :email, autofocus: true, :class=>'form-control', :placeholder => 'Email' %>
+						</div>
+
+						<div class="form-group">
+						  <%= f.label :password %><br />
+						  <%= f.password_field :password, autocomplete: "off",:class=>'form-control', :placeholder => 'Password' %>
+						</div>
+
+						<%= f.submit "Log In", :class=> 'btn btn-default access-btn' %>
+						<% if devise_mapping.recoverable? && controller_name != 'passwords' && controller_name != 'registrations' %>
+						  <%= link_to "Forgot your password?", new_password_path(resource_name) %><br />
+						<% end %>
+					<% end %>
+					<a href="/users/auth/facebook" class="btn btn-default btn-fb-access">
+						<svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+						width="16px" height="16px" viewBox="0 0 24 24" enable-background="new 0 0 24 24" xml:space="preserve">
+
+							<g>
+
+								<path id="Facebook" fill="#FFFFFF" d="M8.821,4.648c0,0.605,0,3.304,0,3.304H6.4v4.041h2.421V24h4.973V11.993h3.337
+
+								c0,0,0.312-1.938,0.464-4.056c-0.435,0-3.782,0-3.782,0s0-2.351,0-2.763c0-0.413,0.543-0.968,1.078-0.968s1.664,0,2.709,0
+
+								c0-0.55,0-2.451,0-4.207c-1.396,0-2.983,0-3.684,0C8.698,0,8.821,4.044,8.821,4.648z"/>
+
+							</g>
+
+						</svg>
+						&nbsp;
+						Sign In with Facebook
+					</a>
+
+					<p>Not yet a member? <strong><%= link_to "Sign Up", new_user_registration_path %></strong></p>
+				</div>
+			  
+			</div>
+	  </div>
+	</div>
+</div>
+
+<style>
+	  /* -----
+SVG Icons
+----- */
+
+.svg-icon {
+  width: 1em;
+  height: 1em;
+}
+
+.svg-icon path,
+.svg-icon polygon,
+.svg-icon rect {
+  fill: #4691f6;
+}
+
+.svg-icon circle {
+  stroke: #4691f6;
+  stroke-width: 1;
+}
+/* -----
+SVG Icons
+----- */
+.icon-facebook{    position: absolute;
+    top: -2px;
+    left: 91px;
+    width: 20px;}
+.icon-facebook path{fill:#FFF;}
+.btn-facebook { background:#3b5999; border:0; border-radius:1px; color:#FFF;width: 380px;
+    height: 40px;     padding: 12px 120px;
+    margin-left: -15px;}
+	.btn-facebook:hover,active,focus { color:#FFF;}
+	.fb-btn-row { margin-top:40px;}
+
+	  </style>

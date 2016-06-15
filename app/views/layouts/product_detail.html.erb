@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  <meta name="viewport" content="width=device-width, maximum-scale=1.0, minimum-scale=1.0, initial-scale=1.0" />
+  
+
+  <% if content_for?(:head) %>
+    <%= yield(:head) %>
+  <% end %>
+
+  <% if content_for?(:city) %>
+    <%= yield(:city) %>
+  <% end %>
+
+  <%= favicon_link_tag 'favicon.ico' %>
+  <title><%= page_title yield(:page_title) %></title>
+  <%= stylesheet_link_tag    'application_detail', media: 'all' %>
+  <%= javascript_include_tag 'application_detail' %>
+  <%= csrf_meta_tags %>
+  <%= Gon::Base.render_data %>
+</head>
+<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-56e0d61f50ddf821"></script>
+<body>
+
+  <div class="page-wrapper">
+    <%= render 'layouts/header' %>
+    <%= render 'shared/flash' %>
+    <%= yield %>
+    <%= render 'layouts/footer' %>
+  </div>
+
+  <style type="text/css">
+    
+  </style>
+</body>
+</html>
+

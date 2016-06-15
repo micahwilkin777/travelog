@@ -1,0 +1,39 @@
+.alert {
+	text-align: center;
+}
+
+.alert-notice {
+	color: #31708f;
+  background-color: #d9edf7;
+  border-color: #bce8f1;
+}
+
+.alert-alert {
+  background-color: #f2dede;
+  border-color: #ebccd1;
+  color: #a94442;
+}
+
+.img-circle.profile-nav {
+	width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #000;
+}
+
+li.active {
+	font-weight: bold;
+}
+// .header-10 {
+// 	overflow: hidden;
+// }
+.navbar-header {
+	height: 80px;
+	.brand {
+		height: 87px;
+	}
+}
+.users-form-container {
+	margin: 0 auto;
+  max-width: 500px;
+}

@@ -1,0 +1,128 @@
+<section class="content-23  v-center bg-midnight-blue">
+	<div id="bgVideo" class="background" style=""></div>
+	<div>
+		<div class="container">
+			<div class="hero-unit">
+				<h1>Discover and
+					book amazing things to do
+				</h1>
+				<h4 class="taglog">We believe in great experiences</h4>
+				<!-- <form class="form-inline"> -->
+				<form class="form-inline" method="POST" action="/place/all" id="search-place">
+					<%= tag(:input, :name => 'authenticity_token', :type => "hidden", :value => form_authenticity_token) %>
+					<div class="col-md-4 col-md-offset-2 location-search">
+						<div class="input-group">
+							<input type="text" class="form-control input-location " placeholder="Search for places" name="city" id="search-location" autocomplete="off">
+							<div class="input-group-btn">
+								<button type="button" class="btn btn-default dropdown-toggle drop-places" data-toggle="dropdown">
+									<span class="caret"></span>
+								</button>
+								<ul id="color-dropdown-menu" class="dropdown-menu dropdown-menu-right" role="menu">
+									<!-- <li class="input"><a href="#">Kuala Lumpur</a></li>
+									<li class="input"><a href="#">Perhentian</a></li>
+									<li class="input"><a href="#">Sarawak</a></li> -->
+
+									<% @search_location_list.each do |location| %>
+										<li class="input"><a href="#"><%= location %></a></li>
+									<% end %>
+								</ul>
+							</div>
+						</div>
+					</div>
+					<div class="form-group global-search" id="interest-group">
+						<input type="text" class="form-control input-global" id="demo6" name="search_free_text" placeholder="Search for interest" autocomplete="off">
+					</div>
+					<% ProductCategory.order('id').each do |category| %>
+						<input type="hidden" name="category_<%= category.id %>" value="1">
+					<% end %>
+					<button type="submit" class="btn btn-success btn-search">Search</button>
+				</form>
+			</div>
+		</div>
+	</div>
+</section>
+
+<style>
+	
+	.dropdown-menu li.active > a,
+	.dropdown-menu li.selected > a,
+	.dropdown-menu li.active > a.highlighted,
+	.dropdown-menu li.selected > a.highlighted {
+		background-color: #ddd;
+		color: #ffffff;
+	}
+
+	.dropdown-menu li.active > a:hover, .dropdown-menu li.selected > a:hover, .dropdown-menu li.active > a.highlighted:hover, .dropdown-menu li.selected > a.highlighted:hover, .dropdown-menu li.active > a:focus, .dropdown-menu li.selected > a:focus, .dropdown-menu li.active > a.highlighted:focus, .dropdown-menu li.selected > a.highlighted:focus {
+		background: #ccc;
+	}
+
+	.dropdown-menu.typeahead {
+		border-color: #ccc;
+		border-radius: 0;
+	}
+</style>
+
+<script>
+	$(function() {
+		function displayResult(item) {
+		  $('.alert').show().html('You selected <strong>' + item.value + '</strong>: <strong>' + item.text + '</strong>');
+		}
+		
+		$('#demo6').typeahead({
+		  source: gon.search_interests,
+		  onSelect: displayResult
+		});
+
+		var AdjustTypeaheadPos = function() {
+			var box = $("#search-location")[0];
+	    var jTypeahead = $(box).parent().find("ul.typeahead");
+	    // $(box).parent().find("ul.typeahead").css({top: newPos.y+32, left: newPos.x});
+	    jTypeahead.css({left: '-40px', width: jTypeahead.width() + 40 + 'px'});
+		}
+
+		$('#search-location').typeahead({
+			source: gon.search_location_list,
+			onSelect: displayResult,
+		});
+
+		// var AdjustTypeaheadPos = _.debounce(function(){
+	 //    var box = $("#search-location")[0];
+	 //    var newPos = elPos(box);
+	 //    var jTypeahead = $(box).parent().find("ul.typeahead");
+	 //    jTypeahead.css({left: '-40px', width: jTypeahead.width() + 40 + 'px'});
+		// }, 10, true);
+
+		
+		$('#color-dropdown-menu li a').on('click', function(event) {
+			event.preventDefault();
+			var location = $(this).text();
+			$('#search-location').val(location);
+			mixpanel.track("Search Location", {location});
+		})
+
+		$('.btn-search').on('click', function() {
+			var location = $('#search-location').val();
+			var search_url;
+			if (location.length) {
+				search_url = '/place/' + location.toLowerCase().replace(new RegExp(' ', 'g'), '-');
+			} else {
+				search_url = '/place/all';
+				mixpanel.track("Empty Search", {location});
+			}
+			
+			var free_text = $('[name="search_free_text"]').val();
+			if (free_text.length) {
+				free_text_capital = free_text.charAt(0).toUpperCase() + free_text.slice(1);
+				if (gon.search_interests.indexOf(free_text_capital) != -1) {
+					search_url += '?cat=' + encodeURIComponent(free_text);
+					mixpanel.track("Search Cat", {'Search Cat': free_text, 'Search Location': location});
+				} else {
+					search_url += '?query=' + encodeURIComponent(free_text);
+					mixpanel.track("Search Query", {'Search Query': free_text,'Search Location': location});
+				}
+			};
+
+			$('#search-place').attr('action', search_url);
+		})
+	});
+</script>

@@ -1,0 +1,149 @@
+<% content_for :page_title do %>
+	<%= 'Profile - Travelog' %>
+<% end %>
+
+
+<%= render "shared/settings_nav", :obj => 'profile' %>
+<div class="side-collapse-container">
+	<section class="header-11-sub profile-page">
+		<div class="container">
+			<div class="row ">
+				<%= render 'shared/profile_nav', :obj => 'document' %>
+				<div class="col-xs-12 col-sm-9 col-md-9">
+					<!-- <div class="panel-heading">
+						Profile Photo
+					</div> -->
+
+					<%= form_for @profile, url: {action: "profile_document"}, :html => {:class => "form-horizontal profile-form" } do |f| %>
+						<div class="panel panel-default profile-photo">
+							<div class="panel-heading">Required Documents</div>
+							<div class="panel-body">
+								<div class="col-xs-12 col-sm-3 col-md-3 profileholder">
+									Required Documents
+									
+								</div> 
+								
+								<div class="col-xs-12 col-sm-9 col-md-9">
+									
+									<span class="btn btn-default btn-profile" style="margin-bottom: 20px;">
+										Upload a file form your computer <input type="file" id="file_upload">
+									</span>
+
+									<div class="document-container">
+										<!-- <input type="text" class="form-control"> -->
+										<% @profile.profile_documents.each do |profile_document| %>
+											<div class="profile-document-item">
+												<input type="text" class="form-control" value="<%= profile_document.document.url %>" disabled>
+												<input type="hidden" name="document_id[]" value="<%= profile_document.id %>">
+												<a class="delete-attachment" href="#"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></a>
+											</div>
+										<% end %>
+										
+									</div>
+
+									<button type="submit" name="commit" id="submit-form" class="btn btn-default btn-save" style="display: block; margin-bottom: 20px;">Submit</button>
+								</div> 
+							</div>
+						</div>
+					<% end %>
+				</div>
+
+				
+			</div>
+		</div>
+	</section>
+</div>
+
+<style>
+	.profile-form input {
+		color: black;
+	}
+	.profile-document-item {
+		margin-bottom: 15px;
+		position: relative;
+	}
+	.delete-attachment {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    color: red;
+	}
+</style>
+
+<script type="text/javascript">
+	$(document).ready(function() {
+
+		$(document).on('change', '#file_upload', function() {
+
+			var formData = new FormData();
+			formData.append('profile_document[document]', this.files[0]);
+			formData.append('profile_document[name]', this.files[0].name);
+			$('body').loading({ message: 'Uploading...'});
+			$.ajax({
+				url: '/profile_documents',
+				dataType: "json",
+				data: formData,
+				cache: false,
+				contentType: false,
+				processData: false,
+				type: 'POST',
+				success: function(data) {
+					console.log('success');
+					var append_html = '<div class="profile-document-item">';
+					append_html += '<input type="text" class="form-control" value="' + data.document.url + '" disabled>';
+					append_html += '<input type="hidden" name="document_id[]" value="' + data.id + '">';
+					append_html += '<a class="delete-attachment" href="#"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></a>';
+					append_html += '</div>';
+
+					$('.document-container').append(append_html);
+
+					$('#file_upload').val('');
+					$('body').loading('stop');
+				},
+				error: function(error) {
+					console.log(error);
+					$('body').loading('stop');
+				}
+			});
+		})
+
+		$(document).on('click', '.delete-attachment', function(event) {
+			event.preventDefault();
+			if ($(this).parent().find('input[name="document_id[]"]').length == 0) {
+				return;
+			}
+			var document_id = $(this).parent().find('input[name="document_id[]"]').val();
+
+			$this = $(this);
+			$('body').loading({ message: 'Deleting...'});
+			$.ajax({
+				type: "POST",
+				url: "/profile_documents/" + document_id,
+				dataType: "json",
+				data: { "_method": "delete" },
+				success: function(){
+					$this.parent().remove();
+					$('body').loading('stop');
+					console.log('deleted profile document');
+				},
+				error: function(error) {
+					console.log(error);
+					$('body').loading('stop');
+				}
+			});
+		})
+
+		$(document).on('click', '#submit-form', function(event) {
+			if ($('[name="document_id[]"]').length == 0) {
+				alert('You have to upload at least 1 document');
+				event.preventDefault();
+			};
+		})
+	})
+
+		
+</script>
+
+
+
+

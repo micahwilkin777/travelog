@@ -1,0 +1,179 @@
+<% content_for :page_title do %>
+	<%= 'Profile - Travelog' %>
+<% end %>
+
+<%= render "shared/settings_nav", :obj => 'accounts' %>
+
+<section class="header-11-sub profile-page">
+	<div class="container">
+		<div class="row ">
+			<%= render 'shared/accounts_nav' %>
+			<div class="col-xs-12 col-sm-9 col-md-9">
+			<!-- <div class="panel-header">
+				Required
+			</div> -->
+			</div>
+			<div class="col-md-8">
+
+				<div class="profile-details">
+					<div class="panel-heading">Account Type</div>
+					<div class="panel-body">
+						<div class="row">
+							<div class="form-group col-sm-12">
+								<input type="radio" name="store_setting[merchant_type]" value="1" <%= 'checked' if @store_setting.merchant_type != 2 %> disabled> Business
+								<input type="radio" style="margin-left: 50px;" name="store_setting[merchant_type]" value="2" <%= 'checked' if @store_setting.merchant_type == 2 %>  disabled> Personal
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="profile-details">
+					<%= form_for @store_setting, url: {action: "accounts"}, :html => {:class => "form-horizontal profile-form" } do |f| %>
+						<div class="panel-heading">Account Edit</div>
+						<div class="panel-body">
+							<div class="form-group">
+								<%= f.label :mobile_number, 'Mobile number', :class=>"col-sm-3 control-label"  %>
+								<div class="col-sm-9">
+									<%= f.text_field :mobile_number, :class => 'form-control', :placeholder => 'Mobile number' %>
+								</div>
+							</div>
+							<div class="form-group">
+								<%= f.label :phone_number, 'Phone number', :class=>"col-sm-3 control-label"  %>
+								<div class="col-sm-9">
+									<%= f.text_field :phone_number, :class => 'form-control', :placeholder => 'Phone number' %>
+								</div>
+							</div>
+							<div class="form-group">
+								<%= f.label :store_username, 'Store Username', :class=>"col-sm-3 control-label"  %>
+								<div class="col-sm-9">
+									<%= f.text_field :store_username, :class => 'form-control', :placeholder => 'Store Username', disabled: true %>
+								</div>
+							</div>
+							<div class="form-group">
+								<%= f.label :store_name, 'Store Name', :class=>"col-sm-3 control-label"  %>
+								<div class="col-sm-9">
+									<%= f.text_field :store_name, :class => 'form-control', :placeholder => 'Store Name' %>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<%= f.label :country, 'Country', :class=>"col-sm-3 control-label"  %>
+								<div class="col-sm-9">
+									<%= country_select("store_setting", "country", {selected: @store_setting.country}, { class: 'form-control'} ) %>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<%= f.label :city, 'City', :class=>"col-sm-3 control-label"  %>
+								<div class="col-sm-9">
+									<%= f.text_field :city, :class => 'form-control', :placeholder => 'City' %>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<%= f.label :website, 'Website', :class=>"col-sm-3 control-label"  %>
+								<div class="col-sm-9">
+									<%= f.text_field :website, :class => 'form-control', :placeholder => 'Website' %>
+								</div>
+							</div>
+
+							<!-- <div class="form-group">
+								<%= f.label :know_us_text, 'How do you know us', :class=>"col-sm-3 control-label"  %>
+								<div class="col-sm-9">
+									<%= f.text_area :know_us_text, :class => 'form-control', :row => 4, :style => 'height: 100px;' %>
+								</div>
+							</div> -->
+							
+							<div class="form-group">
+								<div class="col-sm-offset-3 col-sm-9">
+									<button type="submit" name="commit" class="btn btn-default btn-save">Submit</button>
+								</div>
+							</div>
+
+						</div>
+					<% end %>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+
+
+<style type="text/css">
+	.profile {
+		padding: 70px 30px;
+	}
+	input[type=file] {
+		display: none;
+	}
+	.attachments-container .btn.delete-attachment {
+		position: absolute;
+		top: 0;
+		right: 15px;
+		height: inherit;
+		padding: 2px 10px;
+		border-radius: 0;
+		opacity: 0.8;
+		background-color: #ccc;
+	}
+	.attachments-container .form-group.col-md-4 {
+		position: relative;
+	}
+	.attachments-container img {
+		width: 100%
+	}
+	.profile-details {
+		padding: 0;
+	}
+
+	.second-merchant-type {
+		margin-left: 50px;
+	}
+
+	input[type="radio"] {
+    -webkit-appearance: radio;
+	}
+
+	.profile-details + .profile-details {
+    margin-top: 30px;
+	}
+
+	
+</style>
+
+<script>
+	$(document).ready(function() {
+		$('form.profile-form').formValidation({
+			framework: 'bootstrap',
+			icon: {
+				valid: 'glyphicon glyphicon-ok',
+				invalid: 'glyphicon glyphicon-remove',
+				validating: 'glyphicon glyphicon-refresh'
+			},
+			fields: {
+				'store_setting[mobile_number]': {
+					validators: {
+						notEmpty: {
+							message: 'The mobile number is required'
+						}
+					}
+				},
+				'store_setting[store_name]': {
+					validators: {
+						notEmpty: {
+							message: 'The store name is required'
+						}
+					}
+				},
+				'store_setting[city]': {
+					validators: {
+						notEmpty: {
+							message: 'The city is required'
+						}
+					}
+				}
+			}
+		})
+	})
+</script>

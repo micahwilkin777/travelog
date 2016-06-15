@@ -1,0 +1,326 @@
+<% content_for :page_title do %>
+	<%= 'Profile - Travelog' %>
+<% end %>
+
+
+<%= render "shared/settings_nav", :obj => 'accounts' %>
+<div class="side-collapse-container">
+	<section class="header-11-sub profile-page">
+		<div class="container">
+			<div class="row ">
+				<%= render 'shared/accounts_nav' %>
+				<div class="col-xs-12 col-sm-9 col-md-9">
+					<!-- <div class="panel-heading">
+						Profile Photo
+					</div> -->
+					<div class="panel panel-default profile-photo">
+						<div class="panel-body">
+							<div class="row">
+									<div class="col-md-2">
+										<h6>Status:</h6>
+										
+									</div>
+									<div class="col-md-8">
+										<% if current_user.merchant_status == 'verified' %>
+											<span class="icon-verified">You store has been verified!</span>
+										<% else %>
+											<span class="icon-noverified">You account is pending for verification</span>
+										<% end %>
+									</div>
+							</div>
+						</div>
+					</div>
+
+					<br>
+
+					<%= form_for @account_document,  :html => {:class => "form-horizontal profile-form" } do |f| %>
+						<input type="hidden" name="account_document[store_setting_id]" value="<%= @store_setting.id %>">
+						<div class="panel panel-default profile-photo">
+							<div class="panel-heading">Account Document</div>
+							<div class="panel-body">
+								<div class="row">
+									<div class="col-md-4">
+										<p>A copy of IC/Passport</p>
+									</div>
+									<div class="col-md-8">
+										<div class="form-group">
+											<input type="text" class="form-control" name="ic-passport-url" value="<%= @account_document.ic_passport.url %>" placeholder = "Supported file types : jpg, gif, pdf, Max file size: 3MB" >
+											<button type="button" class="btn btn-default btn-browse">Browse</button>
+											<%= f.file_field :ic_passport %>
+										</div>
+									</div>
+								</div>
+
+								<div class="row">
+									<div class="col-md-4">
+										<p>A copy of bank statement header or passbook</p>
+									</div>
+									<div class="col-md-8">
+										<div class="form-group">
+											<input type="text" class="form-control" name="bank-url" value="<%= @account_document.bank.url %>" placeholder = "Supported file types : jpg, gif, pdf, Max file size: 3MB" >
+											<button type="button" class="btn btn-default btn-browse">Browse</button>
+											<%= f.file_field :bank %>
+										</div>
+									</div>
+								</div>
+
+								<div class="row">
+									<div class="col-md-4">
+										<p>A copy of Business Registration</p>
+									</div>
+									<div class="col-md-8">
+										<div class="form-group">
+											<input type="text" class="form-control" name="business-url" value="<%= @account_document.business.url %>" placeholder = "Supported file types : jpg, gif, pdf, Max file size: 3MB" >
+											<button type="button" class="btn btn-default btn-browse">Browse</button>
+											<%= f.file_field :business %>
+										</div>
+									</div>
+								</div>
+
+								<div class="row">
+									<div class="col-md-12">
+										<button type="submit" name="commit" id="submit-form" class="btn btn-default btn-save" style="display: block; margin-top: 20px;">Submit</button>
+									</div>
+								</div>
+								
+							</div>
+							
+						</div>
+					<% end %>
+				</div>
+
+				
+			</div>
+		</div>
+	</section>
+</div>
+
+<style>
+	.profile-form input {
+		color: black;
+	}
+	.profile-document-item {
+		margin-bottom: 15px;
+		position: relative;
+	}
+	.delete-attachment {
+		position: absolute;
+		top: 10px;
+		right: 10px;
+		color: red;
+	}
+
+	input.form-control {
+		display: inline-block;
+		width: calc(100% - 150px);
+		margin-right: 10px;
+		vertical-align: top;
+		font-size: 11px;
+	}
+
+	button.btn.btn-browse {
+		padding: 5px 20px;
+		vertical-align: top;
+	}
+
+	.panel-body .row {
+		border-bottom: 1px solid #ccc;
+		padding-bottom: 15px;
+		padding-top: 10px;
+	}
+	.panel-body .row:last-child {
+		border-bottom: none;
+    padding-bottom: 5px;
+	}
+	input[type='file'] {
+		position: absolute;
+		top: 0;
+		left: 0px;
+		width: 100%;
+		height: 36px;
+		z-index: 9;
+		opacity: 0;
+		filter: alpha(opacity:0);
+		cursor: pointer;
+	}
+	.icon-verified {
+    	color: #3fb34f;
+	}
+	.icon-noverified {
+		color: #d52b2a
+	}
+</style>
+
+<script type="text/javascript">
+
+	$(document).ready(function() {
+
+		$(document).on('change', 'input[type="file"]', function() {
+			var result = this.value;
+			var UpperResult = result.toUpperCase();
+			$form_group = $(this).closest('.form-group');
+			$form_group.removeClass('has-error');
+			$('#submit-form').removeClass('disabled');
+			$('#submit-form').prop('disabled', false);
+			$form_group.find('small').css('display', 'none').text('The ic/passport document is required')
+			$form_group.find('input.form-control').val('');
+			
+
+			if (result == '') {
+				$form_group.find('small').css('display', 'block');
+				$form_group.addClass('has-error');
+				$('#submit-form').addClass('disabled');
+				$('#submit-form').prop('disabled', true);
+				return;
+			};
+
+			var isFileSize = true;
+			
+			if($(this)[0].files && $(this)[0].files.length > 0) {
+				if($(this)[0].files[0].size > 3000000)
+					isFileSize = false;
+			}
+
+			if (!isFileSize) {
+				
+				$form_group.find('small').css('display', 'block').text('Your file is too large to upload');
+				// $form_group.text('Your file is too large to upload');
+				$form_group.addClass('has-error');
+				$('#submit-form').addClass('disabled');
+				$('#submit-form').prop('disabled', true);
+				return;
+			};
+
+			if(UpperResult != "" && (UpperResult.lastIndexOf(".GIF") > 0 || UpperResult.lastIndexOf(".JPG") > 0 || UpperResult.lastIndexOf(".PDF") > 0) && isFileSize) {
+				console.log('success');
+				result = result.substr(result.lastIndexOf('\\')+1)
+				$form_group.find('input.form-control').val(result);
+
+			} else {
+				$form_group.find('small').css('display', 'block').text('Supported file types : jpg, gif, pdf only');
+				$form_group.addClass('has-error');
+				$('#submit-form').addClass('disabled');
+				$('#submit-form').prop('disabled', true);
+				return;
+			}
+
+			if ($(this).prop('id') == 'account_document_ic_passport') {
+				$('form.profile-form').formValidation('revalidateField', 'ic-passport-url');
+			} else if ($(this).prop('id') == 'account_document_bank') {
+				$('form.profile-form').formValidation('revalidateField', 'bank-url');
+			} else if ($(this).prop('id') == 'account_document_business') {
+				$('form.profile-form').formValidation('revalidateField', 'business-url');
+			};
+
+			return true;		
+		})
+
+		$(document).on('click', '.delete-attachment', function(event) {
+			event.preventDefault();
+			if ($(this).parent().find('input[name="document_id[]"]').length == 0) {
+				return;
+			}
+			var document_id = $(this).parent().find('input[name="document_id[]"]').val();
+
+			$this = $(this);
+			$('body').loading({ message: 'Deleting...'});
+			$.ajax({
+				type: "POST",
+				url: "/profile_documents/" + document_id,
+				dataType: "json",
+				data: { "_method": "delete" },
+				success: function(){
+					$this.parent().remove();
+					$('body').loading('stop');
+					console.log('deleted profile document');
+				},
+				error: function(error) {
+					console.log(error);
+					$('body').loading('stop');
+				}
+			});
+		})
+
+		// $(document).on('click', '#submit-form', function(event) {
+		// 	if ($('[name="document_id[]"]').length == 0) {
+		// 		alert('You have to upload at least 1 document');
+		// 		event.preventDefault();
+		// 	};
+		// })
+
+		$(document).on('focus', 'input.form-control', function() {
+			$(this).blur();
+		})
+
+		var UPLOAD_RULES = [
+			{
+				name: 'size',
+				message: 'Your file is too large to upload',
+				check: function(obj) {
+					// return value.length >= 8;
+					var isFileSize = true;
+					if($(obj)[0].files && $(obj)[0].files.length > 0) {
+						if($(obj)[0].files[0].size > 3000000)
+							isFileSize = false;
+					}
+					return isFileSize
+				}
+			},
+			{
+				name: 'type',
+				message: 'Supported file types : jpg, gif, pdf only',
+				check: function(obj) {
+					// return value !== value.toLowerCase();
+					var result = obj.value;
+					var UpperResult = result.toUpperCase();
+					//if(UpperResult == "") return;
+					
+					var isSupportedType = false;
+					
+					if(UpperResult != "" && (UpperResult.lastIndexOf(".GIF") > 0 || UpperResult.lastIndexOf(".JPG") > 0 || UpperResult.lastIndexOf(".PDF") > 0) ) {
+						isSupportedType = true;
+					}
+					return isSupportedType;
+				}
+			}
+		];
+
+		$('form.profile-form').formValidation({
+			framework: 'bootstrap',
+			icon: {
+				valid: 'glyphicon glyphicon-ok',
+				invalid: 'glyphicon glyphicon-remove',
+				validating: 'glyphicon glyphicon-refresh'
+			},
+			fields: {
+				'ic-passport-url': {
+					validators: {
+						notEmpty: {
+							message: 'The ic/passport document is required'
+						}
+					}
+				},
+				'bank-url': {
+					validators: {
+						notEmpty: {
+							message: 'The bank document is required'
+						}
+					}
+				},
+				'business-url': {
+					validators: {
+						notEmpty: {
+							message: 'The business document is required'
+						}
+					}
+				}
+			}
+		})
+	})
+
+		
+</script>
+
+
+
+

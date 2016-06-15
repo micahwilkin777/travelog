@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <% if content_for?(:head) %>
+    <%= yield(:head) %>
+  <% end %>
+
+  <%= favicon_link_tag 'favicon.ico' %>
+  <title><%= page_title yield(:page_title) %></title>
+  <%= stylesheet_link_tag    'application_detail', media: 'all' %>
+  <%= javascript_include_tag 'application_detail' %>
+  <%= csrf_meta_tags %>
+  <%= Gon::Base.render_data %>
+</head>
+<body>
+
+  <%= render 'layouts/result_header' %>
+  <%= render 'shared/flash' %>
+  <%= yield %>
+  <%= render 'layouts/footer' %>
+
+  <style type="text/css">
+    
+  </style>
+</body>
+</html>
+

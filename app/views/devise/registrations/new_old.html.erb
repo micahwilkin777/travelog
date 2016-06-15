@@ -1,0 +1,42 @@
+<% content_for :page_title do %>
+  <%= 'Travelog - Signup' %>
+<% end %>
+<div class="header-gradient"></div>
+<nav class="navbar navbar-white  navbar-static-top">
+  <div class="container">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="/"><img src="<%= asset_url('dummylogo.png') %>" width="30"></a>
+
+    </div>
+    <!--/.nav-collapse -->
+  </div>
+</nav>
+<div class="container signupLogin-content">
+   <!-- Projects Row -->
+   <div class="row">
+      <div class="col-md-offset-3 col-md-6 col-lg-6 signup-page text-center">
+       	<h3>Let's sign you in!</h3>
+       	<hr>
+       	<%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: {:class => 'text-left'}) do |f| %>
+          <div class="form-group">
+          	<%= f.label :email, 'Email address' %><br />
+    				<%= f.email_field :email, autofocus: true, placeholder: "Email", class: "form-control" %>
+          </div>
+          <div class="form-group">
+          	<%= f.label :password %>
+          	<%= f.password_field :password, autocomplete: "off", placeholder: "Password", class: "form-control" %>
+          </div>
+
+          <div class="form-group">
+            <%= f.label :password_confirmation, 'Confirm Password' %>
+          	<%= f.password_field :password_confirmation, autocomplete: "off", placeholder: "Confirm Password", class: "form-control" %>
+          </div>
+          <button type="submit" class="btn btn-default signup-btn">Submit</button>
+       	<% end %>
+        <div class="col-md-12 text-center">
+          <p class="signupToLogin">Already a member? <strong><%= link_to "Login", new_user_session_path %></strong></p>
+        </div>
+       	
+      </div>
+   </div>
+</div>

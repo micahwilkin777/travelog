@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="Travelog.com brings you the best in authentic travel experiences, outdoor activities, family tours, cultural sightseeing, wellness retreats, weekend things to do and more">
+	<meta name="google" value="notranslate">
+	<meta property="fb:app_id" content="1532030150450881">
+	<meta property="og:site_name" content="Travelog">
+	<meta property="og:title" content="Travelog | Book Tours, Sightseeing, Activities, Things to do">
+	<meta property="og:description" content="Join Travelog and discover thousands of amazing experiences in Malaysia!">
+	<meta property="og:image" content="https://s3-us-west-2.amazonaws.com/travelog/assets/Travelog_fb_invite.jpg">
+	<meta property="og:image:width" content="1200">
+	<meta property="og:image:height" content="630">
+	<meta property="og:url" content="https://www.travelog.com/">
+	<meta property="og:locale" content="en_US">
+	<meta name="google-site-verification" content="9hUPuZEg2WBgYPhoxVo0W0RzEo5Fm911CZYVz6MPmco" />
+	<link rel="canonical" href="https://www.travelog.com/">
+	<meta name="keywords" content="kl, find kuala lumpur travel agency, Malaysia, find travel agency, reliable, trusted travel agency, affordable, cheap tour packages, activities, things to do, attraction, sightseeing, trips, travel guide" />
+	<!--Start of Zopim Live Chat Script-->
+	<!--End of Zopim Live Chat Script-->
+	<%= favicon_link_tag 'favicon.ico' %>
+	<!-- start Mixpanel --><script type="text/javascript">(function(e,b){if(!b.__SV){var a,f,i,g;window.mixpanel=b;b._i=[];b.init=function(a,e,d){function f(b,h){var a=h.split(".");2==a.length&&(b=b[a[0]],h=a[1]);b[h]=function(){b.push([h].concat(Array.prototype.slice.call(arguments,0)))}}var c=b;"undefined"!==typeof d?c=b[d]=[]:d="mixpanel";c.people=c.people||[];c.toString=function(b){var a="mixpanel";"mixpanel"!==d&&(a+="."+d);b||(a+=" (stub)");return a};c.people.toString=function(){return c.toString(1)+".people (stub)"};i="disable time_event track track_pageview track_links track_forms register register_once alias unregister identify name_tag set_config people.set people.set_once people.increment people.append people.union people.track_charge people.clear_charges people.delete_user".split(" ");
+for(g=0;g<i.length;g++)f(c,i[g]);b._i.push([a,e,d])};b.__SV=1.2;a=e.createElement("script");a.type="text/javascript";a.async=!0;a.src="undefined"!==typeof MIXPANEL_CUSTOM_LIB_URL?MIXPANEL_CUSTOM_LIB_URL:"file:"===e.location.protocol&&"//cdn.mxpnl.com/libs/mixpanel-2-latest.min.js".match(/^\/\//)?"https://cdn.mxpnl.com/libs/mixpanel-2-latest.min.js":"//cdn.mxpnl.com/libs/mixpanel-2-latest.min.js";f=e.getElementsByTagName("script")[0];f.parentNode.insertBefore(a,f)}})(document,window.mixpanel||[]);
+mixpanel.init("6a074aecbabf21341e32c9631632712e");
+</script><!-- end Mixpanel -->
+
+  <title><%= page_title yield(:page_title) %></title>
+  <%= stylesheet_link_tag    'application', media: 'all' %>
+  <%= javascript_include_tag 'application' %>
+  <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?libraries=places&sensor=false"></script>
+  <%= csrf_meta_tags %>
+  <%= Gon::Base.render_data %>
+</head>
+<body>
+	<div class="page-wrapper">
+		<%= render 'layouts/header' %>
+		<%= render 'shared/flash' %>
+		<%= yield %>
+		<%= render 'layouts/footer' %>
+	</div>
+</body>
+</html>
+

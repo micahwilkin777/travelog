@@ -1,0 +1,23 @@
+<%= render "shared/settings_nav", :obj => 'dashboard' %>
+
+<section class="header-11-sub dashboard">
+	<div class="dashboard-header">
+		<div class="container">
+			<div class="row ">
+				<div class="col-md-2">
+					<img src="<%= current_user.get_avatar_url %>" width="80" class="img-circle">
+				</div>
+				<div class="col-md-7">
+					<h4>Welcome back, <%= current_user.full_name %>!<br>
+						Book Amazing Activities, Tours and more.
+					</h4>
+				</div>
+				<div class="col-md-3">
+				<h1>$ <%= current_user.reward_credit %></h1>
+					 <h5>Travel credit to spend.</h5>
+					<!-- <a href="#">see earning details</a> -->
+				</div>
+			</div>
+		</div>
+	</div>
+</section>

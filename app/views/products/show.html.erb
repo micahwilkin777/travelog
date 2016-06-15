@@ -1,0 +1,479 @@
+<% content_for :head do %>
+  <meta name="description" content="<%= strip_tags(@product.highlight)%>">
+  <meta name="keywords" content="<%= @product.name%>, <%= @product.city %> <%= @product.product_category.name%>, <%= @product.country%> <%= @product.product_category.name%>">
+  <meta property="og:site_name" content="Travelog.com">
+  <meta property="og:type" content="listing">
+  <meta property="og:title" content="<%= @product.name %>">
+  <meta property="og:description" content="<%= strip_tags(@product.highlight)%>">
+  <meta property="og:image" content="<%= @product.product_attachments.order('id')[0].attachment.large.url if @product.product_attachments.count > 0 %>">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:url" content="<%= @original_url %>">
+  <meta property="og:locale" content="en_US">
+  <link rel="canonical" href="<%= root_url + 'products/' + @product.slug%>">
+  <title><%= @product.name %> - Travelog.com</title>
+<% end %>
+
+<%= render 'product_details' %>
+<%= render 'gallery_details' %>
+<%= render 'review_details' %>
+<%= render 'merchant_details' %>
+
+
+<script>
+	function initResponsiveHeader() {
+		var sideslider = $('[data-toggle=collapse-side]');
+		var sel = sideslider.attr('data-target');
+		var sel2 = sideslider.attr('data-target-2');
+		sideslider.click(function(event) {
+			$(sel).toggleClass('in');
+			$(sel2).toggleClass('out');
+		});
+
+	}
+
+
+	function initCalendarDate() {
+		var nowTemp = new Date();
+		var now =  new Date(nowTemp.getFullYear(), nowTemp.getMonth(), nowTemp.getDate(), 0, 0, 0, 0);
+		$('#datetimepicker').datepicker({
+			format: 'dd/mm/yyyy',
+			startDate: now
+		})
+		.on('changeDate', function(e) {
+			$('#booking-form').formValidation('revalidateField', 'datepicker');
+		});
+
+		$('#datetimepicker-small').datepicker({
+			format: 'dd/mm/yyyy',
+			startDate: now
+		})
+		.on('changeDate', function(e) {
+			$('#booking-small-form').formValidation('revalidateField', 'datepicker');
+		});
+
+	}
+	$(window).load(function() {
+		// initResponsiveHeader();
+		initCalendarDate();
+		$(document).ready(function() {
+			$('#lightgallery').lightGallery();
+		});
+	});
+
+	$(document).ready(function () {
+		$('.header-10-sub .background').css({'background-image': 'url(' + gon.product_cover_image_url + ')'})
+		var product_currency = "<%= @product.currency %>";
+		var product_price_cents = parseInt("<%= @product.price_cents %>");
+		var selected_currency_symbol = gon.current_currency;
+		var selected_currency_rate = parseFloat(gon.currency_rates[product_currency]);
+
+		
+		// set footer currency
+		// $('#footer-currency').val(product_currency);
+
+		var product_currency_symbol = gon.currency_symbols[gon.current_currency];
+		
+		var showResultBooking = function() {
+
+			$('.booking-result-container').empty();
+
+			var $template = $('#booking-result-item-template');
+			var is_booking = false;
+			var total_price = 0;
+			$('.booking-variants-container > .varient-row').each(function() {
+				variant_name = $(this).find('label').text();
+				variant_count = parseInt($(this).find('[name="variant[][count]"]').val());
+				variant_price = $(this).find('[name="variant-price-with-currency"]').val();
+				if (variant_count > 0) {
+					is_booking = true;
+					$clone = $template.clone().removeClass('hide').removeAttr('id').addClass('item');
+					$clone.find('.result-item-name label').text(product_currency_symbol + variant_price + ' x ' + variant_count + ' ' + variant_name)
+						.attr({'data-item-price': variant_price, 'data-item-count': variant_count, 'data-item-name': variant_name})
+
+					item_price = (variant_price * variant_count).toFixed(2);
+					$clone.find('.result-item-price label').text(product_currency_symbol + item_price)
+						.attr('data-price', item_price)
+					total_price += variant_price * variant_count;
+					$('.booking-result-container').append($clone);
+				};
+			})
+			if (is_booking) {
+				$clone = $template.clone().removeClass('hide').removeAttr('id').addClass('total');
+				$clone.find('.result-item-name label').text('Total');
+				$clone.find('.result-item-price label').text(product_currency_symbol + total_price.toFixed(2)).attr('data-total-price', total_price);
+				$('.booking-result-container').append($clone);
+			};
+
+			// showResultBookingWithMultiCurrency();
+		}
+
+		$('.booking-variants-container').on('click', 'button.addButton', function() {
+			$variant_count = $(this).parent().find('[name="variant[][count]"]');
+
+			var index = $(this).closest('.varient-row').index();
+			var min_count = gon.variants[index].min_count;
+			var max_count = gon.variants[index].max_count;
+
+			var count = parseInt($variant_count.val());
+			if (isNaN(count)) {
+				count = 0;
+			} else {
+				count++;
+			}
+
+			if (min_count > 0 && count < min_count) {
+				count = min_count;
+			};
+
+			if (max_count > 0 && count > max_count) {
+				count = max_count;
+			};
+
+			$variant_count.val(count.toString());
+			showResultBooking();
+		})
+
+		$('.booking-variants-container').on('click', 'button.removeButton', function() {
+			$variant_count = $(this).parent().find('[name="variant[][count]"]');
+
+			var index = $(this).closest('.varient-row').index();
+			var min_count = gon.variants[index].min_count;
+			var max_count = gon.variants[index].max_count;
+
+			var count = parseInt($variant_count.val());
+			if (isNaN(count)) {
+				count = 0;
+			} else {
+				count--;
+				if (count < 0)
+					count = 0;
+			}
+
+			if (min_count > 0 && count < min_count) {
+				count = 0;
+			};
+
+			if (max_count > 0 && count > max_count) {
+				count = max_count;
+			};
+
+			$variant_count.val(count.toString());
+			showResultBooking();
+		})
+
+		$('#footer-currency').on('change', function() {
+			selected_currency_symbol = gon.currency_symbols[$(this).val()];
+			selected_currency_rate = parseFloat(gon.currency_rates[$(this).val()]);
+			showResultBookingWithMultiCurrency();
+		})
+
+		var showResultBookingWithMultiCurrency = function() {
+			converted_price = (product_price_cents * selected_currency_rate / 100).toFixed(2);
+			$('#booking-form .totalprice').text('Total : ' + selected_currency_symbol + converted_price.toString());
+
+			// set booking items
+			$('.booking-result-container .form-group.item').each(function() {
+				$result_item_name = $(this).find('.result-item-name label');
+				converted_count = parseInt($result_item_name.attr('data-item-count'));
+				converted_name = $result_item_name.attr('data-item-name');
+
+				converted_price = (parseFloat($result_item_name.attr('data-item-price')) * selected_currency_rate).toFixed(2);
+
+				$result_item_name.text(selected_currency_symbol + converted_price + ' x ' + converted_count + ' ' + converted_name)
+
+				$result_item_price = $(this).find('.result-item-price label');
+
+				$result_item_price.text(selected_currency_symbol + (converted_price * converted_count).toFixed(2))
+			})
+
+			$('.booking-result-container .form-group.total').each(function() {
+				$result_item_price = $(this).find('.result-item-price label');
+				converted_price = (parseFloat($result_item_price.attr('data-total-price')) * selected_currency_rate).toFixed(2);
+				$result_item_price.text(selected_currency_symbol + converted_price);
+			})
+		}
+
+
+		$('#booking-form').formValidation({
+			framework: 'bootstrap',
+			icon: {
+				valid: 'glyphicon glyphicon-ok',
+				invalid: 'glyphicon glyphicon-remove',
+				validating: 'glyphicon glyphicon-refresh'
+			},
+			fields: {
+				'datepicker': {
+					row: '.col-xs-12',
+					validators: {
+						notEmpty: {
+							message: 'The date field is required'
+						}
+					}
+				},
+			}
+		})
+
+		$('#booking-small-form').formValidation({
+			framework: 'bootstrap',
+			icon: {
+				valid: 'glyphicon glyphicon-ok',
+				invalid: 'glyphicon glyphicon-remove',
+				validating: 'glyphicon glyphicon-refresh'
+			},
+			fields: {
+				'datepicker': {
+					row: '.col-xs-12',
+					validators: {
+						notEmpty: {
+							message: 'The date field is required'
+						}
+					}
+				},
+			}
+		})
+
+	})
+</script>
+
+
+
+<style>
+	/*detail page only*/
+	/*Overrighting original style.css, please change class name*/ 
+	/*.paddingzero { padding:0;}*/
+	.header-10-sub .background {
+		opacity: 85;
+		filter: alpha(opacity=8500);
+		opacity: 0.85;
+		filter: alpha(opacity=85);
+		background-repeat: no-repeat;
+		background-size: cover;
+		width: 100%;
+	}
+	.header-10-sub {
+		height: 500px !important;
+	}
+
+
+	.form-control {
+		border: 1px solid #bdc3c7;
+		color: #34495e;
+		border-radius: 2px;
+	}
+	.btn-default { background:#E64A19; color:#FFF; border-radius:1px;}
+	.btn-default:hover {background:#BF360C;}
+	footer p {
+		color: #FFF;
+	}
+	/*Overrighting original style.css, please change class name*/
+	/*Overrighting original header.css*/
+	.navsearch-form {
+		top: 5px;
+	}
+	.navbar-form .form-control {
+		border-radius: 1px;
+	}
+	/*Overrighting original header.css*/
+
+	.titledistance { margin-bottom:40px;}
+
+	p {    font-size: 14px;
+		color: #000;}
+
+	a {   
+		color: #000;}
+
+	.content-8 p {
+		font-size: 14px;
+		font-weight: normal;
+		color: #000;
+		margin-bottom: 43px;margin-bottom: 0;
+	}
+
+	.content-8 h4 {
+		font-weight: normal;
+		margin-top: 0;
+	}
+
+	.content-7 h4{
+		font-weight: normal;
+		margin-top: 0;
+	}
+
+
+
+
+	.book-now-block {
+		background-color: #fff;
+		display: block;
+		width: 400px;
+		min-height: 225px;
+		border: 1px solid #dce0e0;
+		border-radius: 0;
+		z-index:999;
+	}
+	.book-widget-detail-page {
+		position: absolute;
+		top: -94px;opacity: 0.9;
+	}
+
+	.productdetail {
+		/*position: absolute;*/
+		padding: 20px 20px 20px 20px;
+	}
+
+
+	.book-widget-detail-page p { font-weight:normal;font-size: 16px;}
+	.widget-title {
+		background: rgba(0, 0, 0, 0.8);
+		padding: 10px 40px;
+		margin: 0;
+		opacity: 1.5;
+		display: block;
+		width: 400px;
+		border: 1px solid #000;
+	}
+	.widget-title p { color:#FFF; font-weight:300; font-size:18px;margin: 0;}
+
+
+	.greysection {
+		background-color: #f9f9f9;
+		min-height: 150px;
+		border: 1px solid #dce0e0;
+	}
+
+
+	/*1 - about merchant*/
+	.aboutmerchant {    
+		padding-top: 40px;
+		padding-bottom: 40px;text-align: left;
+		z-index: 4;
+		position: relative;
+	}
+
+	/*1 - about merchant*/
+	/*2 - about product*/
+	.aboutproduct {    padding-top: 40px;
+		padding-bottom: 40px;text-align: left;}
+
+	/*2 - about product*/
+	/*3 - gallery*/
+	.gallery {    
+		padding-top: 40px;
+		padding-bottom: 40px;
+		
+
+	}
+
+	/*3 - gallery*/
+	/*4 - reviews*/
+	.reviews {    padding-top: 40px;
+		padding-bottom: 40px;text-align: left;}
+
+	/*4 - reviews*/
+	/*5 - merchant detail*/
+	.merchantdetail {    padding-top: 40px;
+		padding-bottom: 40px;text-align: left;}
+
+	/*5 - merchant detail*/
+
+	/*detail page only*/
+
+	/*detail page gallery*/
+	.detailpage-images-gallery {}
+	.topleftimg { padding:0 2px 2px 0;}
+	.toprightimg {padding:0 0 2px 2px;}
+	.bottomleftimg {padding:2px 2px 0 0;} 
+	.bottomcentreimg {padding:2px 2px 0 2px;}
+	.bottomrightimg {padding:2px 0  0 2px;}
+	.gallery-overlay-cover {    background: #000;
+		opacity: 0.3; width:215px; height:215px; position:absolute;}
+	.text-overlay-cover { position:absolute; top: 100px;
+		left: 40px; z-index:99; color:#FFF; font-size:16px; font-weight:bold;}
+	.text-overlay-cover:hover {color:#F4511E; }
+	/*detail page gallery*/
+
+	/*Footer*/
+	.bottom-below-footer { margin-top:100px;}
+
+	.btn-currency { border-radius:1px; background:none; border:1px solid #999;}
+	.btn-currency:hover, focus, active {background:none;}
+	.btn-currency:hover,active {  background:none;}
+	.open > ul.currency-dropdown-menu {
+		margin-top: 0;
+	}
+	.open .dropdown-toggle.btn-default.btn-currency {
+		background: #000;
+	}
+
+	/*Footer*/
+
+	/*suggestions*/
+
+	.portfolio-item {
+		margin-bottom: 40px
+	}
+	.portfolio-item h4{
+		color: #333;    margin-top: 20px;
+
+	}
+	.portfolio-item a{
+		color: #333;
+	}
+	.portfolio-item p{
+		color: #333;
+	}
+	.portfolio-item p.price{
+		color: #FFF;
+	}
+
+	.user-thumb {
+		position: absolute;
+		top: 255px;
+		left: 235px;
+	}
+
+	.price {
+		opacity: .79;
+		background: #3c3d41;
+		min-width: 100px;
+		padding: 10px;
+		color: #fff;
+		font-size: 18px;
+		position: absolute;
+		top: 180px
+	}
+	.heart-wrapper {
+		position: absolute;
+		top: 5px;
+		left: 235px;
+	}
+	.glyphicon-star {
+		color: #ffcd00;
+	}
+	.starratings { padding-top:5px;}
+	.star-rating .icon-star {
+		display: inline;
+		color: #d8d8d8;
+		font-size: 16px;
+	}
+
+	/*hearts*/
+	input[type=checkbox].heart-checkbox {
+		display: none;
+	}
+
+
+</style>
+
+
+
+
+
+<!-- customize by me -->
+<style>
+	.btn.removeButton, .btn.addButton {
+		padding: 10px 13px;
+	}
+</style>

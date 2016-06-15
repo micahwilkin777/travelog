@@ -1,0 +1,199 @@
+<div class="container">
+	
+	<div class=" col-md-8 hidden-xs hidden-sm poster-info-xssm ">
+		<div class="col-xs-12 col-sm-2 col-md-2">
+			<a href="#">
+				<% if @user.get_store_thumb_url.present? %>
+					<img src="<%= @user.get_store_thumb_url %>" class="img-circle">
+				<% else %>
+					<img src="<%= asset_url('default-avatar.png') %>" class="img-circle">
+				<% end %>
+			</a>
+		</div>
+		<div class="col-xs-12 col-sm-10 col-md-10">
+			<h1 class="productName" itemprop="name"><%= @product.name %></h1>
+			<div class="col-md-4 paddingzero">
+				<p><%= @product.city %>, <%= @product.country %></p>
+			</div>
+			<div class="col-md-8 starratings">
+				<span class="glyphicon glyphicon-star <%= 'empty-star' if @product.review_mark <= 0 %>" aria-hidden="true"></span>
+				<span class="glyphicon glyphicon-star <%= 'empty-star' if @product.review_mark <= 1 %>" aria-hidden="true"></span>
+				<span class="glyphicon glyphicon-star <%= 'empty-star' if @product.review_mark <= 2 %>" aria-hidden="true"></span>
+				<span class="glyphicon glyphicon-star <%= 'empty-star' if @product.review_mark <= 3 %>" aria-hidden="true"></span>
+				<span class="glyphicon glyphicon-star <%= 'empty-star' if @product.review_mark <= 4 %>" aria-hidden="true"></span>
+
+			</div>
+			<span itemprop="aggregateRating" itemscope="" itemtype="http://schema.org/AggregateRating">
+				<meta itemprop="ratingValue" content="4">
+				<meta itemprop="bestRating" content="5">
+				<meta itemprop="ratingCount" content="20">
+			</span>
+			<div class="col-md-12 paddingzero">
+				<%= @product.highlight.html_safe if @product.highlight.present? %>
+			</div>
+
+		</div>
+		<meta itemprop="url" content="<%= root_url + 'products/' + @product.slug %>">
+	</div>
+
+	<!--rightside booking-->
+	<div class="col-xs-12 col-sm-12 col-md-4">
+		<div class="book-now-block book-widget-detail-page hidden-xs hidden-sm">
+			<form method="POST" id="booking-form" action="/invoices/new">
+				<%= tag(:input, :name => 'authenticity_token', :type => "hidden", :value => form_authenticity_token) %>
+
+				<div class="widget-title">
+					<% if @product_discount != 1%>
+						<span>
+
+							From <strike><em><%= @current_currency %></em> <%= @product.price_with_currency %></strike>
+							</span>
+							<p><em><%= @current_currency %></em> <%= (@product.price_with_currency * @product_discount).round(2) %></p>
+					<% else %>
+						<p><span><%= @current_currency %></span> <span><%= @product.price_with_currency %></span></p>
+					<% end %>
+
+				</div>
+
+				<div class="productdetail-booking">
+					
+					
+					<input type="hidden" name="product-id" value="<%= @product.id %>">
+
+					<div class="form-group row">
+						<label class="col-xs-12"><strong>When would you like to visit</strong></label>
+						<div class="col-xs-12">
+							
+							<div class="form-group  detail-widget-dateform">
+								<div class="input-group">
+									<input type="text" id="datetimepicker" class="form-control date-book" placeholder="Date" name="datepicker" >
+									<div class="input-group-addon"><span class="glyphicon glyphicon-calendar" aria-hidden="true"></span></div>
+								</div>
+							</div>
+
+						</div>
+					</div>
+
+					<div itemprop="offers" itemscope itemtype="http://schema.org/AggregateOffer">
+						<meta itemprop="priceCurrency" content="<%= @product.currency %>">
+						<meta itemprop="lowPrice" content="<%= @product.price_cents / 100 %>">
+					</div>
+
+					<div class="varient-options booking-variants-container">
+					
+						<% @product.variants.each do |variant| %>
+							<div class="row varient-row">
+
+								<input type="hidden" name="variant-price" value="<%= (variant.price_cents * @product_discount / 100).round(2) %>">
+								<input type="hidden" name="variant-price-with-currency" value="<%= (variant.price_with_currency * @product_discount).round(2) %>">
+								
+								<div class="col-sm-6 col-md-6">
+									<label ><%= variant.name %>:</label><br>
+								</div>
+								<div class="col-sm-6 col-md-6">
+									<!-- <button type="button" class="btn btn-default removeButton"><i class="fa fa-minus"></i></button>
+									<input type="hidden" name="variant[][id]" value="<%= variant.id %>">
+									<input type="hidden" name="variant[][name]" value="<%= variant.name %>">
+									<input type="hidden" name="variant[][price_cents]" value="<%= variant.price_cents %>">
+									<input type="text" name="variant[][count]" style="width: 40px; height: 40px; text-align: center;" value="0">
+									<button type="button" class="btn btn-default addButton"><i class="fa fa-plus"></i></button> -->
+									<div class="form-inline">
+										<div class="form-group pull-right">
+											<div class="input-group">
+												<input type="hidden" name="variant[][id]" value="<%= variant.id %>">
+												<input type="hidden" name="variant[][name]" value="<%= variant.name %>">
+												<input type="hidden" name="variant[][price_cents]" value="<%= variant.price_cents %>">
+
+												<button type="button" class="btn btn-default btn-minus removeButton"><span class="glyphicon glyphicon-minus"></span></button>
+												<input type="text" name="variant[][count]" class="input-varient" value="0">
+												<button type="button" class="btn btn-default btn-add addButton"><span class="glyphicon glyphicon-plus"></span></button>
+											</div>
+										</div>
+									</div>
+
+								</div>
+							</div>
+						<% end %>
+					</div>
+
+					<% if @product.refundable == 1 %>
+						<p class="refund">Refundable: <%= "#{@product.refund_percent}%" %> refund if cancelled <%= "#{@product.refund_day}days" %> in advance</p>
+					<% else %>
+						<p class="refund">Non-refundable</p>
+					<% end %>
+					<% if @is_variants %>
+						<hr>
+					<% end %>
+					<div class="form-group row hide" id="booking-result-item-template">
+						<div class="col-xs-7 result-item-name">
+							<label></label>
+						</div>
+						<div class="col-xs-5 result-item-price">
+							<label></label>
+						</div>
+					</div>
+					<div class="booking-result-container">
+								
+					</div>
+					<button type="submit" class="btn btn-block btn-default">Book Now</button>
+
+				</div>
+			</form>
+			<div align="center" class="addthis_sharing_toolbox"></div>
+		</div>
+	</div>
+
+
+	<div class="col-xs-12 col-sm-12 hidden-md hidden-lg poster-info-xssm ">
+		<div class="col-xs-12 col-sm-2 col-md-2">
+			<a href="#">
+				<% if @user.get_store_thumb_url.present? %>
+					<img src="<%= @user.get_store_thumb_url %>" class="img-circle">
+				<% else %>
+					<img src="<%= asset_url('default-avatar.png') %>" class="img-circle">
+				<% end %>
+			</a>
+
+		</div>
+		<div class="col-xs-12 col-sm-10 col-md-10">
+			<h4><%= @product.name %></h4>
+			<div class="col-md-4 paddingzero">
+				<p><%= @product.city %>, <%= @product.country %></p>
+			</div>
+			<div class="col-md-8 starratings">
+				<span class="glyphicon glyphicon-star <%= 'empty-star' if @product.review_mark <= 0 %>" aria-hidden="true"></span>
+				<span class="glyphicon glyphicon-star <%= 'empty-star' if @product.review_mark <= 1 %>" aria-hidden="true"></span>
+				<span class="glyphicon glyphicon-star <%= 'empty-star' if @product.review_mark <= 2 %>" aria-hidden="true"></span>
+				<span class="glyphicon glyphicon-star <%= 'empty-star' if @product.review_mark <= 3 %>" aria-hidden="true"></span>
+				<span class="glyphicon glyphicon-star <%= 'empty-star' if @product.review_mark <= 4 %>" aria-hidden="true"></span>
+
+			</div>
+			<div class="col-md-12">
+				<%= @product.highlight.html_safe if @product.highlight.present? %>
+			</div>
+		</div>
+	</div>
+
+</div>
+
+<style>
+	.glyphicon-star.empty-star {
+		color: #d8d8d8;
+	}
+	.productdetail {
+		width: inherit;
+		min-height: inherit;
+	}
+	.productdetail-booking {
+		width: inherit;
+	}
+
+	.varient-row {
+	  padding-bottom: 20px;
+	}
+
+	.varient-options .input-group .input-varient {
+		padding: 6px 0 9px;
+		text-align: center;
+	}
+</style>
